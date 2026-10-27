@@ -35,7 +35,7 @@ node -e "const c=require('./show.json'); require('fs').writeFileSync('show.min.j
 
 ## Entities it depends on
 
-Everything comes through the Hubitat integration (Maker API 144) except: `weather.forecast_home` (met.no), `calendar.household` (Local Calendar), `todo.shopping_list`, `media_player.family_room_family_room_wiim` (WiiM), `media_player.family_room_family_room_homepod` (Apple TV integration), `media_player.basement_receiver` (Denon), `media_player.shield` and `media_player.65q750g` (Cast). If an entity id changes in HA, search this file for the old id.
+Everything comes through the Hubitat integration (Maker API 144) except: `sensor.sunrise_time` and `sensor.sunset_time` (Template helpers, `%-I:%M %p` of sun.sun next_rising/next_setting), `sensor.moon_phase` (Moon integration), `weather.forecast_home` (met.no), `calendar.household` (Local Calendar), `todo.shopping_list`, `media_player.family_room_family_room_wiim` (WiiM), `media_player.family_room_family_room_homepod` (Apple TV integration), `media_player.basement_receiver` (Denon), `media_player.shield` and `media_player.65q750g` (Cast). If an entity id changes in HA, search this file for the old id.
 
 ## Themes
 
