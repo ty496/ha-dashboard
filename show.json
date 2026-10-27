@@ -162,6 +162,20 @@
               "grid_options": {
                 "columns": 4
               }
+            },
+            {
+              "type": "button",
+              "name": "Scores",
+              "icon": "mdi:scoreboard-outline",
+              "show_state": false,
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "/dashboard-show/sports"
+              },
+              "grid_options": {
+                "columns": "full",
+                "rows": 1
+              }
             }
           ]
         },
@@ -554,6 +568,91 @@
                   "state": "on"
                 }
               ]
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sensor.bears",
+                  "state": "IN"
+                }
+              ],
+              "card": {
+                "type": "custom:teamtracker-card",
+                "entity": "sensor.bears",
+                "grid_options": {
+                  "columns": "full"
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sensor.avalanche",
+                  "state": "IN"
+                }
+              ],
+              "card": {
+                "type": "custom:teamtracker-card",
+                "entity": "sensor.avalanche",
+                "grid_options": {
+                  "columns": "full"
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sensor.fsu",
+                  "state": "IN"
+                }
+              ],
+              "card": {
+                "type": "custom:teamtracker-card",
+                "entity": "sensor.fsu",
+                "grid_options": {
+                  "columns": "full"
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sensor.iowa",
+                  "state": "IN"
+                }
+              ],
+              "card": {
+                "type": "custom:teamtracker-card",
+                "entity": "sensor.iowa",
+                "grid_options": {
+                  "columns": "full"
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sensor.rockies",
+                  "state": "IN"
+                }
+              ],
+              "card": {
+                "type": "custom:teamtracker-card",
+                "entity": "sensor.rockies",
+                "grid_options": {
+                  "columns": "full"
+                }
+              }
             }
           ]
         }
@@ -1296,6 +1395,89 @@
               "forecast_type": "hourly",
               "show_current": true,
               "show_forecast": true,
+              "grid_options": {
+                "columns": "full"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Scores",
+      "path": "sports",
+      "subview": true,
+      "icon": "mdi:scoreboard",
+      "type": "sections",
+      "max_columns": 3,
+      "dense_section_placement": true,
+      "sections": [
+        {
+          "type": "grid",
+          "cards": [
+            {
+              "type": "heading",
+              "heading": "Football",
+              "icon": "mdi:football"
+            },
+            {
+              "type": "custom:teamtracker-card",
+              "entity": "sensor.broncos",
+              "grid_options": {
+                "columns": "full"
+              }
+            },
+            {
+              "type": "custom:teamtracker-card",
+              "entity": "sensor.bears",
+              "grid_options": {
+                "columns": "full"
+              }
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "cards": [
+            {
+              "type": "heading",
+              "heading": "College",
+              "icon": "mdi:school"
+            },
+            {
+              "type": "custom:teamtracker-card",
+              "entity": "sensor.fsu",
+              "grid_options": {
+                "columns": "full"
+              }
+            },
+            {
+              "type": "custom:teamtracker-card",
+              "entity": "sensor.iowa",
+              "grid_options": {
+                "columns": "full"
+              }
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "cards": [
+            {
+              "type": "heading",
+              "heading": "Hockey and baseball",
+              "icon": "mdi:hockey-puck"
+            },
+            {
+              "type": "custom:teamtracker-card",
+              "entity": "sensor.avalanche",
+              "grid_options": {
+                "columns": "full"
+              }
+            },
+            {
+              "type": "custom:teamtracker-card",
+              "entity": "sensor.rockies",
               "grid_options": {
                 "columns": "full"
               }
