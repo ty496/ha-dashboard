@@ -325,6 +325,10 @@
                   "color": "#9be7a5"
                 },
                 {
+                  "entity": "calendar.personal",
+                  "color": "#ffd166"
+                },
+                {
                   "entity": "calendar.olive",
                   "color": "#f78fb3"
                 },
