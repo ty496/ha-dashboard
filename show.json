@@ -322,27 +322,27 @@
               "entities": [
                 {
                   "entity": "calendar.home",
-                  "color": "#9be7a5"
+                  "color": "#2e7d32"
                 },
                 {
                   "entity": "calendar.personal",
-                  "color": "#ffd166"
+                  "color": "#b26a00"
                 },
                 {
                   "entity": "calendar.olive",
-                  "color": "#f78fb3"
+                  "color": "#c2185b"
                 },
                 {
                   "entity": "calendar.travel",
-                  "color": "#ffb070"
+                  "color": "#d84315"
                 },
                 {
                   "entity": "calendar.birthdays",
-                  "color": "#c9a7ff"
+                  "color": "#6a1b9a"
                 },
                 {
                   "entity": "calendar.ty_mercer90_gmail_com",
-                  "color": "#7cc4ff"
+                  "color": "#1565c0"
                 }
               ],
               "defaultMode": "Event",
@@ -364,7 +364,8 @@
               "grid_options": {
                 "columns": "full"
               },
-              "hideDuplicates": true
+              "hideDuplicates": true,
+              "blocklist": "^(Trash day!|Recycling day!)$"
             },
             {
               "type": "custom:teamtracker-card",
