@@ -1,0 +1,20 @@
+{
+  "alias": "Show glass follows the sky",
+  "description": "Picks one of the six Glass themes for the Show dashboard from sun elevation and the current weather. Replaces 'Show theme follows the sun'.",
+  "mode": "restart",
+  "triggers": [
+    { "trigger": "time_pattern", "minutes": "/10" },
+    { "trigger": "state", "entity_id": "weather.forecast_home" },
+    { "trigger": "state", "entity_id": "sun.sun" },
+    { "trigger": "homeassistant", "event": "start" }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "action": "frontend.set_theme",
+      "data": {
+        "name": "{% set el = state_attr('sun.sun','elevation')|float(0) %}{% set rising = state_attr('sun.sun','rising') %}{% set w = states('weather.forecast_home') %}{% if el < -6 %}Glass Night{% elif el < 8 %}{{ 'Glass Dawn' if rising else 'Glass Dusk' }}{% elif w in ['rainy','pouring','lightning','lightning-rainy','hail','snowy','snowy-rainy'] %}Glass Rain{% elif w in ['cloudy','fog','windy','windy-variant','exceptional'] %}Glass Cloudy{% else %}Glass Day{% endif %}"
+      }
+    }
+  ]
+}

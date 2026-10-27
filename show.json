@@ -1,0 +1,1226 @@
+{
+ "title": "Show",
+ "views": [
+  {
+   "title": "Home",
+   "path": "home",
+   "icon": "mdi:home",
+   "type": "sections",
+   "max_columns": 3,
+   "dense_section_placement": true,
+   "badges": [
+    {
+     "type": "entity",
+     "entity": "binary_sensor.living_room_back_door_contact",
+     "name": "Back door",
+     "show_name": true,
+     "show_state": true,
+     "show_icon": true,
+     "color": "red",
+     "visibility": [
+      {
+       "condition": "state",
+       "entity": "binary_sensor.living_room_back_door_contact",
+       "state": "on"
+      }
+     ]
+    },
+    {
+     "type": "entity",
+     "entity": "binary_sensor.garage_garage_door_contact",
+     "name": "Garage",
+     "show_name": true,
+     "show_state": true,
+     "show_icon": true,
+     "color": "red",
+     "visibility": [
+      {
+       "condition": "state",
+       "entity": "binary_sensor.garage_garage_door_contact",
+       "state": "on"
+      }
+     ]
+    },
+    {
+     "type": "entity",
+     "entity": "sensor.living_room_humidity_sensor_living_room_temperature",
+     "name": "Main floor",
+     "show_name": true,
+     "show_state": true,
+     "show_icon": true,
+     "icon": "mdi:home-thermometer-outline"
+    },
+    {
+     "type": "entity",
+     "entity": "sensor.basement_humidity_sensor_basement_temperature",
+     "name": "Basement",
+     "show_name": true,
+     "show_state": true,
+     "show_icon": true,
+     "icon": "mdi:home-floor-negative-1"
+    },
+    {
+     "type": "entity",
+     "entity": "sensor.primary_humidity_sensor_primary_temperature",
+     "name": "Bedroom",
+     "show_name": true,
+     "show_state": true,
+     "show_icon": true,
+     "icon": "mdi:bed-outline"
+    },
+    {
+     "type": "entity",
+     "entity": "select.hubitat_elevation_hub_mode",
+     "name": "Mode",
+     "show_name": true,
+     "show_state": true,
+     "show_icon": true,
+     "icon": "mdi:home-clock-outline",
+     "tap_action": {
+      "action": "more-info"
+     }
+    },
+    {
+     "type": "entity",
+     "entity": "binary_sensor.hubitat_c979816d_hub_status",
+     "name": "Hubitat",
+     "show_name": true,
+     "show_state": true,
+     "show_icon": true,
+     "color": "red",
+     "visibility": [
+      {
+       "condition": "state",
+       "entity": "binary_sensor.hubitat_c979816d_hub_status",
+       "state_not": "on"
+      }
+     ]
+    }
+   ],
+   "sections": [
+    {
+     "type": "grid",
+     "column_span": 1,
+     "cards": [
+      {
+       "type": "clock",
+       "clock_style": "digital",
+       "clock_size": "large",
+       "show_seconds": false,
+       "time_format": "12",
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "weather-forecast",
+       "entity": "weather.forecast_home",
+       "forecast_type": "daily",
+       "show_current": true,
+       "show_forecast": true,
+       "name": "Wheat Ridge",
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "sun.sun",
+       "name": "Sunset",
+       "icon": "mdi:weather-sunset",
+       "state_content": [
+        "next_setting"
+       ],
+       "color": "amber",
+       "tap_action": {
+        "action": "none"
+       },
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "column_span": 1,
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Quick actions",
+       "heading_style": "subtitle"
+      },
+      {
+       "type": "button",
+       "name": "Everything off",
+       "icon": "mdi:power",
+       "icon_height": "44px",
+       "show_state": false,
+       "tap_action": {
+        "action": "perform-action",
+        "perform_action": "homeassistant.turn_off",
+        "target": {
+         "entity_id": [
+          "light.basement_left_pot_lights_basement",
+          "light.basement_right_pot_lights_basement",
+          "switch.basement_desk_lamp_basement",
+          "light.desk_light_bars",
+          "light.basement_media_cabinet_lights_basement",
+          "switch.basement_lava_lamp_basement",
+          "light.basement_stairwell_light_basement",
+          "light.family_room_bookcase_family_room",
+          "light.family_room_bookcase_lower_family_room",
+          "light.family_room_fr_lights",
+          "light.family_room_globe_light_fr",
+          "light.family_room_tall_lamp_family_room",
+          "switch.family_room_donut_lamp_family_room",
+          "light.kitchen_coffee_station",
+          "light.kitchen_coffee_maker_lights",
+          "light.kitchen_left_sconce_kitchen",
+          "light.kitchen_right_sconce_kitchen",
+          "switch.living_room_globe_lamp_living_room",
+          "switch.living_room_lamp_living_room",
+          "light.tv_backlight",
+          "light.bed_lights_hue_bulb",
+          "switch.primary_salt_lamp_primary",
+          "light.backyard_back_patio_light"
+         ]
+        }
+       },
+       "grid_options": {
+        "columns": 6,
+        "rows": 2
+       }
+      },
+      {
+       "type": "button",
+       "name": "Evening lamps",
+       "icon": "mdi:lamp",
+       "icon_height": "44px",
+       "show_state": false,
+       "tap_action": {
+        "action": "perform-action",
+        "perform_action": "homeassistant.turn_on",
+        "target": {
+         "entity_id": [
+          "switch.living_room_globe_lamp_living_room",
+          "switch.living_room_lamp_living_room",
+          "light.family_room_bookcase_family_room",
+          "light.family_room_bookcase_lower_family_room",
+          "light.family_room_tall_lamp_family_room",
+          "switch.primary_salt_lamp_primary"
+         ]
+        }
+       },
+       "grid_options": {
+        "columns": 6,
+        "rows": 2
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.kitchen_coffee_station",
+       "name": "Coffee bar",
+       "icon": "mdi:coffee",
+       "vertical": true,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6,
+        "rows": 2
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.backyard_back_patio_light",
+       "name": "Patio light",
+       "icon": "mdi:outdoor-lamp",
+       "vertical": true,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6,
+        "rows": 2
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.primary_bathroom_lights",
+       "name": "Bathroom glow",
+       "icon": "mdi:led-strip-variant",
+       "vertical": true,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6,
+        "rows": 2
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.tv_backlight",
+       "name": "TV backlight",
+       "icon": "mdi:television-ambient-light",
+       "vertical": true,
+       "tap_action": {
+        "action": "toggle"
+       },
+       "grid_options": {
+        "columns": 6,
+        "rows": 2
+       }
+      },
+      {
+       "type": "heading",
+       "heading": "Calendar",
+       "heading_style": "subtitle"
+      },
+      {
+       "type": "calendar",
+       "initial_view": "listWeek",
+       "entities": [
+        "calendar.ty_mercer90_gmail_com",
+        "calendar.family",
+        "calendar.birthdays",
+        "calendar.household"
+       ],
+       "grid_options": {
+        "columns": "full",
+        "rows": 5
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "column_span": 1,
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Rooms",
+       "heading_style": "subtitle"
+      },
+      {
+       "type": "area",
+       "area": "living_room",
+       "display_type": "compact",
+       "navigation_path": "/dashboard-show/living-room",
+       "alert_classes": [
+        "motion",
+        "occupancy",
+        "door",
+        "opening"
+       ],
+       "sensor_classes": [
+        "temperature",
+        "humidity"
+       ],
+       "features": [
+        {
+         "type": "area-controls",
+         "controls": [
+          "switch"
+         ]
+        }
+       ],
+       "features_position": "inline"
+      },
+      {
+       "type": "area",
+       "area": "family_room",
+       "display_type": "compact",
+       "navigation_path": "/dashboard-show/family-room",
+       "alert_classes": [
+        "motion",
+        "occupancy"
+       ],
+       "sensor_classes": [],
+       "features": [
+        {
+         "type": "area-controls",
+         "controls": [
+          "light"
+         ]
+        }
+       ],
+       "features_position": "inline"
+      },
+      {
+       "type": "area",
+       "area": "kitchen",
+       "display_type": "compact",
+       "navigation_path": "/dashboard-show/kitchen",
+       "alert_classes": [
+        "motion",
+        "occupancy"
+       ],
+       "sensor_classes": [
+        "illuminance"
+       ],
+       "features": [
+        {
+         "type": "area-controls",
+         "controls": [
+          "light"
+         ]
+        }
+       ],
+       "features_position": "inline"
+      },
+      {
+       "type": "area",
+       "area": "basement",
+       "display_type": "compact",
+       "navigation_path": "/dashboard-show/basement",
+       "alert_classes": [
+        "motion",
+        "occupancy"
+       ],
+       "sensor_classes": [
+        "temperature",
+        "humidity"
+       ],
+       "features": [
+        {
+         "type": "area-controls",
+         "controls": [
+          "light"
+         ]
+        }
+       ],
+       "features_position": "inline"
+      },
+      {
+       "type": "area",
+       "area": "primary",
+       "display_type": "compact",
+       "navigation_path": "/dashboard-show/primary",
+       "alert_classes": [
+        "motion",
+        "occupancy"
+       ],
+       "sensor_classes": [
+        "temperature",
+        "humidity"
+       ],
+       "features": [
+        {
+         "type": "area-controls",
+         "controls": [
+          "light"
+         ]
+        }
+       ],
+       "features_position": "inline"
+      },
+      {
+       "type": "area",
+       "area": "garage",
+       "display_type": "compact",
+       "navigation_path": "/dashboard-show/outside",
+       "alert_classes": [
+        "door",
+        "opening",
+        "garage_door"
+       ],
+       "sensor_classes": [],
+       "features": [
+        {
+         "type": "area-controls",
+         "controls": [
+          "switch"
+         ]
+        }
+       ],
+       "features_position": "inline"
+      },
+      {
+       "type": "heading",
+       "heading": "Playing",
+       "heading_style": "subtitle",
+       "visibility": [
+        {
+         "condition": "or",
+         "conditions": [
+          {
+           "condition": "state",
+           "entity": "media_player.family_room_family_room_wiim",
+           "state": "playing"
+          },
+          {
+           "condition": "state",
+           "entity": "media_player.family_room_family_room_homepod",
+           "state": "playing"
+          },
+          {
+           "condition": "state",
+           "entity": "media_player.basement_receiver",
+           "state": "on"
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "type": "media-control",
+       "entity": "media_player.family_room_family_room_wiim",
+       "visibility": [
+        {
+         "condition": "state",
+         "entity": "media_player.family_room_family_room_wiim",
+         "state": "playing"
+        }
+       ]
+      },
+      {
+       "type": "media-control",
+       "entity": "media_player.family_room_family_room_homepod",
+       "visibility": [
+        {
+         "condition": "state",
+         "entity": "media_player.family_room_family_room_homepod",
+         "state": "playing"
+        }
+       ]
+      },
+      {
+       "type": "media-control",
+       "entity": "media_player.basement_receiver",
+       "visibility": [
+        {
+         "condition": "state",
+         "entity": "media_player.basement_receiver",
+         "state": "on"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Living Room",
+   "path": "living-room",
+   "subview": true,
+   "type": "sections",
+   "max_columns": 3,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Lights",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "switch.living_room_globe_lamp_living_room",
+       "name": "Globe lamp",
+       "icon": "mdi:lamp",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "switch.living_room_lamp_living_room",
+       "name": "Lamp",
+       "icon": "mdi:floor-lamp",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.tv_backlight",
+       "name": "TV backlight",
+       "icon": "mdi:television-ambient-light",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "features": [
+        {
+         "type": "light-brightness"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Room",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "binary_sensor.living_room_living_room_presence_sensor_motion",
+       "name": "Occupied",
+       "icon": "mdi:motion-sensor",
+       "tap_action": {
+        "action": "none"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "binary_sensor.living_room_back_door_contact",
+       "name": "Back door",
+       "icon": "mdi:door",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "sensor.living_room_humidity_sensor_living_room_temperature",
+       "name": "Temperature",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "sensor.living_room_humidity_sensor_living_room_humidity",
+       "name": "Humidity",
+       "tap_action": {
+        "action": "more-info"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "TV",
+       "heading_style": "title"
+      },
+      {
+       "type": "media-control",
+       "entity": "media_player.65q750g"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Family Room",
+   "path": "family-room",
+   "subview": true,
+   "type": "sections",
+   "max_columns": 3,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Lights",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "light.family_room_fr_lights",
+       "name": "Overheads",
+       "icon": "mdi:ceiling-light-multiple",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "features": [
+        {
+         "type": "light-brightness"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.family_room_bookcase_family_room",
+       "name": "Bookcase",
+       "icon": "mdi:bookshelf",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.family_room_bookcase_lower_family_room",
+       "name": "Bookcase lower",
+       "icon": "mdi:bookshelf",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.family_room_globe_light_fr",
+       "name": "Globe light",
+       "icon": "mdi:lightbulb-outline",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.family_room_tall_lamp_family_room",
+       "name": "Tall lamp",
+       "icon": "mdi:floor-lamp-torchiere",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "switch.family_room_donut_lamp_family_room",
+       "name": "Donut lamp",
+       "icon": "mdi:lamp",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.family_room_family_room_stereo_console",
+       "name": "Stereo console",
+       "icon": "mdi:speaker",
+       "tap_action": {
+        "action": "toggle"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Music",
+       "heading_style": "title"
+      },
+      {
+       "type": "media-control",
+       "entity": "media_player.family_room_family_room_wiim"
+      },
+      {
+       "type": "media-control",
+       "entity": "media_player.family_room_family_room_homepod"
+      },
+      {
+       "type": "tile",
+       "entity": "switch.family_room_pioneer_sx_780",
+       "name": "Pioneer SX-780",
+       "icon": "mdi:audio-video",
+       "tap_action": {
+        "action": "toggle"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Room",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "binary_sensor.family_room_motion_sensor_family_room_motion",
+       "name": "Motion",
+       "icon": "mdi:motion-sensor",
+       "tap_action": {
+        "action": "none"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "sensor.family_room_motion_sensor_family_room_illuminance",
+       "name": "Light level",
+       "tap_action": {
+        "action": "more-info"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Kitchen",
+   "path": "kitchen",
+   "subview": true,
+   "type": "sections",
+   "max_columns": 3,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Lights",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "light.kitchen_coffee_station",
+       "name": "Coffee bar",
+       "icon": "mdi:coffee",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "features": [
+        {
+         "type": "light-brightness"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.kitchen_coffee_maker_lights",
+       "name": "Coffee maker",
+       "icon": "mdi:coffee-maker",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.kitchen_left_sconce_kitchen",
+       "name": "Left sconce",
+       "icon": "mdi:wall-sconce",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.kitchen_right_sconce_kitchen",
+       "name": "Right sconce",
+       "icon": "mdi:wall-sconce",
+       "tap_action": {
+        "action": "toggle"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Room",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "binary_sensor.kitchen_coffee_bar_motion_sensor_motion",
+       "name": "Motion",
+       "icon": "mdi:motion-sensor",
+       "tap_action": {
+        "action": "none"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "sensor.kitchen_coffee_bar_motion_sensor_illuminance",
+       "name": "Light level",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "todo-list",
+       "entity": "todo.shopping_list",
+       "title": "Shopping list",
+       "grid_options": {
+        "columns": "full",
+        "rows": 6
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Basement",
+   "path": "basement",
+   "subview": true,
+   "type": "sections",
+   "max_columns": 3,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Lights",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "light.basement_left_pot_lights_basement",
+       "name": "Left pot lights",
+       "icon": "mdi:ceiling-light",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "features": [
+        {
+         "type": "light-brightness"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.basement_right_pot_lights_basement",
+       "name": "Right pot lights",
+       "icon": "mdi:ceiling-light",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "features": [
+        {
+         "type": "light-brightness"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.basement_media_cabinet_lights_basement",
+       "name": "Media cabinet",
+       "icon": "mdi:television-shimmer",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.basement_stairwell_light_basement",
+       "name": "Stairwell",
+       "icon": "mdi:stairs",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "switch.basement_desk_lamp_basement",
+       "name": "Desk lamp",
+       "icon": "mdi:desk-lamp",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.desk_light_bars",
+       "name": "Desk light bars",
+       "icon": "mdi:led-strip",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "switch.basement_lava_lamp_basement",
+       "name": "Lava lamp",
+       "icon": "mdi:lava-lamp",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "switch.basement_fireplace_basement",
+       "name": "Fireplace",
+       "icon": "mdi:fireplace",
+       "tap_action": {
+        "action": "toggle"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Theater",
+       "heading_style": "title"
+      },
+      {
+       "type": "media-control",
+       "entity": "media_player.basement_receiver"
+      },
+      {
+       "type": "media-control",
+       "entity": "media_player.shield"
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Room",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "binary_sensor.basement_motion_sensor_basement_motion",
+       "name": "Motion",
+       "icon": "mdi:motion-sensor",
+       "tap_action": {
+        "action": "none"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "sensor.basement_humidity_sensor_basement_temperature",
+       "name": "Temperature",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "sensor.basement_humidity_sensor_basement_humidity",
+       "name": "Humidity",
+       "tap_action": {
+        "action": "more-info"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Primary",
+   "path": "primary",
+   "subview": true,
+   "type": "sections",
+   "max_columns": 3,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Lights",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "light.bed_lights_hue_bulb",
+       "name": "Bed lights",
+       "icon": "mdi:bed",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "features": [
+        {
+         "type": "light-brightness"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "switch.primary_salt_lamp_primary",
+       "name": "Salt lamp",
+       "icon": "mdi:lamp",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.primary_bathroom_night_light_primary",
+       "name": "Bath night light",
+       "icon": "mdi:lightbulb-night",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.primary_bathroom_lights",
+       "name": "Bathroom glow",
+       "icon": "mdi:led-strip-variant",
+       "tap_action": {
+        "action": "toggle"
+       },
+       "features": [
+        {
+         "type": "light-brightness"
+        }
+       ],
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Room",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "sensor.primary_humidity_sensor_primary_temperature",
+       "name": "Temperature",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "sensor.primary_humidity_sensor_primary_humidity",
+       "name": "Humidity",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "binary_sensor.primary_bathroom_night_light_primary_motion",
+       "name": "Bath motion",
+       "icon": "mdi:motion-sensor",
+       "tap_action": {
+        "action": "none"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "light.guest_room_night_light_guest_room",
+       "name": "Guest night light",
+       "icon": "mdi:lightbulb-night-outline",
+       "tap_action": {
+        "action": "toggle"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Outside",
+   "path": "outside",
+   "subview": true,
+   "type": "sections",
+   "max_columns": 3,
+   "sections": [
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Outside and garage",
+       "heading_style": "title"
+      },
+      {
+       "type": "tile",
+       "entity": "light.backyard_back_patio_light",
+       "name": "Patio light",
+       "icon": "mdi:outdoor-lamp",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "binary_sensor.garage_garage_door_contact",
+       "name": "Garage door",
+       "icon": "mdi:garage",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "switch.garage_garage_stereo",
+       "name": "Garage stereo",
+       "icon": "mdi:speaker",
+       "tap_action": {
+        "action": "toggle"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "binary_sensor.living_room_back_door_contact",
+       "name": "Back door",
+       "icon": "mdi:door",
+       "tap_action": {
+        "action": "more-info"
+       }
+      },
+      {
+       "type": "tile",
+       "entity": "sun.sun",
+       "name": "Sun",
+       "icon": "mdi:weather-sunset",
+       "state_content": [
+        "state",
+        "next_setting"
+       ],
+       "tap_action": {
+        "action": "more-info"
+       },
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    },
+    {
+     "type": "grid",
+     "cards": [
+      {
+       "type": "heading",
+       "heading": "Weather",
+       "heading_style": "title"
+      },
+      {
+       "type": "weather-forecast",
+       "entity": "weather.forecast_home",
+       "forecast_type": "hourly",
+       "show_current": true,
+       "show_forecast": true,
+       "grid_options": {
+        "columns": "full"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
