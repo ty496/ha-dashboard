@@ -1,15 +1,23 @@
-// Generates themes/show_glass.yaml: six "liquid glass" themes for the Show dashboard.
-// Each theme = a background (CSS gradient for now, image later) + a glass card family.
+// Generates themes/show_glass.yaml: "liquid glass" themes for the Show dashboard.
+// Each theme = a full-view background (photo under a readability scrim) + a glass card family.
+// Backgrounds live in www/bg (served by HA at /local/bg); see README for the delivery route.
 const fs = require('fs');
 
-const light = {
-  'ha-card-background': 'rgba(255, 255, 255, 0.55)',
-  'card-background-color': '#ffffff',
-  'ha-card-backdrop-filter': 'blur(24px) saturate(160%)',
+// Glass recipe (2026-10-27): clearer than the first pass, iOS-style. Low blur so the scene
+// shows through, a hairline top highlight, and a bright specular rim along the bottom edge
+// done with inset box-shadows (ha-card honours --ha-card-box-shadow and --ha-card-backdrop-filter).
+const glass = (bg, border, top, rim, glow, drop) => ({
+  'ha-card-background': bg,
+  'ha-card-backdrop-filter': 'blur(14px) saturate(150%)',
   'ha-card-border-width': '1px',
-  'ha-card-border-color': 'rgba(255, 255, 255, 0.75)',
+  'ha-card-border-color': border,
   'ha-card-border-radius': '24px',
-  'ha-card-box-shadow': '0 8px 32px rgba(31, 38, 135, 0.12)',
+  'ha-card-box-shadow': `inset 0 1px 0 ${top}, inset 0 -1px 0 ${rim}, inset 0 -10px 18px -14px ${glow}, 0 10px 30px ${drop}`,
+});
+
+const light = {
+  ...glass('rgba(255, 255, 255, 0.34)', 'rgba(255, 255, 255, 0.65)', 'rgba(255, 255, 255, 0.75)', 'rgba(255, 255, 255, 0.60)', 'rgba(255, 255, 255, 0.90)', 'rgba(31, 38, 135, 0.14)'),
+  'card-background-color': '#ffffff',
   'primary-text-color': '#1b2230',
   'secondary-text-color': '#4a5568',
   'disabled-text-color': '#94a0b2',
@@ -20,8 +28,8 @@ const light = {
   'state-icon-active-color': '#f5a623',
   'divider-color': 'rgba(0, 0, 0, 0.08)',
   'outline-color': 'rgba(0, 0, 0, 0.12)',
-  'secondary-background-color': 'rgba(255, 255, 255, 0.35)',
-  'app-header-background-color': 'rgba(255, 255, 255, 0.35)',
+  'secondary-background-color': 'rgba(255, 255, 255, 0.30)',
+  'app-header-background-color': 'rgba(255, 255, 255, 0.30)',
   'app-header-text-color': '#1b2230',
   'sidebar-background-color': 'rgba(255, 255, 255, 0.55)',
   'sidebar-text-color': '#4a5568',
@@ -37,13 +45,8 @@ const light = {
 };
 
 const dark = {
-  'ha-card-background': 'rgba(255, 255, 255, 0.10)',
+  ...glass('rgba(255, 255, 255, 0.12)', 'rgba(255, 255, 255, 0.28)', 'rgba(255, 255, 255, 0.22)', 'rgba(255, 255, 255, 0.30)', 'rgba(255, 255, 255, 0.50)', 'rgba(0, 0, 0, 0.30)'),
   'card-background-color': '#141a2b',
-  'ha-card-backdrop-filter': 'blur(24px) saturate(160%)',
-  'ha-card-border-width': '1px',
-  'ha-card-border-color': 'rgba(255, 255, 255, 0.18)',
-  'ha-card-border-radius': '24px',
-  'ha-card-box-shadow': '0 8px 32px rgba(0, 0, 0, 0.35)',
   'primary-text-color': '#f2f4f8',
   'secondary-text-color': '#b4bccb',
   'disabled-text-color': '#6c7786',
@@ -71,23 +74,24 @@ const dark = {
   'map-filter': 'invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)',
 };
 
-// Backgrounds. `lovelace-background` paints the whole view; the base colour sits behind the
-// gradients so the page is never white while fonts load.
+// Background set. "strip" = the comic-strip beagle scenes (chosen 2026-10-27); the alpine photos
+// (dawn.jpg ... night.jpg) are still in www/bg if the set is ever swapped back.
 const IMG = '/local/bg';
-const scrimLight = 'linear-gradient(rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.18))';
-const scrimDark  = 'linear-gradient(rgba(5, 8, 20, 0.22), rgba(5, 8, 20, 0.38))';
+const scrimLight = 'linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06))';
+const scrimDark  = 'linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26))';
 const photo = (file, scrim) => `${scrim}, url('${IMG}/${file}.jpg') center / cover no-repeat`;
 const themes = {
-  'Glass Dawn':   { base: light, bg: photo('dawn', scrimLight),  primary: '#e9d6cc' },
-  'Glass Day':    { base: light, bg: photo('day', scrimLight),   primary: '#3d86d6' },
-  'Glass Cloudy': { base: light, bg: photo('cloudy', scrimLight), primary: '#b7c0cb' },
-  'Glass Rain':   { base: dark,  bg: photo('rain', scrimDark),   primary: '#1b2533' },
-  'Glass Dusk':   { base: dark,  bg: photo('dusk', scrimDark),   primary: '#1a1d3a' },
-  'Glass Night':  { base: dark,  bg: photo('night', scrimDark),  primary: '#0b0d1c' },
+  'Glass Dawn':      { base: light, bg: photo('strip-dawn', scrimLight),      primary: '#f6c9b0' },
+  'Glass Day':       { base: light, bg: photo('strip-day', scrimLight),       primary: '#8ec5ea' },
+  'Glass Cloudy':    { base: light, bg: photo('strip-cloudy', scrimLight),    primary: '#b9bcc0' },
+  'Glass Rain':      { base: dark,  bg: photo('strip-rain', scrimDark),       primary: '#4a5a6e' },
+  'Glass Dusk':      { base: dark,  bg: photo('strip-dusk', scrimDark),       primary: '#5a4a66' },
+  'Glass Night':     { base: dark,  bg: photo('strip-night', scrimDark),      primary: '#12213a' },
+  'Glass Halloween': { base: dark,  bg: photo('strip-halloween', scrimDark),  primary: '#1a2d4e' },
 };
 
 let out = '# Liquid-glass themes for the Show dashboard. GENERATED by build_glass.js, edit that.\n' +
-          '# Backgrounds are photos in /config/www/bg (served at /local/bg), see README.\n' +
+          '# Backgrounds are images in /config/www/bg (served at /local/bg), see README.\n' +
           '# Picked by the "Show glass follows the sky" automation from sun elevation + weather.\n\n';
 for (const [name, t] of Object.entries(themes)) {
   out += `${name}:\n`;
