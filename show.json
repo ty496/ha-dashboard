@@ -342,6 +342,13 @@
               "grid_options": {
                 "columns": "full"
               }
+            },
+            {
+              "type": "custom:teamtracker-card",
+              "entity": "sensor.broncos",
+              "grid_options": {
+                "columns": "full"
+              }
             }
           ]
         },
@@ -547,6 +554,13 @@
                   "state": "on"
                 }
               ]
+            },
+            {
+              "type": "custom:teamtracker-card",
+              "entity": "sensor.duke",
+              "grid_options": {
+                "columns": "full"
+              }
             }
           ]
         }
