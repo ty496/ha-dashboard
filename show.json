@@ -303,22 +303,44 @@
               "heading_style": "subtitle"
             },
             {
-              "type": "calendar",
-              "initial_view": "listWeek",
+              "type": "custom:atomic-calendar-revive",
+              "name": "This week",
               "entities": [
-                "calendar.ty_mercer90_gmail_com",
-                "calendar.family",
-                "calendar.birthdays",
-                "calendar.household"
-              ],
-              "grid_options": {
-                "columns": "full",
-                "rows": 5
-              },
-              "card_mod": {
-                "style": {
-                  "ha-full-calendar$": ".fc, .fc-view-harness, .fc-list, .fc-list-empty, .fc-scrollgrid, .fc-list-day-cushion { background: transparent !important; } .fc { --fc-neutral-bg-color: transparent; --fc-page-bg-color: transparent; }"
+                {
+                  "entity": "calendar.ty_mercer90_gmail_com",
+                  "color": "#7cc4ff"
+                },
+                {
+                  "entity": "calendar.family",
+                  "color": "#ffb070"
+                },
+                {
+                  "entity": "calendar.birthdays",
+                  "color": "#f78fb3"
+                },
+                {
+                  "entity": "calendar.household",
+                  "color": "#9be7a5"
                 }
+              ],
+              "defaultMode": "Event",
+              "maxDaysToShow": 7,
+              "showDate": true,
+              "showWeekNumber": false,
+              "showLocation": false,
+              "showDescription": false,
+              "hideFinishedEvents": true,
+              "showProgressBar": true,
+              "showNoEventsForToday": true,
+              "noEventsForTodayText": "Nothing on today",
+              "showNoEventsText": "Nothing this week",
+              "hoursFormat": "12h",
+              "showAllDayEvents": true,
+              "disableEventLink": true,
+              "disableCalEventLink": true,
+              "disableCalLink": true,
+              "grid_options": {
+                "columns": "full"
               }
             }
           ]
