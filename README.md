@@ -64,3 +64,18 @@ await h.callService('automation','trigger',{entity_id:'automation.show_glass_fol
 ```
 
 Open browsers need a reload to pick up a theme change. Kiosk Mode (HACS) is installed: `/dashboard-show/home?kiosk` hides header and sidebar.
+
+### Backgrounds and the repo route (2026-10-26)
+
+`www/bg/*.jpg` are the six sky photos (1920x1200). This folder is published as the public repo `ty496/ha-dashboard`, and HA pulls files from it with the Downloader integration, which is simpler than the gist for binaries:
+
+```js
+const base = 'https://raw.githubusercontent.com/ty496/ha-dashboard/main/';
+for (const n of ['dawn','day','cloudy','rain','dusk','night'])
+  await h.callService('downloader','download_file',{url: base+'www/bg/'+n+'.jpg', subdir:'www/bg', filename:n+'.jpg', overwrite:true});
+await h.callService('downloader','download_file',{url: base+'themes/show_glass.yaml', subdir:'themes', filename:'show_glass.yaml', overwrite:true});
+```
+
+Push first (`git push`), then run the snippet. If `/local/bg/<name>.jpg` 404s after the first ever download, restart HA core: `/config/www` must exist at boot for `/local/` to be served.
+
+Known gap: the calendar card paints its inner `.fc` divs with `--ha-card-background`, so translucent glass stacks into a pale panel. Needs card-mod (HACS).
