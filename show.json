@@ -292,7 +292,9 @@
                 "rows": 5
               },
               "card_mod": {
-                "style": ".fc, .fc-list, .fc-list-empty, .fc-scrollgrid { background: transparent !important; } :host { --fc-neutral-bg-color: transparent; --fc-page-bg-color: transparent; }"
+                "style": {
+                  "ha-full-calendar$": ".fc, .fc-view-harness, .fc-list, .fc-list-empty, .fc-scrollgrid, .fc-list-day-cushion { background: transparent !important; } .fc { --fc-neutral-bg-color: transparent; --fc-page-bg-color: transparent; }"
+                }
               }
             }
           ]
