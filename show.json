@@ -322,7 +322,8 @@
               "entities": [
                 {
                   "entity": "calendar.home",
-                  "color": "#2e7d32"
+                  "color": "#2e7d32",
+                  "blocklist": "^(Trash day!|Recycling day!)$"
                 },
                 {
                   "entity": "calendar.personal",
@@ -364,8 +365,7 @@
               "grid_options": {
                 "columns": "full"
               },
-              "hideDuplicates": true,
-              "blocklist": "^(Trash day!|Recycling day!)$"
+              "hideDuplicates": true
             },
             {
               "type": "custom:teamtracker-card",
