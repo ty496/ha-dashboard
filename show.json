@@ -363,7 +363,8 @@
               "disableCalLink": true,
               "grid_options": {
                 "columns": "full"
-              }
+              },
+              "hideDuplicates": true
             },
             {
               "type": "custom:teamtracker-card",
