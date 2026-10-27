@@ -79,10 +79,13 @@ const dark = {
 const IMG = '/local/bg';
 const scrimLight = 'linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06))';
 const scrimDark  = 'linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26))';
-// Sized by width and anchored at the bottom, with the scene's own sky colour (sampled from the
-// top edge of the image) filling anything above it. On the 16:10 Show that is exactly cover; on a
-// phone in portrait the street sits at the bottom and the sky continues up, instead of a 3x crop.
-const photo = (file, scrim, sky) => `${scrim}, url('${IMG}/${file}.jpg') center bottom / 100% auto no-repeat, ${sky}`;
+// Sized by width, with the scene's own sky colour (sampled from the top edge of the image) filling
+// anything above or below it. The vertical offset centres the image in the first screen: the image
+// is 100vw wide and 1.6:1, so its centre lands at 50vh when its top sits at 50vh - 31.25vw. On the
+// 16:10 Show that is 0, i.e. exactly cover. On a portrait phone the scene starts centred and, since
+// HA's view background is position: absolute inside the scrolling view, it scrolls away with the
+// cards (1:1, the closest CSS alone gets to parallax) with sky colour above and below.
+const photo = (file, scrim, sky) => `${scrim}, url('${IMG}/${file}.jpg') center calc(50vh - 31.25vw) / 100% auto no-repeat, ${sky}`;
 const sky = { dawn: '#fcc6b2', day: '#96d3f0', cloudy: '#b8b8ba', rain: '#617b8e', dusk: '#80647a', night: '#132e48', halloween: '#2b4b73' };
 const themes = {
   'Glass Dawn':      { base: light, bg: photo('strip-dawn', scrimLight, sky.dawn),          primary: sky.dawn },
