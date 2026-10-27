@@ -554,13 +554,6 @@
                   "state": "on"
                 }
               ]
-            },
-            {
-              "type": "custom:teamtracker-card",
-              "entity": "sensor.duke",
-              "grid_options": {
-                "columns": "full"
-              }
             }
           ]
         }

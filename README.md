@@ -4,7 +4,7 @@ Home Assistant wall dashboard for the Echo Show 8 (2nd gen, 1280x800).
 
 - `show.json` is the source of truth (pretty-printed). `show.min.json` is the same thing minified for pasting.
 - Live copy: HA storage dashboard `/dashboard-show` ("Show"). Views: `home` plus subviews `living-room`, `family-room`, `kitchen`, `basement`, `primary`, `outside`.
-- HACS cards in use: Kiosk Mode (open `/dashboard-show/home?kiosk` on the Show), card-mod, mini-media-player, Atomic Calendar Revive (the home-screen calendar, agenda mode), Team Tracker integration + card (`sensor.broncos` NFL, `sensor.duke` NCAA men's basketball). Everything else is native HA 2026.10.
+- HACS cards in use: Kiosk Mode (open `/dashboard-show/home?kiosk` on the Show), card-mod, mini-media-player, Atomic Calendar Revive (the home-screen calendar, agenda mode), Team Tracker integration + card (`sensor.broncos`, NFL). Everything else is native HA 2026.10.
 
 ## Deploy
 
