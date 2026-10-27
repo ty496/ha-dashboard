@@ -95,3 +95,14 @@ Gotcha: `raw.githubusercontent.com` caches for 5 minutes per edge, and HA's edge
 ### Sky tiles (2026-10-27)
 
 On a phone the scene sits at the bottom of the scrolling view and the sky colour fills the rest, so transparent tiles repeat above it: `www/bg/stars.png` (night, Halloween), `stars-dusk.png` (dusk), `rain.png` (rain). Drawn by `www/bg/make_tiles.ps1` in the strip's flat style; day skies stay plain. The tile layer sits under the image in the `lovelace-background` stack, so it never shows on the Show where the image covers the screen.
+
+### Holiday schedule (2026-10-27)
+
+Three more scenes and themes: `strip-thanksgiving.jpg` (Glass Thanksgiving, light), `strip-christmas.jpg` (Glass Christmas, dark, snow tile) and `strip-christmas-day.jpg` (Glass Christmas Day, light, snow tile; the first cast render, Ty's pick). The automation template decides, in this order:
+
+1. Night (elevation < -6): Halloween Oct 24-31, Christmas all of December, otherwise Night.
+2. Dec 25 daytime: Christmas Day.
+3. Thanksgiving week daytime (Monday to Sunday around the 4th Thursday; `tg = 22 + ((3 - nov1.weekday()) % 7)`): Thanksgiving.
+4. Otherwise Dawn/Dusk/Rain/Cloudy/Day as before.
+
+Dry-run any date with HA's `render_template` by substituting `now()` with `as_datetime('YYYY-MM-DD HH:MM:SS')` and the elevation with a number; that was done for 2026 and the windows check out.
