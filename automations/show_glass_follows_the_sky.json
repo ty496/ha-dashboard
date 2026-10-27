@@ -1,6 +1,6 @@
 {
   "alias": "Show glass follows the sky",
-  "description": "Picks one of the Glass themes for the Show dashboard from sun elevation and the current weather; Glass Halloween replaces Night from Oct 24 to 31.",
+  "description": "Picks a Glass theme for the Show dashboard from sun elevation and weather. Holidays: Halloween nights Oct 24-31, the snowy Christmas scene on December nights, Christmas Day daytime on Dec 25, Thanksgiving daytime from the Monday to the Sunday of Thanksgiving week.",
   "mode": "restart",
   "triggers": [
     {
@@ -25,7 +25,7 @@
     {
       "action": "frontend.set_theme",
       "data": {
-        "name": "{% set el = state_attr('sun.sun','elevation')|float(0) %}{% set rising = state_attr('sun.sun','rising') %}{% set w = states('weather.forecast_home') %}{% set hw = now().month == 10 and now().day >= 24 %}{% if el < -6 %}{{ 'Glass Halloween' if hw else 'Glass Night' }}{% elif el < 8 %}{{ 'Glass Dawn' if rising else 'Glass Dusk' }}{% elif w in ['rainy','pouring','lightning','lightning-rainy','hail','snowy','snowy-rainy'] %}Glass Rain{% elif w in ['cloudy','fog','windy','windy-variant','exceptional'] %}Glass Cloudy{% else %}Glass Day{% endif %}"
+        "name": "{% set el = state_attr('sun.sun','elevation')|float(0) %}{% set rising = state_attr('sun.sun','rising') %}{% set w = states('weather.forecast_home') %}{% set n = now() %}{% set tg = 22 + ((3 - n.replace(month=11, day=1).weekday()) % 7) %}{% set thanks = n.month == 11 and n.day >= tg - 3 and n.day <= tg + 3 %}{% set hallow = n.month == 10 and n.day >= 24 %}{% set december = n.month == 12 %}{% set xmas_day = december and n.day == 25 %}{% if el < -6 %}{{ 'Glass Halloween' if hallow else ('Glass Christmas' if december else 'Glass Night') }}{% elif xmas_day %}Glass Christmas Day{% elif thanks %}Glass Thanksgiving{% elif el < 8 %}{{ 'Glass Dawn' if rising else 'Glass Dusk' }}{% elif w in ['rainy','pouring','lightning','lightning-rainy','hail','snowy','snowy-rainy'] %}Glass Rain{% elif w in ['cloudy','fog','windy','windy-variant','exceptional'] %}Glass Cloudy{% else %}Glass Day{% endif %}"
       }
     }
   ]

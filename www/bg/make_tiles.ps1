@@ -69,4 +69,13 @@ for ($n = 0; $n -lt 34; $n++) {
 }
 $bmp.Save("$dir\rain.png", [System.Drawing.Imaging.ImageFormat]::Png); $g.Dispose(); $bmp.Dispose()
 
+# snow.png (christmas scenes: plain white dots of falling snow, like the strip)
+$t = New-Tile 600; $bmp = $t[0]; $g = $t[1]
+$white = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255, 255, 255, 255))
+for ($n = 0; $n -lt 26; $n++) {
+  $x = $rand.Next(10, 590); $y = $rand.Next(10, 590); $d = $rand.Next(7, 13)
+  $g.FillEllipse($white, [float]$x, [float]$y, [float]$d, [float]$d)
+}
+$bmp.Save("$dir\snow.png", [System.Drawing.Imaging.ImageFormat]::Png); $g.Dispose(); $bmp.Dispose()
+
 Get-ChildItem $dir -Filter *.png | Select-Object Name, Length
