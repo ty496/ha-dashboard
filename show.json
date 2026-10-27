@@ -321,20 +321,24 @@
               "name": "This week",
               "entities": [
                 {
-                  "entity": "calendar.ty_mercer90_gmail_com",
-                  "color": "#7cc4ff"
+                  "entity": "calendar.home",
+                  "color": "#9be7a5"
                 },
                 {
-                  "entity": "calendar.family",
+                  "entity": "calendar.olive",
+                  "color": "#f78fb3"
+                },
+                {
+                  "entity": "calendar.travel",
                   "color": "#ffb070"
                 },
                 {
                   "entity": "calendar.birthdays",
-                  "color": "#f78fb3"
+                  "color": "#c9a7ff"
                 },
                 {
-                  "entity": "calendar.household",
-                  "color": "#9be7a5"
+                  "entity": "calendar.ty_mercer90_gmail_com",
+                  "color": "#7cc4ff"
                 }
               ],
               "defaultMode": "Event",
