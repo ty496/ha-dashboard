@@ -91,3 +91,7 @@ Glass recipe lives in `glass()` at the top of `build_glass.js`: `blur(14px) satu
 Backgrounds are `center calc(50vh - 31.25vw) / 100% auto` with the scene's sky colour (sampled from the image's top edge) as the final layer. The image is 1.6:1 and 100vw wide, so that offset centres it in the first screen; on the 16:10 Show it is 0, i.e. plain `cover`. HA's view background is `position: absolute` inside the scrolling view, so on a phone the scene starts centred and scrolls away with the cards (1:1; real parallax would need card-mod on hui-root).
 
 Gotcha: `raw.githubusercontent.com` caches for 5 minutes per edge, and HA's edge can lag yours. When a re-download brings back the old file, use the commit URL instead: `https://raw.githubusercontent.com/ty496/ha-dashboard/<sha>/themes/show_glass.yaml`.
+
+### Sky tiles (2026-10-27)
+
+On a phone the scene sits at the bottom of the scrolling view and the sky colour fills the rest, so transparent tiles repeat above it: `www/bg/stars.png` (night, Halloween), `stars-dusk.png` (dusk), `rain.png` (rain). Drawn by `www/bg/make_tiles.ps1` in the strip's flat style; day skies stay plain. The tile layer sits under the image in the `lovelace-background` stack, so it never shows on the Show where the image covers the screen.
