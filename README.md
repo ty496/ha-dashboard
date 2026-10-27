@@ -79,3 +79,9 @@ await h.callService('downloader','download_file',{url: base+'themes/show_glass.y
 Push first (`git push`), then run the snippet. If `/local/bg/<name>.jpg` 404s after the first ever download, restart HA core: `/config/www` must exist at boot for `/local/` to be served.
 
 Known gap: the calendar card paints its inner `.fc` divs with `--ha-card-background`, so translucent glass stacks into a pale panel. Needs card-mod (HACS).
+
+### Comic-strip set and the glass recipe (2026-10-27)
+
+Backgrounds are now the seven comic-strip beagle scenes `www/bg/strip-{dawn,day,cloudy,rain,dusk,night,halloween}.jpg` (Nano Banana, all edited from one base render so the street stays put). The alpine photos remain in `www/bg` unused. `Glass Halloween` takes the night slot from Oct 24 to 31 (template in the automation checks `now().month == 10 and now().day >= 24`).
+
+Glass recipe lives in `glass()` at the top of `build_glass.js`: `blur(14px) saturate(150%)`, fill 0.12 (dark) / 0.34 (light) white, 1px border, and the box-shadow stack `inset 0 1px 0` (top hairline), `inset 0 -1px 0` (bottom rim), `inset 0 -10px 18px -14px` (bottom specular glow), plus the drop shadow. Tune those four numbers, rebuild, push, re-download, `frontend.reload_themes`.
