@@ -368,10 +368,20 @@
               "hideDuplicates": true
             },
             {
-              "type": "custom:teamtracker-card",
-              "entity": "sensor.broncos",
-              "grid_options": {
-                "columns": "full"
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sensor.broncos",
+                  "state": "IN"
+                }
+              ],
+              "card": {
+                "type": "custom:teamtracker-card",
+                "entity": "sensor.broncos",
+                "grid_options": {
+                  "columns": "full"
+                }
               }
             }
           ]
