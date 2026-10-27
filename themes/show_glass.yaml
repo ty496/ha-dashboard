@@ -108,7 +108,7 @@ Glass Cloudy:
   input-label-ink-color: "#4a5568"
 
 Glass Rain:
-  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-rain.jpg') center bottom / 100% auto no-repeat, #617b8e"
+  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-rain.jpg') center bottom / 100% auto no-repeat, url('/local/bg/rain.png') center top / 300px auto repeat, #617b8e"
   primary-background-color: "#617b8e"
   ha-card-background: "rgba(255, 255, 255, 0.12)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -144,7 +144,7 @@ Glass Rain:
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Dusk:
-  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-dusk.jpg') center bottom / 100% auto no-repeat, #80647a"
+  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-dusk.jpg') center bottom / 100% auto no-repeat, url('/local/bg/stars-dusk.png') center top / 360px auto repeat, #80647a"
   primary-background-color: "#80647a"
   ha-card-background: "rgba(255, 255, 255, 0.12)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -180,7 +180,7 @@ Glass Dusk:
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Night:
-  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-night.jpg') center bottom / 100% auto no-repeat, #132e48"
+  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-night.jpg') center bottom / 100% auto no-repeat, url('/local/bg/stars.png') center top / 360px auto repeat, #132e48"
   primary-background-color: "#132e48"
   ha-card-background: "rgba(255, 255, 255, 0.12)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -216,7 +216,7 @@ Glass Night:
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Halloween:
-  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-halloween.jpg') center bottom / 100% auto no-repeat, #2b4b73"
+  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-halloween.jpg') center bottom / 100% auto no-repeat, url('/local/bg/stars.png') center top / 360px auto repeat, #2b4b73"
   primary-background-color: "#2b4b73"
   ha-card-background: "rgba(255, 255, 255, 0.12)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
