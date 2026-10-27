@@ -124,19 +124,61 @@
               }
             },
             {
-              "type": "tile",
-              "entity": "sun.sun",
-              "name": "Sunset",
-              "icon": "mdi:weather-sunset",
-              "state_content": [
-                "next_setting"
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sun.sun",
+                  "state": "above_horizon"
+                }
               ],
-              "color": "amber",
-              "tap_action": {
-                "action": "none"
-              },
               "grid_options": {
                 "columns": "full"
+              },
+              "card": {
+                "type": "tile",
+                "entity": "sun.sun",
+                "name": "Sunset",
+                "icon": "mdi:weather-sunset-down",
+                "state_content": [
+                  "next_setting"
+                ],
+                "color": "amber",
+                "tap_action": {
+                  "action": "none"
+                },
+                "grid_options": {
+                  "columns": "full"
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sun.sun",
+                  "state": "below_horizon"
+                }
+              ],
+              "grid_options": {
+                "columns": "full"
+              },
+              "card": {
+                "type": "tile",
+                "entity": "sun.sun",
+                "name": "Sunrise",
+                "icon": "mdi:weather-sunset-up",
+                "state_content": [
+                  "next_rising"
+                ],
+                "color": "orange",
+                "tap_action": {
+                  "action": "none"
+                },
+                "grid_options": {
+                  "columns": "full"
+                }
               }
             }
           ]
@@ -1188,19 +1230,61 @@
               }
             },
             {
-              "type": "tile",
-              "entity": "sun.sun",
-              "name": "Sun",
-              "icon": "mdi:weather-sunset",
-              "state_content": [
-                "state",
-                "next_setting"
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sun.sun",
+                  "state": "above_horizon"
+                }
               ],
-              "tap_action": {
-                "action": "more-info"
-              },
               "grid_options": {
                 "columns": "full"
+              },
+              "card": {
+                "type": "tile",
+                "entity": "sun.sun",
+                "name": "Sunset",
+                "icon": "mdi:weather-sunset-down",
+                "state_content": [
+                  "next_setting"
+                ],
+                "color": "amber",
+                "tap_action": {
+                  "action": "more-info"
+                },
+                "grid_options": {
+                  "columns": "full"
+                }
+              }
+            },
+            {
+              "type": "conditional",
+              "conditions": [
+                {
+                  "condition": "state",
+                  "entity": "sun.sun",
+                  "state": "below_horizon"
+                }
+              ],
+              "grid_options": {
+                "columns": "full"
+              },
+              "card": {
+                "type": "tile",
+                "entity": "sun.sun",
+                "name": "Sunrise",
+                "icon": "mdi:weather-sunset-up",
+                "state_content": [
+                  "next_rising"
+                ],
+                "color": "orange",
+                "tap_action": {
+                  "action": "more-info"
+                },
+                "grid_options": {
+                  "columns": "full"
+                }
               }
             }
           ]
