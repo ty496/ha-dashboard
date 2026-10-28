@@ -87,10 +87,14 @@ const scrimDark  = 'linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26))'
 // cards (1:1, the closest CSS alone gets to parallax) with sky colour above and below.
 // 2026-10-27: the centred offset (center calc(50vh - 31.25vw)) read as "stuck" on Ty's iPhone, so
 // the scene is anchored to the bottom of the view again, which he preferred.
+// 2026-10-27 (evening): the word "fixed" in the string makes HA's hui-view-background switch to
+// position: fixed (it checks for the token and applies its own Safari-iOS hack), so on the phone the
+// scene now stays still at the bottom of the viewport while the buttons scroll over it. No change on
+// the Show, where the image already covered the screen exactly.
 // Above the image (only visible on tall viewports) a transparent tile repeats so the sky keeps
 // going: stars for night/halloween, a few pale stars for dusk, rain lines for rain. Tiles are
 // drawn by www/bg/make_tiles.ps1 in the strip's flat style. Day skies stay plain.
-const photo = (file, scrim, sky, tile) => `${scrim}, url('${IMG}/${file}.jpg') center bottom / 100% auto no-repeat` +
+const photo = (file, scrim, sky, tile) => `${scrim}, url('${IMG}/${file}.jpg') center bottom / 100% auto no-repeat fixed` +
   (tile ? `, url('${IMG}/${tile.file}') center top / ${tile.size} auto repeat` : '') + `, ${sky}`;
 const sky = { dawn: '#fcc6b2', day: '#96d3f0', cloudy: '#b8b8ba', rain: '#617b8e', dusk: '#80647a', night: '#132e48', halloween: '#2b4b73',
   thanksgiving: '#efad56', christmas: '#37608f', christmasDay: '#aed6e5' };
