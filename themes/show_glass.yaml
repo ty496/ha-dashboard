@@ -3,7 +3,7 @@
 # Picked by the "Show glass follows the sky" automation from sun elevation + weather.
 
 Glass Dawn:
-  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-dawn.jpg') center bottom / 100% auto no-repeat fixed, #fcc6b2"
+  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-dawn.jpg') center bottom / 100% auto fixed no-repeat, #fcc6b2"
   primary-background-color: "#fcc6b2"
   ha-card-background: "rgba(255, 255, 255, 0.34)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -38,7 +38,7 @@ Glass Dawn:
   input-label-ink-color: "#4a5568"
 
 Glass Day:
-  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-day.jpg') center bottom / 100% auto no-repeat fixed, #96d3f0"
+  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-day.jpg') center bottom / 100% auto fixed no-repeat, #96d3f0"
   primary-background-color: "#96d3f0"
   ha-card-background: "rgba(255, 255, 255, 0.34)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -73,7 +73,7 @@ Glass Day:
   input-label-ink-color: "#4a5568"
 
 Glass Cloudy:
-  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-cloudy.jpg') center bottom / 100% auto no-repeat fixed, #b8b8ba"
+  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-cloudy.jpg') center bottom / 100% auto fixed no-repeat, #b8b8ba"
   primary-background-color: "#b8b8ba"
   ha-card-background: "rgba(255, 255, 255, 0.34)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -108,7 +108,7 @@ Glass Cloudy:
   input-label-ink-color: "#4a5568"
 
 Glass Rain:
-  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-rain.jpg') center bottom / 100% auto no-repeat fixed, url('/local/bg/rain.png') center top / 300px auto repeat, #617b8e"
+  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-rain.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/rain.png') center top / 300px auto repeat, #617b8e"
   primary-background-color: "#617b8e"
   ha-card-background: "rgba(255, 255, 255, 0.12)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -144,7 +144,7 @@ Glass Rain:
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Dusk:
-  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-dusk.jpg') center bottom / 100% auto no-repeat fixed, url('/local/bg/stars-dusk.png') center top / 360px auto repeat, #80647a"
+  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-dusk.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/stars-dusk.png') center top / 360px auto repeat, #80647a"
   primary-background-color: "#80647a"
   ha-card-background: "rgba(255, 255, 255, 0.12)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -180,7 +180,7 @@ Glass Dusk:
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Night:
-  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-night.jpg') center bottom / 100% auto no-repeat fixed, url('/local/bg/stars.png') center top / 360px auto repeat, #132e48"
+  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-night.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/stars.png') center top / 360px auto repeat, #132e48"
   primary-background-color: "#132e48"
   ha-card-background: "rgba(255, 255, 255, 0.12)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -216,7 +216,7 @@ Glass Night:
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Halloween:
-  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-halloween.jpg') center bottom / 100% auto no-repeat fixed, url('/local/bg/stars.png') center top / 360px auto repeat, #2b4b73"
+  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-halloween.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/stars.png') center top / 360px auto repeat, #2b4b73"
   primary-background-color: "#2b4b73"
   ha-card-background: "rgba(255, 255, 255, 0.12)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -252,7 +252,7 @@ Glass Halloween:
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Thanksgiving:
-  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-thanksgiving.jpg') center bottom / 100% auto no-repeat fixed, #efad56"
+  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-thanksgiving.jpg') center bottom / 100% auto fixed no-repeat, #efad56"
   primary-background-color: "#efad56"
   ha-card-background: "rgba(255, 255, 255, 0.34)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -287,7 +287,7 @@ Glass Thanksgiving:
   input-label-ink-color: "#4a5568"
 
 Glass Christmas:
-  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-christmas.jpg') center bottom / 100% auto no-repeat fixed, url('/local/bg/snow.png') center top / 300px auto repeat, #37608f"
+  lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-christmas.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/snow.png') center top / 300px auto repeat, #37608f"
   primary-background-color: "#37608f"
   ha-card-background: "rgba(255, 255, 255, 0.12)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
@@ -323,7 +323,7 @@ Glass Christmas:
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Christmas Day:
-  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-christmas-day.jpg') center bottom / 100% auto no-repeat fixed, url('/local/bg/snow.png') center top / 300px auto repeat, #aed6e5"
+  lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-christmas-day.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/snow.png') center top / 300px auto repeat, #aed6e5"
   primary-background-color: "#aed6e5"
   ha-card-background: "rgba(255, 255, 255, 0.34)"
   ha-card-backdrop-filter: "blur(14px) saturate(150%)"
