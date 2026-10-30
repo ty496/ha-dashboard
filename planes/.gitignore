@@ -1,0 +1,8 @@
+# Masters and working files stay local (about 145 MB): 2K generations, cutouts, Commons reference photos.
+# Only the 1600px WebP copies in ../www/planes are meant for the repo and HA.
+__pycache__/
+art/gen/
+art/cut/
+refs/
+out/_*
+out/qa-*
