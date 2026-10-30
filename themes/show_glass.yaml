@@ -51,6 +51,7 @@ Glass Dawn:
   bubble-horizontal-buttons-stack-background-color: "rgba(255, 255, 255, 0.70)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
 
 Glass Day:
   lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-day.jpg') center bottom / 100% auto fixed no-repeat, #96d3f0"
@@ -101,6 +102,7 @@ Glass Day:
   bubble-horizontal-buttons-stack-background-color: "rgba(255, 255, 255, 0.70)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
 
 Glass Cloudy:
   lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-cloudy.jpg') center bottom / 100% auto fixed no-repeat, #b8b8ba"
@@ -151,6 +153,7 @@ Glass Cloudy:
   bubble-horizontal-buttons-stack-background-color: "rgba(255, 255, 255, 0.70)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
 
 Glass Rain:
   lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-rain.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/rain.png') center top / 300px auto repeat, #617b8e"
@@ -201,6 +204,7 @@ Glass Rain:
   bubble-horizontal-buttons-stack-background-color: "rgba(20, 26, 43, 0.72)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Dusk:
@@ -252,6 +256,7 @@ Glass Dusk:
   bubble-horizontal-buttons-stack-background-color: "rgba(20, 26, 43, 0.72)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Night:
@@ -303,6 +308,7 @@ Glass Night:
   bubble-horizontal-buttons-stack-background-color: "rgba(20, 26, 43, 0.72)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Halloween:
@@ -354,6 +360,7 @@ Glass Halloween:
   bubble-horizontal-buttons-stack-background-color: "rgba(20, 26, 43, 0.72)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Thanksgiving:
@@ -405,6 +412,7 @@ Glass Thanksgiving:
   bubble-horizontal-buttons-stack-background-color: "rgba(255, 255, 255, 0.70)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
 
 Glass Christmas:
   lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-christmas.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/snow.png') center top / 300px auto repeat, #37608f"
@@ -455,6 +463,7 @@ Glass Christmas:
   bubble-horizontal-buttons-stack-background-color: "rgba(20, 26, 43, 0.72)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Christmas Day:
@@ -506,4 +515,5 @@ Glass Christmas Day:
   bubble-horizontal-buttons-stack-background-color: "rgba(255, 255, 255, 0.70)"
   bubble-border-radius: "24px"
   bubble-pop-up-border-radius: "28px"
+  ha-view-sections-column-max-width: "620px"
 

@@ -61,6 +61,8 @@ const light = {
   'bubble-horizontal-buttons-stack-background-color': 'rgba(255, 255, 255, 0.70)',
   'bubble-border-radius': '24px',
   'bubble-pop-up-border-radius': '28px',
+  // Sections view caps a column at 500px; at the Show's 1280px two columns then leave 100px margins.
+  'ha-view-sections-column-max-width': '620px',
 };
 
 const dark = {
@@ -105,6 +107,8 @@ const dark = {
   'bubble-horizontal-buttons-stack-background-color': 'rgba(20, 26, 43, 0.72)',
   'bubble-border-radius': '24px',
   'bubble-pop-up-border-radius': '28px',
+  // Sections view caps a column at 500px; at the Show's 1280px two columns then leave 100px margins.
+  'ha-view-sections-column-max-width': '620px',
   'map-filter': 'invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)',
 };
 
