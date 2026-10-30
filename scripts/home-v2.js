@@ -1,6 +1,6 @@
 // Rewrites the Show dashboard's home view (2026-10-30): the screen is clock, weather, calendar and
 // live events; the smart controls move into Bubble Card pop-ups opened from a bottom button bar.
-// Run: node scripts/home-v2.js   (writes show.json + show.min.json; deploy with lovelace/config/save)
+// One-shot: run once against the pre-2026-10-30 show.json (it picks the old cards by name). Kept for the record.
 const fs = require('fs');
 const path = require('path');
 const file = path.join(__dirname, '..', 'show.json');

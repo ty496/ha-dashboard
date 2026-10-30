@@ -732,7 +732,8 @@
               "2_link": "#rooms",
               "3_name": "Scores",
               "3_icon": "mdi:scoreboard-outline",
-              "3_link": "#scores"
+              "3_link": "#scores",
+              "hide_gradient": true
             }
           ]
         }
