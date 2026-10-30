@@ -162,210 +162,27 @@
               "grid_options": {
                 "columns": 4
               }
-            },
-            {
-              "type": "button",
-              "name": "Scores",
-              "icon": "mdi:scoreboard-outline",
-              "show_state": false,
-              "tap_action": {
-                "action": "navigate",
-                "navigation_path": "/dashboard-show/sports"
-              },
-              "grid_options": {
-                "columns": "full",
-                "rows": 1
-              }
             }
           ]
         },
         {
           "type": "grid",
-          "column_span": 1,
+          "column_span": 2,
           "cards": [
             {
-              "type": "heading",
-              "heading": "Quick actions",
-              "heading_style": "subtitle"
-            },
-            {
-              "type": "button",
-              "name": "Everything off",
-              "icon": "mdi:power",
-              "icon_height": "44px",
-              "show_state": false,
-              "tap_action": {
-                "action": "perform-action",
-                "perform_action": "homeassistant.turn_off",
-                "target": {
-                  "entity_id": [
-                    "light.basement_left_pot_lights_basement",
-                    "light.basement_right_pot_lights_basement",
-                    "switch.basement_desk_lamp_basement",
-                    "light.desk_light_bars",
-                    "light.basement_media_cabinet_lights_basement",
-                    "switch.basement_lava_lamp_basement",
-                    "light.basement_stairwell_light_basement",
-                    "light.family_room_bookcase_family_room",
-                    "light.family_room_bookcase_lower_family_room",
-                    "light.family_room_fr_lights",
-                    "light.family_room_globe_light_fr",
-                    "light.family_room_tall_lamp_family_room",
-                    "switch.family_room_donut_lamp_family_room",
-                    "light.kitchen_coffee_station",
-                    "light.kitchen_coffee_maker_lights",
-                    "light.kitchen_left_sconce_kitchen",
-                    "light.kitchen_right_sconce_kitchen",
-                    "switch.living_room_globe_lamp_living_room",
-                    "switch.living_room_lamp_living_room",
-                    "light.tv_backlight",
-                    "light.bed_lights_hue_bulb",
-                    "switch.primary_salt_lamp_primary",
-                    "light.backyard_back_patio_light"
-                  ]
-                }
-              },
-              "grid_options": {
-                "columns": 6,
-                "rows": 2
-              }
-            },
-            {
-              "type": "button",
-              "name": "Evening lamps",
-              "icon": "mdi:lamp",
-              "icon_height": "44px",
-              "show_state": false,
-              "tap_action": {
-                "action": "perform-action",
-                "perform_action": "homeassistant.turn_on",
-                "target": {
-                  "entity_id": [
-                    "switch.living_room_globe_lamp_living_room",
-                    "switch.living_room_lamp_living_room",
-                    "light.family_room_bookcase_family_room",
-                    "light.family_room_bookcase_lower_family_room",
-                    "light.family_room_tall_lamp_family_room",
-                    "switch.primary_salt_lamp_primary"
-                  ]
-                }
-              },
-              "grid_options": {
-                "columns": 6,
-                "rows": 2
-              }
-            },
-            {
-              "type": "tile",
-              "entity": "light.kitchen_coffee_station",
-              "name": "Coffee bar",
-              "icon": "mdi:coffee",
-              "vertical": true,
-              "tap_action": {
-                "action": "toggle"
-              },
-              "grid_options": {
-                "columns": 6,
-                "rows": 2
-              }
-            },
-            {
-              "type": "tile",
-              "entity": "light.backyard_back_patio_light",
-              "name": "Patio light",
-              "icon": "mdi:outdoor-lamp",
-              "vertical": true,
-              "tap_action": {
-                "action": "toggle"
-              },
-              "grid_options": {
-                "columns": 6,
-                "rows": 2
-              }
-            },
-            {
-              "type": "tile",
-              "entity": "light.primary_bathroom_lights",
-              "name": "Bathroom glow",
-              "icon": "mdi:led-strip-variant",
-              "vertical": true,
-              "tap_action": {
-                "action": "toggle"
-              },
-              "grid_options": {
-                "columns": 6,
-                "rows": 2
-              }
-            },
-            {
-              "type": "tile",
-              "entity": "light.tv_backlight",
-              "name": "TV backlight",
-              "icon": "mdi:television-ambient-light",
-              "vertical": true,
-              "tap_action": {
-                "action": "toggle"
-              },
-              "grid_options": {
-                "columns": 6,
-                "rows": 2
-              }
-            },
-            {
-              "type": "heading",
-              "heading": "Calendar",
-              "heading_style": "subtitle"
-            },
-            {
-              "type": "custom:atomic-calendar-revive",
-              "name": "This week",
-              "entities": [
-                {
-                  "entity": "calendar.home",
-                  "color": "#2e7d32",
-                  "blocklist": "^(Trash day!|Recycling day!)$"
-                },
-                {
-                  "entity": "calendar.personal",
-                  "color": "#b26a00"
-                },
-                {
-                  "entity": "calendar.olive",
-                  "color": "#c2185b"
-                },
-                {
-                  "entity": "calendar.travel",
-                  "color": "#d84315"
-                },
-                {
-                  "entity": "calendar.birthdays",
-                  "color": "#6a1b9a"
-                },
-                {
-                  "entity": "calendar.ty_mercer90_gmail_com",
-                  "color": "#1565c0"
-                }
-              ],
-              "defaultMode": "Event",
-              "maxDaysToShow": 7,
-              "showDate": true,
-              "showWeekNumber": false,
-              "showLocation": false,
-              "showDescription": false,
-              "hideFinishedEvents": true,
-              "showProgressBar": true,
-              "showNoEventsForToday": true,
-              "noEventsForTodayText": "Nothing on today",
-              "showNoEventsText": "Nothing this week",
-              "hoursFormat": "12h",
-              "showAllDayEvents": true,
-              "disableEventLink": true,
-              "disableCalEventLink": true,
-              "disableCalLink": true,
+              "type": "markdown",
+              "title": "Needs attention",
+              "content": "**{{ states(\"sensor.broken_automations\") }} automation(s) unavailable:** {{ states(\"sensor.broken_automation_names\") }}",
               "grid_options": {
                 "columns": "full"
               },
-              "hideDuplicates": true
+              "visibility": [
+                {
+                  "condition": "numeric_state",
+                  "entity": "sensor.broken_automations",
+                  "above": 0
+                }
+              ]
             },
             {
               "type": "conditional",
@@ -383,211 +200,6 @@
                   "columns": "full"
                 }
               }
-            }
-          ]
-        },
-        {
-          "type": "grid",
-          "column_span": 1,
-          "cards": [
-            {
-              "type": "heading",
-              "heading": "Rooms",
-              "heading_style": "subtitle"
-            },
-            {
-              "type": "area",
-              "area": "living_room",
-              "display_type": "compact",
-              "navigation_path": "/dashboard-show/living-room",
-              "alert_classes": [
-                "motion",
-                "occupancy",
-                "door",
-                "opening"
-              ],
-              "sensor_classes": [
-                "temperature",
-                "humidity"
-              ],
-              "features": [
-                {
-                  "type": "area-controls",
-                  "controls": [
-                    "switch"
-                  ]
-                }
-              ],
-              "features_position": "inline"
-            },
-            {
-              "type": "area",
-              "area": "family_room",
-              "display_type": "compact",
-              "navigation_path": "/dashboard-show/family-room",
-              "alert_classes": [
-                "motion",
-                "occupancy"
-              ],
-              "sensor_classes": [],
-              "features": [
-                {
-                  "type": "area-controls",
-                  "controls": [
-                    "light"
-                  ]
-                }
-              ],
-              "features_position": "inline"
-            },
-            {
-              "type": "area",
-              "area": "kitchen",
-              "display_type": "compact",
-              "navigation_path": "/dashboard-show/kitchen",
-              "alert_classes": [
-                "motion",
-                "occupancy"
-              ],
-              "sensor_classes": [
-                "illuminance"
-              ],
-              "features": [
-                {
-                  "type": "area-controls",
-                  "controls": [
-                    "light"
-                  ]
-                }
-              ],
-              "features_position": "inline"
-            },
-            {
-              "type": "area",
-              "area": "basement",
-              "display_type": "compact",
-              "navigation_path": "/dashboard-show/basement",
-              "alert_classes": [
-                "motion",
-                "occupancy"
-              ],
-              "sensor_classes": [
-                "temperature",
-                "humidity"
-              ],
-              "features": [
-                {
-                  "type": "area-controls",
-                  "controls": [
-                    "light"
-                  ]
-                }
-              ],
-              "features_position": "inline"
-            },
-            {
-              "type": "area",
-              "area": "primary",
-              "display_type": "compact",
-              "navigation_path": "/dashboard-show/primary",
-              "alert_classes": [
-                "motion",
-                "occupancy"
-              ],
-              "sensor_classes": [
-                "temperature",
-                "humidity"
-              ],
-              "features": [
-                {
-                  "type": "area-controls",
-                  "controls": [
-                    "light"
-                  ]
-                }
-              ],
-              "features_position": "inline"
-            },
-            {
-              "type": "area",
-              "area": "garage",
-              "display_type": "compact",
-              "navigation_path": "/dashboard-show/outside",
-              "alert_classes": [
-                "door",
-                "opening",
-                "garage_door"
-              ],
-              "sensor_classes": [],
-              "features": [
-                {
-                  "type": "area-controls",
-                  "controls": [
-                    "switch"
-                  ]
-                }
-              ],
-              "features_position": "inline"
-            },
-            {
-              "type": "heading",
-              "heading": "Playing",
-              "heading_style": "subtitle",
-              "visibility": [
-                {
-                  "condition": "or",
-                  "conditions": [
-                    {
-                      "condition": "state",
-                      "entity": "media_player.family_room_family_room_wiim",
-                      "state": "playing"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "media_player.family_room_family_room_homepod",
-                      "state": "playing"
-                    },
-                    {
-                      "condition": "state",
-                      "entity": "media_player.basement_receiver",
-                      "state": "on"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "media-control",
-              "entity": "media_player.family_room_family_room_wiim",
-              "visibility": [
-                {
-                  "condition": "state",
-                  "entity": "media_player.family_room_family_room_wiim",
-                  "state": "playing"
-                }
-              ]
-            },
-            {
-              "type": "media-control",
-              "entity": "media_player.family_room_family_room_homepod",
-              "visibility": [
-                {
-                  "condition": "state",
-                  "entity": "media_player.family_room_family_room_homepod",
-                  "state": "playing"
-                }
-              ]
-            },
-            {
-              "type": "media-control",
-              "entity": "media_player.basement_receiver",
-              "visibility": [
-                {
-                  "condition": "state",
-                  "entity": "media_player.basement_receiver",
-                  "state": "on"
-                }
-              ]
             },
             {
               "type": "conditional",
@@ -673,6 +285,454 @@
                   "columns": "full"
                 }
               }
+            },
+            {
+              "type": "custom:atomic-calendar-revive",
+              "name": "This week",
+              "entities": [
+                {
+                  "entity": "calendar.home",
+                  "color": "var(--show-cal-home)",
+                  "blocklist": "^(Trash day!|Recycling day!)$"
+                },
+                {
+                  "entity": "calendar.personal",
+                  "color": "var(--show-cal-personal)"
+                },
+                {
+                  "entity": "calendar.olive",
+                  "color": "var(--show-cal-olive)"
+                },
+                {
+                  "entity": "calendar.travel",
+                  "color": "var(--show-cal-travel)"
+                },
+                {
+                  "entity": "calendar.birthdays",
+                  "color": "var(--show-cal-birthdays)"
+                },
+                {
+                  "entity": "calendar.ty_mercer90_gmail_com",
+                  "color": "var(--show-cal-gmail)"
+                }
+              ],
+              "defaultMode": "Event",
+              "maxDaysToShow": 10,
+              "showDate": true,
+              "showWeekNumber": false,
+              "showLocation": false,
+              "showDescription": false,
+              "hideFinishedEvents": true,
+              "showProgressBar": true,
+              "showNoEventsForToday": true,
+              "noEventsForTodayText": "Nothing on today",
+              "showNoEventsText": "Nothing this week",
+              "hoursFormat": "12h",
+              "showAllDayEvents": true,
+              "disableEventLink": true,
+              "disableCalEventLink": true,
+              "disableCalLink": true,
+              "grid_options": {
+                "columns": "full"
+              },
+              "hideDuplicates": true
+            },
+            {
+              "type": "media-control",
+              "entity": "media_player.family_room_family_room_wiim",
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "media_player.family_room_family_room_wiim",
+                  "state": "playing"
+                }
+              ]
+            },
+            {
+              "type": "media-control",
+              "entity": "media_player.family_room_family_room_homepod",
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "media_player.family_room_family_room_homepod",
+                  "state": "playing"
+                }
+              ]
+            },
+            {
+              "type": "media-control",
+              "entity": "media_player.basement_receiver",
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "media_player.basement_receiver",
+                  "state": "on"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "grid",
+          "column_span": 3,
+          "cards": [
+            {
+              "type": "custom:bubble-card",
+              "card_type": "pop-up",
+              "hash": "#controls",
+              "name": "Quick actions",
+              "icon": "mdi:lightning-bolt-outline",
+              "popup_mode": "centered",
+              "width_desktop": "820px",
+              "slide_to_close": true,
+              "close_by_clicking_outside": true,
+              "cards": [
+                {
+                  "type": "grid",
+                  "columns": 3,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "button",
+                      "name": "Everything off",
+                      "icon": "mdi:power",
+                      "icon_height": "44px",
+                      "show_state": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "homeassistant.turn_off",
+                        "target": {
+                          "entity_id": [
+                            "light.basement_left_pot_lights_basement",
+                            "light.basement_right_pot_lights_basement",
+                            "switch.basement_desk_lamp_basement",
+                            "light.desk_light_bars",
+                            "light.basement_media_cabinet_lights_basement",
+                            "switch.basement_lava_lamp_basement",
+                            "light.basement_stairwell_light_basement",
+                            "light.family_room_bookcase_family_room",
+                            "light.family_room_bookcase_lower_family_room",
+                            "light.family_room_fr_lights",
+                            "light.family_room_globe_light_fr",
+                            "light.family_room_tall_lamp_family_room",
+                            "switch.family_room_donut_lamp_family_room",
+                            "light.kitchen_coffee_station",
+                            "light.kitchen_coffee_maker_lights",
+                            "light.kitchen_left_sconce_kitchen",
+                            "light.kitchen_right_sconce_kitchen",
+                            "switch.living_room_globe_lamp_living_room",
+                            "switch.living_room_lamp_living_room",
+                            "light.tv_backlight",
+                            "light.bed_lights_hue_bulb",
+                            "switch.primary_salt_lamp_primary",
+                            "light.backyard_back_patio_light"
+                          ]
+                        }
+                      },
+                      "grid_options": {
+                        "columns": 4,
+                        "rows": 2
+                      }
+                    },
+                    {
+                      "type": "button",
+                      "name": "Evening lamps",
+                      "icon": "mdi:lamp",
+                      "icon_height": "44px",
+                      "show_state": false,
+                      "tap_action": {
+                        "action": "perform-action",
+                        "perform_action": "homeassistant.turn_on",
+                        "target": {
+                          "entity_id": [
+                            "switch.living_room_globe_lamp_living_room",
+                            "switch.living_room_lamp_living_room",
+                            "light.family_room_bookcase_family_room",
+                            "light.family_room_bookcase_lower_family_room",
+                            "light.family_room_tall_lamp_family_room",
+                            "switch.primary_salt_lamp_primary"
+                          ]
+                        }
+                      },
+                      "grid_options": {
+                        "columns": 4,
+                        "rows": 2
+                      }
+                    },
+                    {
+                      "type": "tile",
+                      "entity": "light.kitchen_coffee_station",
+                      "name": "Coffee bar",
+                      "icon": "mdi:coffee",
+                      "vertical": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "grid_options": {
+                        "columns": 4,
+                        "rows": 2
+                      }
+                    },
+                    {
+                      "type": "tile",
+                      "entity": "light.backyard_back_patio_light",
+                      "name": "Patio light",
+                      "icon": "mdi:outdoor-lamp",
+                      "vertical": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "grid_options": {
+                        "columns": 4,
+                        "rows": 2
+                      }
+                    },
+                    {
+                      "type": "tile",
+                      "entity": "light.primary_bathroom_lights",
+                      "name": "Bathroom glow",
+                      "icon": "mdi:led-strip-variant",
+                      "vertical": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "grid_options": {
+                        "columns": 4,
+                        "rows": 2
+                      }
+                    },
+                    {
+                      "type": "tile",
+                      "entity": "light.tv_backlight",
+                      "name": "TV backlight",
+                      "icon": "mdi:television-ambient-light",
+                      "vertical": true,
+                      "tap_action": {
+                        "action": "toggle"
+                      },
+                      "grid_options": {
+                        "columns": 4,
+                        "rows": 2
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "custom:bubble-card",
+              "card_type": "pop-up",
+              "hash": "#rooms",
+              "name": "Rooms",
+              "icon": "mdi:floor-plan",
+              "popup_mode": "centered",
+              "width_desktop": "820px",
+              "slide_to_close": true,
+              "close_by_clicking_outside": true,
+              "cards": [
+                {
+                  "type": "grid",
+                  "columns": 2,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "area",
+                      "area": "living_room",
+                      "display_type": "compact",
+                      "navigation_path": "/dashboard-show/living-room",
+                      "alert_classes": [
+                        "motion",
+                        "occupancy",
+                        "door",
+                        "opening"
+                      ],
+                      "sensor_classes": [
+                        "temperature",
+                        "humidity"
+                      ],
+                      "features": [
+                        {
+                          "type": "area-controls",
+                          "controls": [
+                            "switch"
+                          ]
+                        }
+                      ],
+                      "features_position": "inline"
+                    },
+                    {
+                      "type": "area",
+                      "area": "family_room",
+                      "display_type": "compact",
+                      "navigation_path": "/dashboard-show/family-room",
+                      "alert_classes": [
+                        "motion",
+                        "occupancy"
+                      ],
+                      "sensor_classes": [],
+                      "features": [
+                        {
+                          "type": "area-controls",
+                          "controls": [
+                            "light"
+                          ]
+                        }
+                      ],
+                      "features_position": "inline"
+                    },
+                    {
+                      "type": "area",
+                      "area": "kitchen",
+                      "display_type": "compact",
+                      "navigation_path": "/dashboard-show/kitchen",
+                      "alert_classes": [
+                        "motion",
+                        "occupancy"
+                      ],
+                      "sensor_classes": [
+                        "illuminance"
+                      ],
+                      "features": [
+                        {
+                          "type": "area-controls",
+                          "controls": [
+                            "light"
+                          ]
+                        }
+                      ],
+                      "features_position": "inline"
+                    },
+                    {
+                      "type": "area",
+                      "area": "basement",
+                      "display_type": "compact",
+                      "navigation_path": "/dashboard-show/basement",
+                      "alert_classes": [
+                        "motion",
+                        "occupancy"
+                      ],
+                      "sensor_classes": [
+                        "temperature",
+                        "humidity"
+                      ],
+                      "features": [
+                        {
+                          "type": "area-controls",
+                          "controls": [
+                            "light"
+                          ]
+                        }
+                      ],
+                      "features_position": "inline"
+                    },
+                    {
+                      "type": "area",
+                      "area": "primary",
+                      "display_type": "compact",
+                      "navigation_path": "/dashboard-show/primary",
+                      "alert_classes": [
+                        "motion",
+                        "occupancy"
+                      ],
+                      "sensor_classes": [
+                        "temperature",
+                        "humidity"
+                      ],
+                      "features": [
+                        {
+                          "type": "area-controls",
+                          "controls": [
+                            "light"
+                          ]
+                        }
+                      ],
+                      "features_position": "inline"
+                    },
+                    {
+                      "type": "area",
+                      "area": "garage",
+                      "display_type": "compact",
+                      "navigation_path": "/dashboard-show/outside",
+                      "alert_classes": [
+                        "door",
+                        "opening",
+                        "garage_door"
+                      ],
+                      "sensor_classes": [],
+                      "features": [
+                        {
+                          "type": "area-controls",
+                          "controls": [
+                            "switch"
+                          ]
+                        }
+                      ],
+                      "features_position": "inline"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "custom:bubble-card",
+              "card_type": "pop-up",
+              "hash": "#scores",
+              "name": "Scores",
+              "icon": "mdi:scoreboard-outline",
+              "popup_mode": "centered",
+              "width_desktop": "820px",
+              "slide_to_close": true,
+              "close_by_clicking_outside": true,
+              "cards": [
+                {
+                  "type": "grid",
+                  "columns": 2,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "custom:teamtracker-card",
+                      "entity": "sensor.broncos"
+                    },
+                    {
+                      "type": "custom:teamtracker-card",
+                      "entity": "sensor.bears"
+                    },
+                    {
+                      "type": "custom:teamtracker-card",
+                      "entity": "sensor.avalanche"
+                    },
+                    {
+                      "type": "custom:teamtracker-card",
+                      "entity": "sensor.fsu"
+                    },
+                    {
+                      "type": "custom:teamtracker-card",
+                      "entity": "sensor.iowa"
+                    },
+                    {
+                      "type": "custom:teamtracker-card",
+                      "entity": "sensor.rockies"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "custom:bubble-card",
+              "card_type": "horizontal-buttons-stack",
+              "width_desktop": "540px",
+              "is_sidebar_hidden": true,
+              "rise_animation": false,
+              "highlight_current_view": true,
+              "1_name": "Quick actions",
+              "1_icon": "mdi:lightning-bolt-outline",
+              "1_link": "#controls",
+              "2_name": "Rooms",
+              "2_icon": "mdi:floor-plan",
+              "2_link": "#rooms",
+              "3_name": "Scores",
+              "3_icon": "mdi:scoreboard-outline",
+              "3_link": "#scores"
             }
           ]
         }

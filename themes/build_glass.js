@@ -50,6 +50,17 @@ const light = {
   'show-cal-travel': '#d84315',
   'show-cal-birthdays': '#6a1b9a',
   'show-cal-gmail': '#1565c0',
+  // Bubble Card (pop-ups + bottom button bar on the TECHO5 Show): its defaults paint white on white
+  // over the glass, so give it an explicit pane and tile fill per palette.
+  'bubble-pop-up-background-color': 'rgba(255, 255, 255, 0.92)',
+  'bubble-pop-up-main-background-color': 'rgba(255, 255, 255, 0.92)',
+  'bubble-main-background-color': 'rgba(255, 255, 255, 0.70)',
+  'bubble-secondary-background-color': 'rgba(0, 0, 0, 0.06)',
+  'bubble-icon-background-color': 'rgba(0, 0, 0, 0.06)',
+  'bubble-backdrop-background-color': 'rgba(0, 0, 0, 0.25)',
+  'bubble-horizontal-buttons-stack-background-color': 'rgba(255, 255, 255, 0.70)',
+  'bubble-border-radius': '24px',
+  'bubble-pop-up-border-radius': '28px',
 };
 
 const dark = {
@@ -85,6 +96,15 @@ const dark = {
   'show-cal-travel': '#ffab8f',
   'show-cal-birthdays': '#dcb2ff',
   'show-cal-gmail': '#8fc9ff',
+  'bubble-pop-up-background-color': 'rgba(20, 26, 43, 0.92)',
+  'bubble-pop-up-main-background-color': 'rgba(20, 26, 43, 0.92)',
+  'bubble-main-background-color': 'rgba(255, 255, 255, 0.12)',
+  'bubble-secondary-background-color': 'rgba(255, 255, 255, 0.10)',
+  'bubble-icon-background-color': 'rgba(255, 255, 255, 0.12)',
+  'bubble-backdrop-background-color': 'rgba(0, 0, 0, 0.45)',
+  'bubble-horizontal-buttons-stack-background-color': 'rgba(20, 26, 43, 0.72)',
+  'bubble-border-radius': '24px',
+  'bubble-pop-up-border-radius': '28px',
   'map-filter': 'invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)',
 };
 
