@@ -6,7 +6,7 @@
       "path": "home",
       "icon": "mdi:home",
       "type": "sections",
-      "max_columns": 4,
+      "max_columns": 2,
       "dense_section_placement": true,
       "badges": [
         {
@@ -100,7 +100,7 @@
       "sections": [
         {
           "type": "grid",
-          "column_span": 2,
+          "column_span": 1,
           "cards": [
             {
               "type": "clock",
@@ -134,7 +134,7 @@
                 "action": "none"
               },
               "grid_options": {
-                "columns": 8
+                "columns": 4
               }
             },
             {
@@ -148,7 +148,7 @@
                 "action": "none"
               },
               "grid_options": {
-                "columns": 8
+                "columns": 4
               }
             },
             {
@@ -160,14 +160,14 @@
                 "action": "none"
               },
               "grid_options": {
-                "columns": 8
+                "columns": 4
               }
             }
           ]
         },
         {
           "type": "grid",
-          "column_span": 2,
+          "column_span": 1,
           "cards": [
             {
               "type": "markdown",
@@ -378,7 +378,7 @@
         },
         {
           "type": "grid",
-          "column_span": 4,
+          "column_span": 2,
           "cards": [
             {
               "type": "custom:bubble-card",
