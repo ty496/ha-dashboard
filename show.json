@@ -737,7 +737,10 @@
               "3_name": "Scores",
               "3_icon": "mdi:scoreboard-outline",
               "3_link": "#scores",
-              "hide_gradient": true
+              "hide_gradient": true,
+              "card_mod": {
+                "style": "ha-card.horizontal-buttons-stack-card { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: none !important; border: none !important; background: none !important; }"
+              }
             }
           ]
         }
