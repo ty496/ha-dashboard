@@ -1,0 +1,86 @@
+{#- Planes overhead (2026-10-30): art lookup and captions for the Show's "Overhead now" card and the
+    poster takeover. Flights come from the Flightradar24 integration (sensor.flightradar24_current_in_area).
+    Art lives in /config/www/planes (served at /local/planes), one WebP per <airline ICAO>-<type ICAO>,
+    plus GEN-* plain white fallbacks by aircraft class. Source: ty496/ha-dashboard, planes/ and www/planes/.
+    Lives in /config/custom_templates; after changing it run homeassistant.reload_custom_templates. -#}
+
+{%- macro plane_key(f) -%}
+{%- set have = ['AAL-A319', 'AAL-A321', 'AAL-B738', 'AAY-A320', 'ACA-BCS3', 'ASA-B39M', 'ASA-B739', 'BAW-A35K',
+  'DAL-A320', 'DAL-A321', 'DAL-B739', 'DAL-BCS3', 'FFT-A20N', 'FFT-A21N', 'SCX-B738', 'SWA-B737', 'SWA-B738',
+  'SWA-B38M', 'UAL-A319', 'UAL-A320', 'UAL-A21N', 'UAL-B38M', 'UAL-B39M', 'UAL-B738', 'UAL-B739', 'UAL-B752',
+  'UAL-B772', 'UAL-B789', 'UAX-CRJ2', 'UAX-CRJ7', 'UAX-E75L'] -%}
+{#- Regional operators out of DEN mostly fly as United Express; Horizon wears Alaska colours. -#}
+{%- set operator = {'SKW': 'UAX', 'RPA': 'UAX', 'ASH': 'UAX', 'GJS': 'UAX', 'UCA': 'UAX', 'AWI': 'UAX', 'QXE': 'ASA'} -%}
+{#- When an airline has no drawing for this exact type, the nearest sibling it does have. -#}
+{%- set sibling = {'B78X': 'B789', 'B788': 'B789', 'B77W': 'B772', 'B77L': 'B772', 'B753': 'B752', 'A320': 'A20N',
+  'A321': 'A21N', 'A21N': 'A321', 'A20N': 'A320', 'B38M': 'B738', 'B738': 'B739', 'B739': 'B738', 'B39M': 'B739',
+  'BCS1': 'BCS3', 'E75S': 'E75L', 'E170': 'E75L', 'CRJ9': 'CRJ7', 'CRJ5': 'CRJ7'} -%}
+{%- set icao = (f.airline_icao or '') | upper -%}
+{%- set airline = operator.get(icao, icao) -%}
+{%- set t = (f.aircraft_code or '') | upper -%}
+{%- set cat = (f.aircraft_category or '') | lower -%}
+{%- if airline and (airline ~ '-' ~ t) in have -%}{{ airline }}-{{ t }}
+{%- elif airline and (airline ~ '-' ~ sibling.get(t, '')) in have -%}{{ airline }}-{{ sibling.get(t, '') }}
+{%- elif 'heli' in cat or t in ['R22', 'R44', 'R66', 'EC20', 'EC30', 'EC35', 'EC45', 'AS50', 'AS55', 'B06', 'B407', 'B429', 'H125', 'H135', 'H145', 'A109', 'A119', 'S76'] -%}GEN-HELI
+{%- elif t in ['C150', 'C152', 'C162', 'C170', 'C172', 'C175', 'C177', 'C180', 'C182', 'C185', 'C195', 'C205', 'C206', 'C207', 'C208', 'C210', 'P210', 'T210'] -%}GEN-C172
+{%- elif t in ['SR20', 'SR22', 'S22T', 'COL3', 'COL4', 'C400'] -%}GEN-SR22
+{%- elif t in ['PA44', 'PA34', 'PA23', 'PA30', 'PA31', 'BE76', 'BE55', 'BE58', 'BE95', 'DA42', 'DA62', 'C310', 'C340', 'C414', 'C421', 'P68', 'AC50'] -%}GEN-PA44
+{%- elif t in ['PC12', 'PC6T', 'TBM7', 'TBM8', 'TBM9', 'P46T', 'PA46', 'M600', 'KODI', 'BE20', 'BE9L', 'BE30', 'B350'] -%}GEN-PC12
+{%- elif t in ['C25A', 'C25B', 'C25C', 'C25M', 'C500', 'C510', 'C525', 'C550', 'C560', 'C56X', 'C650', 'C680', 'C68A', 'C700', 'C750', 'E50P', 'E55P', 'E545', 'E550', 'LJ35', 'LJ40', 'LJ45', 'LJ60', 'LJ70', 'LJ75', 'HDJT', 'SF50', 'PC24', 'PRM1', 'H25B', 'BE40'] -%}GEN-C56X
+{%- elif t in ['CL30', 'CL35', 'CL60', 'G280', 'GALX', 'FA50', 'F2TH', 'FA20', 'ASTR', 'G150', 'G200'] -%}GEN-CL35
+{%- elif t in ['GLEX', 'GL5T', 'GL7T', 'GL8T', 'GLF4', 'GLF5', 'GLF6', 'GLF7', 'G650', 'FA7X', 'FA8X', 'F900', 'FA6X'] -%}GEN-GLEX
+{%- elif t[:3] in ['B74', 'B76', 'B77', 'B78', 'A33', 'A34', 'A35', 'A38', 'MD1'] or t in ['A306', 'A310'] -%}GEN-WIDE
+{%- elif t[:3] in ['E17', 'E19', 'E75', 'E13', 'E14', 'CRJ', 'DH8', 'AT4', 'AT7', 'D32', 'SF3', 'J32'] -%}GEN-REGIONAL
+{%- elif t in ['P28A', 'P28B', 'P28R', 'P28T', 'P32R', 'P32T', 'PA32', 'DA20', 'DA40', 'DV20', 'M20P', 'M20T', 'BE23', 'BE24', 'BE33', 'BE35', 'BE36', 'A210', 'AA5', 'TB20', 'TOBA', 'RV6', 'RV7', 'RV8', 'RV10', 'RV12', 'GLAS', 'LNC4'] -%}GEN-P28A
+{#- Unknown type: no airline means private, and private traffic here is mostly light aircraft. -#}
+{%- elif not airline -%}GEN-C172
+{%- else -%}GEN-NARROW
+{%- endif -%}
+{%- endmacro -%}
+
+{%- macro plane_art(f) -%}/local/planes/{{ plane_key(f) }}.webp{%- endmacro -%}
+
+{#- "4.2 mi NE": distance (FR24 gives km) and compass point from home to the aircraft. -#}
+{%- macro plane_where(f) -%}
+{%- set hlat = state_attr('zone.home', 'latitude') | float(0) -%}
+{%- set hlon = state_attr('zone.home', 'longitude') | float(0) -%}
+{%- set dy = (f.latitude | float(hlat)) - hlat -%}
+{%- set dx = ((f.longitude | float(hlon)) - hlon) * cos(hlat * pi / 180) -%}
+{%- set brg = (atan2(dx, dy) * 180 / pi + 360) % 360 -%}
+{%- set pts = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'] -%}
+{{ '%.1f' | format((f.distance | float(0)) * 0.621371) }} mi {{ pts[(((brg + 22.5) // 45) | int) % 8] }}
+{%- endmacro -%}
+
+{%- macro plane_trend(f) -%}
+{%- set vs = f.vertical_speed | float(0) -%}
+{{ 'climbing' if vs > 300 else ('descending' if vs < -300 else 'level') }}
+{%- endmacro -%}
+
+{#- "United 1523" for airline flights, the registration for private aircraft. -#}
+{%- macro plane_flight(f) -%}
+{%- set name = f.airline_short or f.airline -%}
+{%- set num = (f.flight_number or '') | replace(f.airline_iata or '~', '', 1) -%}
+{{ (name ~ ' ' ~ num) | trim if name else (f.aircraft_registration or f.callsign or 'Aircraft') }}
+{%- endmacro -%}
+
+{%- macro plane_route(f) -%}
+{%- set a = f.airport_origin_city or f.airport_origin_code_iata -%}
+{%- set b = f.airport_destination_city or f.airport_destination_code_iata -%}
+{{ (a ~ ' → ' ~ b) if a and b else (a or b or 'Route unknown') }}
+{%- endmacro -%}
+
+{#- "737 MAX 9" for chips; the poster uses the full aircraft_model. -#}
+{%- macro plane_model(f) -%}
+{{ (f.aircraft_model or f.aircraft_code or '') | replace('Boeing ', '') | replace('Airbus ', '') | replace('Embraer ', '') | replace('Bombardier ', '') }}
+{%- endmacro -%}
+
+{%- macro plane_alt(f) -%}{{ '{:,}'.format(f.altitude | int(0)) }}{%- endmacro -%}
+
+{%- macro plane_mph(f) -%}{{ ((f.ground_speed | float(0)) * 1.15078) | round(0) | int }}{%- endmacro -%}
+
+{#- The flight to show: the one the takeover automation picked (by FR24 id), else the closest. -#}
+{%- macro plane_pick(want_id='') -%}
+{%- set fl = (state_attr('sensor.flightradar24_current_in_area', 'flights') or []) | rejectattr('distance', 'none') | list -%}
+{%- set hit = fl | selectattr('id', 'eq', want_id) | list if want_id else [] -%}
+{{ (hit or (fl | sort(attribute='distance')))[0].id if fl else '' }}
+{%- endmacro -%}

@@ -106,3 +106,24 @@ Three more scenes and themes: `strip-thanksgiving.jpg` (Glass Thanksgiving, ligh
 4. Otherwise Dawn/Dusk/Rain/Cloudy/Day as before.
 
 Dry-run any date with HA's `render_template` by substituting `now()` with `as_datetime('YYYY-MM-DD HH:MM:SS')` and the elevation with a number; that was done for 2026 and the windows check out.
+
+## Planes overhead (2026-10-30)
+
+An "Overhead now" glass card at the top of the home view's right column, plus a full-screen poster
+(FlightPortrait style, red print, serif captions) for 20 s when a plane enters the area.
+
+- **Data:** Flightradar24 custom integration (HACS, AlexandrErohin), 8 km around `zone.home`, 30 s polling.
+  `sensor.flightradar24_current_in_area` carries a `flights` list; `flightradar24_entry` fires per new plane.
+- **Art:** `www/planes/<airline ICAO>-<type ICAO>.webp` (31 combos) and `GEN-*.webp` (12 white fallbacks),
+  served from `/config/www/planes` at `/local/planes`. Made in `planes/` (Nano Banana from Commons photos,
+  keyed off magenta by `planes/cutout.py`); the 2K masters stay local.
+- **Lookup:** `custom_templates/planes.jinja` (macros `plane_key`, `plane_art`, `plane_where`, ...) maps a flight to
+  its drawing: exact combo, then the airline's nearest sibling type, then a GEN class. SkyWest/Republic and other
+  regionals map to United Express (`UAX`). Test it locally with a plain jinja2 stub before shipping.
+- **Cards:** inserted by `scripts/planes-cards.js` (idempotent). The poster is a markdown card made
+  `position: fixed` by card-mod; it shows while `input_boolean.plane_takeover` is on.
+- **Automations:** `automations/planes_overhead_takeover.json` (07:00-22:00, airborne only, at most every
+  15 min, sets `input_text.plane_takeover_id`) and `automations/planes_overhead_count.json` (`counter.planes_today`,
+  reset at midnight, shown in the poster footer).
+- **Install:** paste `planes/deploy_ha.js` into a signed-in admin HA tab, then `await planesPhase1()`,
+  `await planesRestart()`, reload, `await planesPhase2()`. `await planesTestTakeover()` previews the poster.

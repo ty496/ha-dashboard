@@ -1,0 +1,18 @@
+{
+  "id": "planes_overhead_count",
+  "alias": "Planes overhead count",
+  "description": "counter.planes_today: +1 per aircraft entering the Flightradar24 area, reset at midnight. Feeds the poster footer. Source: ha-dashboard/automations/planes_overhead_count.json",
+  "mode": "queued",
+  "max": 20,
+  "triggers": [
+    {"trigger": "event", "event_type": "flightradar24_entry", "id": "entry"},
+    {"trigger": "time", "at": "00:00:00", "id": "midnight"}
+  ],
+  "conditions": [],
+  "actions": [
+    {"choose": [
+      {"conditions": [{"condition": "trigger", "id": "entry"}], "sequence": [{"action": "counter.increment", "target": {"entity_id": "counter.planes_today"}}]},
+      {"conditions": [{"condition": "trigger", "id": "midnight"}], "sequence": [{"action": "counter.reset", "target": {"entity_id": "counter.planes_today"}}]}
+    ]}
+  ]
+}

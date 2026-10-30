@@ -185,6 +185,26 @@
               ]
             },
             {
+              "type": "markdown",
+              "name": "Overhead now",
+              "grid_options": {
+                "columns": "full"
+              },
+              "visibility": [
+                {
+                  "condition": "numeric_state",
+                  "entity": "sensor.flightradar24_current_in_area",
+                  "above": 0
+                }
+              ],
+              "content": "{% from 'planes.jinja' import plane_pick, plane_art, plane_where, plane_trend, plane_flight, plane_route, plane_model, plane_alt, plane_mph %}\n{% set id = plane_pick('') | trim %}{% set f = (state_attr('sensor.flightradar24_current_in_area', 'flights') or []) | selectattr('id', 'eq', id) | first if id else none %}\n{% if f %}\n#### ✈︎ OVERHEAD NOW <span>{{ plane_where(f) }} · {{ plane_trend(f) }}</span>\n\n<img src=\"{{ plane_art(f) }}\">\n\n# {{ plane_flight(f) }}\n{{ plane_route(f) }}\n\n| {{ plane_alt(f) }} | {{ plane_mph(f) }} | {{ plane_model(f) }} |\n|:-:|:-:|:-:|\n| ft | mph | {{ f.aircraft_registration or '' }} |\n{% endif %}",
+              "card_mod": {
+                "style": {
+                  "ha-markdown$": "ha-markdown-element { display: grid; grid-template-columns: 1fr auto; column-gap: 12px; align-items: end; }\nh4, img { grid-column: 1 / -1; }\nh4 { display: flex; justify-content: space-between; margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .3px; color: var(--primary-color); }\nh4 span { color: var(--secondary-text-color); }\nimg { display: block; width: 100%; margin: 10px 0 6px; filter: drop-shadow(0 10px 12px rgba(20, 30, 60, .22)); }\nh1 { grid-column: 1; margin: 2px 0 0; font-size: 30px; font-weight: 700; line-height: 1.1; }\np { grid-column: 1; margin: 2px 0 0; font-size: 18px; color: var(--secondary-text-color); }\ntable { grid-column: 2; grid-row: 3 / span 2; border-collapse: separate; border-spacing: 8px 0; margin: 0; }\nth, td { background: rgba(255, 255, 255, .55); text-align: center; border: 0; }\nth { padding: 6px 10px 0; border-radius: 12px 12px 0 0; font-size: 17px; font-weight: 700; }\ntd { padding: 0 10px 6px; border-radius: 0 0 12px 12px; font-size: 13px; color: var(--secondary-text-color); }"
+                }
+              }
+            },
+            {
               "type": "conditional",
               "conditions": [
                 {
@@ -740,6 +760,24 @@
               "hide_gradient": true,
               "card_mod": {
                 "style": "ha-card.horizontal-buttons-stack-card { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: none !important; border: none !important; background: none !important; }"
+              }
+            },
+            {
+              "type": "markdown",
+              "name": "Plane poster takeover",
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "input_boolean.plane_takeover",
+                  "state": "on"
+                }
+              ],
+              "content": "{% from 'planes.jinja' import plane_pick, plane_art, plane_where, plane_trend, plane_flight, plane_route, plane_model, plane_alt, plane_mph %}\n{% set id = plane_pick(states('input_text.plane_takeover_id')) | trim %}{% set f = (state_attr('sensor.flightradar24_current_in_area', 'flights') or []) | selectattr('id', 'eq', id) | first if id else none %}\n{% if f %}\n{% set lat = state_attr('zone.home', 'latitude') | float(0) %}{% set lon = state_attr('zone.home', 'longitude') | float(0) %}\n##### OVERHEAD\n### {{ plane_where(f) }} · {{ plane_trend(f) }}\n\n<img src=\"{{ plane_art(f) }}\">\n\n## {{ f.airline or 'Private' }} · {{ f.aircraft_model or f.aircraft_code }}\n{{ [f.flight_number, plane_route(f), f.aircraft_registration, plane_alt(f) ~ ' ft'] | select | join(' · ') }}\n\n###### No {{ states('counter.planes_today') }} today · {{ now().strftime('%A %-d %B %Y') }} · {{ '%.2f' | format(lat | abs) }}° {{ 'N' if lat >= 0 else 'S' }} {{ '%.2f' | format(lon | abs) }}° {{ 'W' if lon < 0 else 'E' }} · Wheat Ridge, Colorado\n{% endif %}",
+              "card_mod": {
+                "style": {
+                  ".": "ha-card { position: fixed !important; inset: 0 !important; z-index: 1000; margin: 0; padding: 0 !important;\n  border: 0 !important; border-radius: 0 !important; box-shadow: none !important;\n  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;\n  background: #8d0e12 !important; color: #f3e6c8; font-family: Georgia, 'Times New Roman', serif; }",
+                  "ha-markdown$": "ha-markdown-element { position: absolute; inset: 0; }\nh5 { position: absolute; left: 5vw; top: 6.5vh; margin: 0; font-size: 15px; font-weight: 400; letter-spacing: 5px; }\nh3 { position: absolute; right: 5vw; top: 6.5vh; margin: 0; font-size: 13px; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; opacity: .8; }\nimg { position: absolute; left: 5.5vw; top: 24vh; width: 89vw; filter: drop-shadow(0 18px 18px rgba(0, 0, 0, .25)); }\nh2 { position: absolute; left: 9.4vw; top: 73.5vh; margin: 0; font-size: 30px; font-weight: 400; }\np { position: absolute; left: 9.4vw; top: 79.5vh; margin: 0; font-size: 19px; opacity: .85; }\nh6 { position: absolute; left: 5vw; right: 5vw; bottom: 5.5vh; margin: 0; text-align: center; font-family: 'Segoe UI', Roboto, sans-serif; font-size: 11px; font-weight: 400; letter-spacing: 2.4px; text-transform: uppercase; opacity: .7; }"
+                }
               }
             }
           ]

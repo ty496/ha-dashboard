@@ -1,0 +1,18 @@
+{
+  "id": "planes_overhead_takeover",
+  "alias": "Planes overhead takeover",
+  "description": "Show's full-screen poster for 20 s when a plane enters the Flightradar24 area. At most once every 15 minutes, never 22:00-07:00, never for aircraft on the ground. Source: ha-dashboard/automations/planes_overhead_takeover.json",
+  "mode": "single",
+  "triggers": [{"trigger": "event", "event_type": "flightradar24_entry"}],
+  "conditions": [
+    {"condition": "time", "after": "07:00:00", "before": "22:00:00"},
+    {"condition": "template", "value_template": "{{ (trigger.event.data.on_ground | default(0) | int(0)) == 0 }}"},
+    {"condition": "template", "value_template": "{% set last = state_attr(this.entity_id, 'last_triggered') %}{{ last is none or (now() - last).total_seconds() > 900 }}"}
+  ],
+  "actions": [
+    {"action": "input_text.set_value", "target": {"entity_id": "input_text.plane_takeover_id"}, "data": {"value": "{{ trigger.event.data.id }}"}},
+    {"action": "input_boolean.turn_on", "target": {"entity_id": "input_boolean.plane_takeover"}},
+    {"delay": {"seconds": 20}},
+    {"action": "input_boolean.turn_off", "target": {"entity_id": "input_boolean.plane_takeover"}}
+  ]
+}
