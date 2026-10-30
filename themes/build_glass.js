@@ -42,6 +42,14 @@ const light = {
   'input-fill-color': 'rgba(255, 255, 255, 0.4)',
   'input-ink-color': '#1b2230',
   'input-label-ink-color': '#4a5568',
+  // Calendar event-title colours (Atomic Calendar Revive reads `color: var(--show-cal-*)`),
+  // deep on light glass, pastel on dark glass, so titles stay readable on every sky.
+  'show-cal-home': '#2e7d32',
+  'show-cal-personal': '#b26a00',
+  'show-cal-olive': '#c2185b',
+  'show-cal-travel': '#d84315',
+  'show-cal-birthdays': '#6a1b9a',
+  'show-cal-gmail': '#1565c0',
 };
 
 const dark = {
@@ -71,6 +79,12 @@ const dark = {
   'input-fill-color': 'rgba(255, 255, 255, 0.06)',
   'input-ink-color': '#f2f4f8',
   'input-label-ink-color': '#b4bccb',
+  'show-cal-home': '#9be0a0',
+  'show-cal-personal': '#ffcf80',
+  'show-cal-olive': '#ff9ec4',
+  'show-cal-travel': '#ffab8f',
+  'show-cal-birthdays': '#dcb2ff',
+  'show-cal-gmail': '#8fc9ff',
   'map-filter': 'invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)',
 };
 

@@ -36,6 +36,12 @@ Glass Dawn:
   input-fill-color: "rgba(255, 255, 255, 0.4)"
   input-ink-color: "#1b2230"
   input-label-ink-color: "#4a5568"
+  show-cal-home: "#2e7d32"
+  show-cal-personal: "#b26a00"
+  show-cal-olive: "#c2185b"
+  show-cal-travel: "#d84315"
+  show-cal-birthdays: "#6a1b9a"
+  show-cal-gmail: "#1565c0"
 
 Glass Day:
   lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-day.jpg') center bottom / 100% auto fixed no-repeat, #96d3f0"
@@ -71,6 +77,12 @@ Glass Day:
   input-fill-color: "rgba(255, 255, 255, 0.4)"
   input-ink-color: "#1b2230"
   input-label-ink-color: "#4a5568"
+  show-cal-home: "#2e7d32"
+  show-cal-personal: "#b26a00"
+  show-cal-olive: "#c2185b"
+  show-cal-travel: "#d84315"
+  show-cal-birthdays: "#6a1b9a"
+  show-cal-gmail: "#1565c0"
 
 Glass Cloudy:
   lovelace-background: "linear-gradient(rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.06)), url('/local/bg/strip-cloudy.jpg') center bottom / 100% auto fixed no-repeat, #b8b8ba"
@@ -106,6 +118,12 @@ Glass Cloudy:
   input-fill-color: "rgba(255, 255, 255, 0.4)"
   input-ink-color: "#1b2230"
   input-label-ink-color: "#4a5568"
+  show-cal-home: "#2e7d32"
+  show-cal-personal: "#b26a00"
+  show-cal-olive: "#c2185b"
+  show-cal-travel: "#d84315"
+  show-cal-birthdays: "#6a1b9a"
+  show-cal-gmail: "#1565c0"
 
 Glass Rain:
   lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-rain.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/rain.png') center top / 300px auto repeat, #617b8e"
@@ -141,6 +159,12 @@ Glass Rain:
   input-fill-color: "rgba(255, 255, 255, 0.06)"
   input-ink-color: "#f2f4f8"
   input-label-ink-color: "#b4bccb"
+  show-cal-home: "#9be0a0"
+  show-cal-personal: "#ffcf80"
+  show-cal-olive: "#ff9ec4"
+  show-cal-travel: "#ffab8f"
+  show-cal-birthdays: "#dcb2ff"
+  show-cal-gmail: "#8fc9ff"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Dusk:
@@ -177,6 +201,12 @@ Glass Dusk:
   input-fill-color: "rgba(255, 255, 255, 0.06)"
   input-ink-color: "#f2f4f8"
   input-label-ink-color: "#b4bccb"
+  show-cal-home: "#9be0a0"
+  show-cal-personal: "#ffcf80"
+  show-cal-olive: "#ff9ec4"
+  show-cal-travel: "#ffab8f"
+  show-cal-birthdays: "#dcb2ff"
+  show-cal-gmail: "#8fc9ff"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Night:
@@ -213,6 +243,12 @@ Glass Night:
   input-fill-color: "rgba(255, 255, 255, 0.06)"
   input-ink-color: "#f2f4f8"
   input-label-ink-color: "#b4bccb"
+  show-cal-home: "#9be0a0"
+  show-cal-personal: "#ffcf80"
+  show-cal-olive: "#ff9ec4"
+  show-cal-travel: "#ffab8f"
+  show-cal-birthdays: "#dcb2ff"
+  show-cal-gmail: "#8fc9ff"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Halloween:
@@ -249,6 +285,12 @@ Glass Halloween:
   input-fill-color: "rgba(255, 255, 255, 0.06)"
   input-ink-color: "#f2f4f8"
   input-label-ink-color: "#b4bccb"
+  show-cal-home: "#9be0a0"
+  show-cal-personal: "#ffcf80"
+  show-cal-olive: "#ff9ec4"
+  show-cal-travel: "#ffab8f"
+  show-cal-birthdays: "#dcb2ff"
+  show-cal-gmail: "#8fc9ff"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Thanksgiving:
@@ -285,6 +327,12 @@ Glass Thanksgiving:
   input-fill-color: "rgba(255, 255, 255, 0.4)"
   input-ink-color: "#1b2230"
   input-label-ink-color: "#4a5568"
+  show-cal-home: "#2e7d32"
+  show-cal-personal: "#b26a00"
+  show-cal-olive: "#c2185b"
+  show-cal-travel: "#d84315"
+  show-cal-birthdays: "#6a1b9a"
+  show-cal-gmail: "#1565c0"
 
 Glass Christmas:
   lovelace-background: "linear-gradient(rgba(5, 8, 20, 0.08), rgba(5, 8, 20, 0.26)), url('/local/bg/strip-christmas.jpg') center bottom / 100% auto fixed no-repeat, url('/local/bg/snow.png') center top / 300px auto repeat, #37608f"
@@ -320,6 +368,12 @@ Glass Christmas:
   input-fill-color: "rgba(255, 255, 255, 0.06)"
   input-ink-color: "#f2f4f8"
   input-label-ink-color: "#b4bccb"
+  show-cal-home: "#9be0a0"
+  show-cal-personal: "#ffcf80"
+  show-cal-olive: "#ff9ec4"
+  show-cal-travel: "#ffab8f"
+  show-cal-birthdays: "#dcb2ff"
+  show-cal-gmail: "#8fc9ff"
   map-filter: "invert(.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(.3)"
 
 Glass Christmas Day:
@@ -356,4 +410,10 @@ Glass Christmas Day:
   input-fill-color: "rgba(255, 255, 255, 0.4)"
   input-ink-color: "#1b2230"
   input-label-ink-color: "#4a5568"
+  show-cal-home: "#2e7d32"
+  show-cal-personal: "#b26a00"
+  show-cal-olive: "#c2185b"
+  show-cal-travel: "#d84315"
+  show-cal-birthdays: "#6a1b9a"
+  show-cal-gmail: "#1565c0"
 
