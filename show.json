@@ -333,9 +333,13 @@
               "disableCalEventLink": true,
               "disableCalLink": true,
               "grid_options": {
-                "columns": "full"
+                "columns": "full",
+                "rows": 9
               },
-              "hideDuplicates": true
+              "hideDuplicates": true,
+              "card_mod": {
+                "style": ".event-title, .event-left, .event-time, .event-right, .hours, .relative-time { font-size: 19px !important; } .event-left { min-width: 120px !important; } .single-event-container { line-height: 1.5 !important; } .header { font-size: 1.25em !important; } ha-card { height: 100%; }"
+              }
             },
             {
               "type": "media-control",
