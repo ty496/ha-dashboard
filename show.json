@@ -293,7 +293,7 @@
                 {
                   "entity": "calendar.home",
                   "color": "var(--show-cal-home)",
-                  "blocklist": "^(Trash day!|Recycling day!)$"
+                  "blocklist": "^(Trash day!|Recycling day!|Check In Night.*)$"
                 },
                 {
                   "entity": "calendar.personal",
