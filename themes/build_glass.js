@@ -4,11 +4,11 @@
 const fs = require('fs');
 
 // Glass recipe (2026-10-27): clearer than the first pass, iOS-style. Low blur so the scene
-// shows through, a hairline top highlight, and a bright specular rim along the bottom edge
+// shows through (blur cut from 14px to 5px on 2026-10-30: Ty found the tiles too frosted), a hairline top highlight, and a bright specular rim along the bottom edge
 // done with inset box-shadows (ha-card honours --ha-card-box-shadow and --ha-card-backdrop-filter).
 const glass = (bg, border, top, rim, glow, drop) => ({
   'ha-card-background': bg,
-  'ha-card-backdrop-filter': 'blur(14px) saturate(150%)',
+  'ha-card-backdrop-filter': 'blur(5px) saturate(140%)',
   'ha-card-border-width': '1px',
   'ha-card-border-color': border,
   'ha-card-border-radius': '24px',
