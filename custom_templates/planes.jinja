@@ -31,6 +31,8 @@
 {%- elif t in ['GLEX', 'GL5T', 'GL7T', 'GL8T', 'GLF4', 'GLF5', 'GLF6', 'GLF7', 'G650', 'FA7X', 'FA8X', 'F900', 'FA6X'] -%}GEN-GLEX
 {%- elif t[:3] in ['B74', 'B76', 'B77', 'B78', 'A33', 'A34', 'A35', 'A38', 'MD1'] or t in ['A306', 'A310'] -%}GEN-WIDE
 {%- elif t[:3] in ['E17', 'E19', 'E75', 'E13', 'E14', 'CRJ', 'DH8', 'AT4', 'AT7', 'D32', 'SF3', 'J32'] -%}GEN-REGIONAL
+{#- Airliners can arrive with no airline code (Amazon Air flown by Sun Country, charters, ferry flights). -#}
+{%- elif t[:3] in ['B73', 'B71', 'B75', 'A31', 'A32', 'MD8', 'MD9', 'BCS'] or t in ['B37M', 'B38M', 'B39M', 'B3XM', 'A19N', 'A20N', 'A21N'] -%}GEN-NARROW
 {%- elif t in ['P28A', 'P28B', 'P28R', 'P28T', 'P32R', 'P32T', 'PA32', 'DA20', 'DA40', 'DV20', 'M20P', 'M20T', 'BE23', 'BE24', 'BE33', 'BE35', 'BE36', 'A210', 'AA5', 'TB20', 'TOBA', 'RV6', 'RV7', 'RV8', 'RV10', 'RV12', 'GLAS', 'LNC4'] -%}GEN-P28A
 {#- Unknown type: no airline means private, and private traffic here is mostly light aircraft. -#}
 {%- elif not airline -%}GEN-C172

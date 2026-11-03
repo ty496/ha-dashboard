@@ -122,6 +122,8 @@ An "Overhead now" glass card at the top of the home view's right column, plus a 
   regionals map to United Express (`UAX`). Test it locally with a plain jinja2 stub before shipping.
 - **Cards:** inserted by `scripts/planes-cards.js` (idempotent). The poster is a markdown card made
   `position: fixed` by card-mod; it shows while `input_boolean.plane_takeover` is on.
+- **Live map:** tapping the card's drawing opens the `#plane` Bubble Card pop-up, which holds the integration's own
+  `custom:flightradar24-card` (Leaflet map of the area, every flight with its trail; loaded from `/flightradar24/`).
 - **Automations:** `automations/planes_overhead_takeover.json` (07:00-22:00, airborne only, at most every
   15 min, sets `input_text.plane_takeover_id`) and `automations/planes_overhead_count.json` (`counter.planes_today`,
   reset at midnight, shown in the poster footer).

@@ -3,6 +3,8 @@
 //   Flightradar24 area (closest flight, its drawing from /local/planes, route and altitude/speed/type chips).
 // - Poster takeover: full-screen FlightPortrait-style print, shown while input_boolean.plane_takeover is on
 //   (the planes_overhead_takeover automation turns it on for 20 s, at most every 15 min, 07:00-22:00).
+// - Live map pop-up (#plane): tapping the card's drawing opens the Flightradar24 integration's own map card
+//   (Leaflet, the search circle, every flight in it with its trail).
 // Lookup and caption macros live in custom_templates/planes.jinja.
 const fs = require('fs');
 const path = require('path');
@@ -23,7 +25,7 @@ const overhead = {
     IMPORT, FLIGHT("''"), '{% if f %}',
     '#### ✈︎ OVERHEAD NOW <span>{{ plane_where(f) }} · {{ plane_trend(f) }}</span>',
     '',
-    '<img src="{{ plane_art(f) }}">',
+    '<a href="#plane"><img src="{{ plane_art(f) }}"></a>',
     '',
     '# {{ plane_flight(f) }}',
     '{{ plane_route(f) }}',
@@ -40,6 +42,7 @@ const overhead = {
         'ha-markdown-element { display: block; }',
         'h4 { display: flex; justify-content: space-between; margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .3px; color: var(--primary-color); }',
         'h4 span { color: var(--secondary-text-color); font-weight: 500; }',
+        'a { display: block; -webkit-tap-highlight-color: transparent; }',
         'img { display: block; width: 100%; margin: 8px 0 4px; filter: drop-shadow(0 10px 12px rgba(20, 30, 60, .22)); }',
         'h1 { margin: 0; font-size: 28px; font-weight: 700; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
         'p { margin: 2px 0 0; font-size: 17px; color: var(--secondary-text-color); }',
@@ -93,14 +96,39 @@ const takeover = {
   },
 };
 
+// Same shape as the #controls, #rooms and #scores pop-ups. The map stays non-interactive so a drag closes the
+// pop-up instead of panning.
+const mapPopup = {
+  type: 'custom:bubble-card',
+  card_type: 'pop-up',
+  hash: '#plane',
+  name: 'Live map',
+  icon: 'mdi:radar',
+  popup_mode: 'centered',
+  width_desktop: '820px',
+  slide_to_close: true,
+  close_by_clicking_outside: true,
+  cards: [{
+    type: 'custom:flightradar24-card',
+    entity: 'sensor.flightradar24_current_in_area',
+    show_header: false,
+    show_flights: true,
+    show_tracks: true,
+    show_area: true,
+    show_area_center: true,
+    interactive_map: false,
+    map_style: 'osm',
+  }],
+};
+
 // Right column: after "Needs attention" (index 0). Takeover: anywhere, it is position: fixed; put it in the
 // bottom-bar section with the pop-ups.
 const right = home.sections[1].cards;
 const bar = home.sections[2].cards;
-const strip = cards => cards.filter(c => c.name !== 'Overhead now' && c.name !== 'Plane poster takeover');
+const strip = cards => cards.filter(c => c.name !== 'Overhead now' && c.name !== 'Plane poster takeover' && c.hash !== '#plane');
 home.sections[1].cards = strip(right);
 home.sections[1].cards.splice(1, 0, overhead);
-home.sections[2].cards = [...strip(bar), takeover];
+home.sections[2].cards = [...strip(bar), mapPopup, takeover];
 
 fs.writeFileSync(file, JSON.stringify(cfg, null, 2) + '\n');
 fs.writeFileSync(path.join(__dirname, '..', 'show.min.json'), JSON.stringify(cfg));
