@@ -129,3 +129,15 @@ An "Overhead now" glass card at the top of the home view's right column, plus a 
   reset at midnight, shown in the poster footer).
 - **Install:** paste `planes/deploy_ha.js` into a signed-in admin HA tab, then `await planesPhase1()`,
   `await planesRestart()`, reload, `await planesPhase2()`. `await planesTestTakeover()` previews the poster.
+
+## Voice: Claude can add, change and delete calendar events (2026-11-03)
+
+Home Assistant's CalDAV (iCloud) calendars can only create events, so `custom_components/caldav_edit` adds
+`caldav_edit.update_event` and `caldav_edit.delete_event`. They reuse each calendar entity's own CalDAV connection
+(no second login) and find an event by title and day across the calendars given. Copies with the same UID are
+changed together; ambiguous matches and repeating events are refused with a message the voice assistant can read out.
+Timed changes are written in UTC. The logic is in `events.py` (no Home Assistant imports, tested on its own).
+
+Install: Downloader the files into `/config/custom_components/caldav_edit`, restart, then add the "CalDAV edit"
+integration (one confirm step). The voice tools are the scripts `add_calendar_event`, `change_calendar_event` and
+`delete_calendar_event` (exposed to Assist); "Home" means the iCloud Home shared with Emily (`calendar.home_2`).

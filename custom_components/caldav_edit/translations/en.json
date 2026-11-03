@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "CalDAV edit",
+        "description": "Adds actions that change and delete events in your CalDAV calendars. It uses the CalDAV integration's existing login."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "CalDAV edit is already set up."
+    }
+  },
+  "services": {
+    "update_event": {
+      "name": "Update event",
+      "description": "Changes one event, found by its title and the day it is on. Copies of the event in several of the given calendars are changed together. Repeating events are refused.",
+      "fields": {
+        "entity_id": { "name": "Calendars", "description": "CalDAV calendars to look in." },
+        "date": { "name": "Day", "description": "The day the event is on now." },
+        "title": { "name": "Title", "description": "The event's current title (part of it is enough)." },
+        "new_title": { "name": "New title", "description": "Rename the event." },
+        "new_start": { "name": "New start", "description": "YYYY-MM-DD HH:MM, or YYYY-MM-DD for all day. Without a new end the event keeps its length." },
+        "new_end": { "name": "New end", "description": "Same format as the start." },
+        "new_location": { "name": "New place", "description": "Where it is." },
+        "new_description": { "name": "New notes", "description": "Replaces the notes." }
+      }
+    },
+    "delete_event": {
+      "name": "Delete event",
+      "description": "Deletes one event, found by its title and the day it is on, from every given calendar that has a copy. Repeating events are refused.",
+      "fields": {
+        "entity_id": { "name": "Calendars", "description": "CalDAV calendars to look in." },
+        "date": { "name": "Day", "description": "The day the event is on." },
+        "title": { "name": "Title", "description": "The event's title (part of it is enough)." }
+      }
+    }
+  }
+}

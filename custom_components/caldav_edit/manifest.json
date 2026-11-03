@@ -1,0 +1,13 @@
+{
+  "domain": "caldav_edit",
+  "name": "CalDAV edit",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": ["caldav", "calendar"],
+  "documentation": "https://github.com/ty496/ha-dashboard/tree/main/custom_components/caldav_edit",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

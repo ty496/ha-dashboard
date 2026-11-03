@@ -1,0 +1,53 @@
+update_event:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: caldav
+          domain: calendar
+          multiple: true
+    date:
+      required: true
+      selector:
+        date:
+    title:
+      required: true
+      selector:
+        text:
+    new_title:
+      selector:
+        text:
+    new_start:
+      example: "2026-11-20 18:30"
+      selector:
+        text:
+    new_end:
+      example: "2026-11-20 20:00"
+      selector:
+        text:
+    new_location:
+      selector:
+        text:
+    new_description:
+      selector:
+        text:
+          multiline: true
+
+delete_event:
+  fields:
+    entity_id:
+      required: true
+      selector:
+        entity:
+          integration: caldav
+          domain: calendar
+          multiple: true
+    date:
+      required: true
+      selector:
+        date:
+    title:
+      required: true
+      selector:
+        text:
