@@ -137,6 +137,19 @@ def _wire(value: date | datetime) -> date | datetime:
     return value.astimezone(timezone.utc) if _timed(value) else value
 
 
+def _save(obj: Any) -> None:
+    """Save a just-re-read event. If the server still rejects the cached ETag / Schedule-Tag (412), drop the tag
+    and save once more: the event was read a moment ago, so there is no stale copy to overwrite."""
+    try:
+        obj.save(no_create=True, obj_type="event")
+    except Exception as err:  # caldav's ETagMismatchError / ScheduleTagMismatchError; no caldav import here
+        if type(err).__name__ not in ("ETagMismatchError", "ScheduleTagMismatchError"):
+            raise
+        for key in [k for k in obj.props if str(k).endswith(("getetag", "schedule-tag"))]:
+            obj.props.pop(key, None)
+        obj.save(no_create=True, obj_type="event")
+
+
 def describe(m: Match, tz: tzinfo) -> dict[str, str]:
     start, end = span(m.comp, tz)
     out = {"title": str(m.comp.get("SUMMARY", "")), "calendar": m.calendar, "day": say_day(_day(start, tz))}
@@ -176,7 +189,10 @@ def update(
         if finish <= begin:
             raise EventError("The end has to be after the start.")
     for m in copies:
-        comp = m.comp
+        # Re-read the event first: iCloud answers a save carrying the ETag from a search report with 412
+        # Precondition Failed; a plain GET returns the ETag it expects back.
+        m.obj.load()
+        comp = m.comp = m.obj.icalendar_component
         if new_title:
             comp["SUMMARY"] = new_title
         if new_location:
@@ -188,7 +204,7 @@ def update(
                 comp.pop(key, None)
             comp.add("DTSTART", _wire(begin))
             comp.add("DTEND", _wire(finish))
-        m.obj.save(no_create=True, obj_type="event")
+        _save(m.obj)
     return describe(copies[0], tz)
 
 
