@@ -193,7 +193,7 @@
               "visibility": [
                 {
                   "condition": "numeric_state",
-                  "entity": "sensor.flightradar24_current_in_area",
+                  "entity": "sensor.planes_worth_showing",
                   "above": 0
                 }
               ],

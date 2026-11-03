@@ -20,7 +20,8 @@ const overhead = {
   type: 'markdown',
   name: 'Overhead now',
   grid_options: { columns: 'full' },
-  visibility: [{ condition: 'numeric_state', entity: 'sensor.flightradar24_current_in_area', above: 0 }],
+  // Hidden while only flight-school and local VFR traffic is about (plane_boring in planes.jinja).
+  visibility: [{ condition: 'numeric_state', entity: 'sensor.planes_worth_showing', above: 0 }],
   content: [
     IMPORT, FLIGHT("''"), '{% if f %}',
     '#### ✈︎ OVERHEAD NOW <span>{{ plane_where(f) }} · {{ plane_trend(f) }}</span>',

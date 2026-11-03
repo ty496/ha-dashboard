@@ -82,9 +82,33 @@
 
 {%- macro plane_mph(f) -%}{{ ((f.ground_speed | float(0)) * 1.15078) | round(0) | int }}{%- endmacro -%}
 
-{#- The flight to show: the one the takeover automation picked (by FR24 id), else the closest. -#}
+{#- Flight-school and local VFR traffic (2026-11-03): a light piston plane (the C172, P28A, SR22 and PA44
+    art classes, which take in unknown private types too) going nowhere in particular, no destination
+    filed. Those circle all day and aren't shown. Anything with a destination, any helicopter (the
+    Chinooks) and anything bigger still is. -#}
+{%- macro plane_boring(f) -%}
+{%- if not (f.airport_destination_code_iata or f.airport_destination_city)
+     and plane_key(f) | trim in ['GEN-C172', 'GEN-P28A', 'GEN-SR22', 'GEN-PA44'] -%}y{%- endif -%}
+{%- endmacro -%}
+
+{#- The flights worth showing: in the area with a distance, and not boring. -#}
+{%- macro plane_worth(fl) -%}
+{%- set ns = namespace(ids=[]) -%}
+{%- for f in fl if f.distance is not none and not plane_boring(f) | trim -%}{%- set ns.ids = ns.ids + [f.id] -%}{%- endfor -%}
+{{ ns.ids | join(',') }}
+{%- endmacro -%}
+
+{#- How many flights are worth showing, for the card's visibility (sensor.planes_worth_showing). -#}
+{%- macro plane_count() -%}
+{%- set ids = plane_worth(state_attr('sensor.flightradar24_current_in_area', 'flights') or []) | trim -%}
+{{ ids.split(',') | length if ids else 0 }}
+{%- endmacro -%}
+
+{#- The flight to show: the one the takeover automation picked (by FR24 id), else the closest worth showing. -#}
 {%- macro plane_pick(want_id='') -%}
-{%- set fl = (state_attr('sensor.flightradar24_current_in_area', 'flights') or []) | rejectattr('distance', 'none') | list -%}
-{%- set hit = fl | selectattr('id', 'eq', want_id) | list if want_id else [] -%}
-{{ (hit or (fl | sort(attribute='distance')))[0].id if fl else '' }}
+{%- set all = (state_attr('sensor.flightradar24_current_in_area', 'flights') or []) | rejectattr('distance', 'none') | list -%}
+{%- set ids = (plane_worth(all) | trim).split(',') -%}
+{%- set fl = all | selectattr('id', 'in', ids) | list -%}
+{%- set hit = all | selectattr('id', 'eq', want_id) | list if want_id else [] -%}
+{{ (hit or (fl | sort(attribute='distance')))[0].id if (hit or fl) else '' }}
 {%- endmacro -%}

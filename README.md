@@ -127,6 +127,12 @@ An "Overhead now" glass card at the top of the home view's right column, plus a 
 - **Automations:** `automations/planes_overhead_takeover.json` (07:00-22:00, airborne only, at most every
   5 min, sets `input_text.plane_takeover_id`) and `automations/planes_overhead_count.json` (`counter.planes_today`,
   reset at midnight, shown in the poster footer).
+- **Flight-school filter (2026-11-03):** `plane_boring(f)` in `planes.jinja` marks a light piston plane (the
+  GEN-C172, GEN-P28A, GEN-SR22 and GEN-PA44 classes, which include unknown private types) with no destination:
+  the C172s and Archers circling on VFR all day. Those don't get a poster or a place in `counter.planes_today`,
+  and `plane_pick` skips them for the card. The card shows while `sensor.planes_worth_showing` (a template helper:
+  `{% from 'planes.jinja' import plane_count %}{{ plane_count() | trim }}`) is above 0. Anything with a
+  destination, helicopters (the Chinooks have none) and everything bigger still shows. The Live map shows all.
 - **Install:** paste `planes/deploy_ha.js` into a signed-in admin HA tab, then `await planesPhase1()`,
   `await planesRestart()`, reload, `await planesPhase2()`. `await planesTestTakeover()` previews the poster.
 

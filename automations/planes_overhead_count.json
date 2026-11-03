@@ -1,7 +1,7 @@
 {
   "id": "planes_overhead_count",
   "alias": "Planes overhead count",
-  "description": "counter.planes_today: +1 per aircraft entering the Flightradar24 area, reset at midnight. Feeds the poster footer. Source: ha-dashboard/automations/planes_overhead_count.json",
+  "description": "counter.planes_today: +1 per aircraft entering the Flightradar24 area that is worth showing (not plane_boring: flight-school and local VFR traffic), reset at midnight. Feeds the poster footer. Source: ha-dashboard/automations/planes_overhead_count.json",
   "mode": "queued",
   "max": 20,
   "triggers": [
@@ -11,7 +11,7 @@
   "conditions": [],
   "actions": [
     {"choose": [
-      {"conditions": [{"condition": "trigger", "id": "entry"}], "sequence": [{"action": "counter.increment", "target": {"entity_id": "counter.planes_today"}}]},
+      {"conditions": [{"condition": "trigger", "id": "entry"}, {"condition": "template", "value_template": "{% from 'planes.jinja' import plane_boring %}{{ not (plane_boring(trigger.event.data) | trim) }}"}], "sequence": [{"action": "counter.increment", "target": {"entity_id": "counter.planes_today"}}]},
       {"conditions": [{"condition": "trigger", "id": "midnight"}], "sequence": [{"action": "counter.reset", "target": {"entity_id": "counter.planes_today"}}]}
     ]}
   ]
