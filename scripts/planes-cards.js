@@ -2,7 +2,7 @@
 // - "Overhead now": glass markdown card at the top of the right column, shown while any flight is in the
 //   Flightradar24 area (closest flight, its drawing from /local/planes, route and altitude/speed/type chips).
 // - Poster takeover: full-screen FlightPortrait-style print, shown while input_boolean.plane_takeover is on
-//   (the planes_overhead_takeover automation turns it on for 20 s, at most every 15 min, 07:00-22:00).
+//   (the planes_overhead_takeover automation turns it on for 20 s, at most every 5 min, 07:00-22:00).
 // - Live map pop-up (#plane): tapping the card's drawing opens the Flightradar24 integration's own map card
 //   (Leaflet, the search circle, every flight in it with its trail).
 // Lookup and caption macros live in custom_templates/planes.jinja.
