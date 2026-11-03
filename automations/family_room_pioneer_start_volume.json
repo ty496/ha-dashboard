@@ -1,0 +1,27 @@
+{
+  "id": "family_room_pioneer_start_volume",
+  "alias": "Family room music: start at a nice volume",
+  "description": "Whenever the Pioneer SX-780 is turned on (by the warm-up, a Hubitat remote rule, Apple Home or by hand), the WiiM goes to input_number.family_room_start_volume.",
+  "triggers": [
+    {
+      "trigger": "state",
+      "entity_id": "switch.family_room_pioneer_sx_780",
+      "from": "off",
+      "to": "on"
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "action": "media_player.volume_set",
+      "target": {
+        "entity_id": "media_player.family_room_family_room_wiim"
+      },
+      "data": {
+        "volume_level": "{{ states('input_number.family_room_start_volume') | float(20) / 100 }}"
+      },
+      "continue_on_error": true
+    }
+  ],
+  "mode": "single"
+}

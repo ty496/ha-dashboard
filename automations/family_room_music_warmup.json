@@ -1,0 +1,102 @@
+{
+  "id": "family_room_music_warmup",
+  "alias": "Family room music: warm up the Pioneer first",
+  "description": "When the WiiM starts playing while the Pioneer SX-780 is off: mute and pause the WiiM, power the Pioneer, give it 6 s to settle (its old capacitors and speaker relay), set the start volume, rewind a track that had only just begun, then unmute and play. Covers every source: Music Assistant, the WiiM app, AirPlay, Spotify Connect and the Hubitat rules.",
+  "triggers": [
+    {
+      "trigger": "state",
+      "entity_id": "media_player.family_room_family_room_wiim",
+      "to": "playing"
+    }
+  ],
+  "conditions": [
+    {
+      "condition": "state",
+      "entity_id": "switch.family_room_pioneer_sx_780",
+      "state": "off"
+    }
+  ],
+  "actions": [
+    {
+      "variables": {
+        "started_at": "{{ state_attr('media_player.family_room_family_room_wiim', 'media_position') | float(0) }}"
+      }
+    },
+    {
+      "action": "media_player.volume_mute",
+      "target": {
+        "entity_id": "media_player.family_room_family_room_wiim"
+      },
+      "data": {
+        "is_volume_muted": true
+      },
+      "continue_on_error": true
+    },
+    {
+      "action": "media_player.media_pause",
+      "target": {
+        "entity_id": "media_player.family_room_family_room_wiim"
+      },
+      "continue_on_error": true
+    },
+    {
+      "action": "switch.turn_on",
+      "target": {
+        "entity_id": "switch.family_room_pioneer_sx_780"
+      }
+    },
+    {
+      "delay": {
+        "seconds": 6
+      }
+    },
+    {
+      "action": "media_player.volume_set",
+      "target": {
+        "entity_id": "media_player.family_room_family_room_wiim"
+      },
+      "data": {
+        "volume_level": "{{ states('input_number.family_room_start_volume') | float(20) / 100 }}"
+      },
+      "continue_on_error": true
+    },
+    {
+      "if": [
+        {
+          "condition": "template",
+          "value_template": "{{ started_at < 20 }}"
+        }
+      ],
+      "then": [
+        {
+          "action": "media_player.media_seek",
+          "target": {
+            "entity_id": "media_player.family_room_family_room_wiim"
+          },
+          "data": {
+            "seek_position": 0
+          },
+          "continue_on_error": true
+        }
+      ]
+    },
+    {
+      "action": "media_player.volume_mute",
+      "target": {
+        "entity_id": "media_player.family_room_family_room_wiim"
+      },
+      "data": {
+        "is_volume_muted": false
+      },
+      "continue_on_error": true
+    },
+    {
+      "action": "media_player.media_play",
+      "target": {
+        "entity_id": "media_player.family_room_family_room_wiim"
+      },
+      "continue_on_error": true
+    }
+  ],
+  "mode": "single"
+}
