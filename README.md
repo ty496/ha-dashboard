@@ -140,4 +140,4 @@ Timed changes are written in UTC. The logic is in `events.py` (no Home Assistant
 
 Install: Downloader the files into `/config/custom_components/caldav_edit`, restart, then add the "CalDAV edit"
 integration (one confirm step). The voice tools are the scripts `add_calendar_event`, `change_calendar_event` and
-`delete_calendar_event` (exposed to Assist); "Home" means the iCloud Home shared with Emily (`calendar.home_2`).
+`delete_calendar_event` (exposed to Assist); "Home" means the shared iCloud Home calendar (`calendar.home_2`).
