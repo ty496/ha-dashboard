@@ -847,6 +847,46 @@
                   "forecast_slots": 7
                 }
               ]
+            },
+            {
+              "type": "custom:bubble-card",
+              "card_type": "pop-up",
+              "hash": "#place-weather",
+              "name": "Weather",
+              "icon": "mdi:weather-partly-cloudy",
+              "popup_mode": "centered",
+              "width_desktop": "820px",
+              "slide_to_close": true,
+              "close_by_clicking_outside": true,
+              "trigger_entity": "input_boolean.kitchen_place_weather_popup",
+              "trigger_state": "on",
+              "trigger_close": true,
+              "close_action": {
+                "action": "perform-action",
+                "perform_action": "input_boolean.turn_off",
+                "target": {
+                  "entity_id": "input_boolean.kitchen_place_weather_popup"
+                }
+              },
+              "cards": [
+                {
+                  "type": "weather-forecast",
+                  "entity": "weather.place_weather",
+                  "show_current": true,
+                  "show_forecast": true,
+                  "forecast_type": "hourly",
+                  "forecast_slots": 8,
+                  "secondary_info_attribute": "wind_speed"
+                },
+                {
+                  "type": "weather-forecast",
+                  "entity": "weather.place_weather",
+                  "show_current": false,
+                  "show_forecast": true,
+                  "forecast_type": "daily",
+                  "forecast_slots": 7
+                }
+              ]
             }
           ]
         }

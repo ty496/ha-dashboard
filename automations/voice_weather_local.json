@@ -51,6 +51,12 @@
       ],
       "then": [
         {
+          "action": "input_boolean.turn_off",
+          "target": {
+            "entity_id": "input_boolean.kitchen_place_weather_popup"
+          }
+        },
+        {
           "action": "input_boolean.turn_on",
           "target": {
             "entity_id": "input_boolean.kitchen_weather_popup"

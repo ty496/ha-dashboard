@@ -159,7 +159,14 @@ Weather sites fill in their numbers with scripts, so the agent's web search and 
 `get_place_weather`: a place name (or latitude/longitude for ski areas and trailheads) goes to Open-Meteo's geocoder
 and forecast API (free, no key) and comes back as current conditions, the next 12 hours and up to 7 days, in °F, mph
 and inches. Ambiguous names prefer matches within 350 miles of home ("Vail" is Colorado); "Vail, AZ" or
-"Paris, France" picks by the qualifier. Matching and shaping are in `weather.py` (no Home Assistant imports).
+"Paris, France" picks by the qualifier. Matching and shaping are in `openmeteo.py` (no Home Assistant imports).
+
+Since 0.2.0 each answer also goes to a weather entity, `weather.place_weather` (`weather.py`), which takes the
+place's short name ("Vail, Colorado", "Paris, France") and its current conditions, 24 hourly and 7 daily forecasts,
+so a weather-forecast card draws it like the home forecast. Hours keep their true instant (shown on the home's clock);
+days sit at noon of their own date in the home's time zone, so far-east places keep the right weekday. The tool then
+fires `place_weather_shown` with `place` and the asking `device_id`. The entity is empty until the first lookup and
+after a restart, and is not exposed to Assist.
 
 ## Voice: home weather answered locally, with a pop-up (2026-11-03)
 
@@ -175,3 +182,7 @@ and inches. Ambiguous names prefer matches within 350 miles of home ("Vail" is C
   the Kitchen Echo (`trigger.device_id`), and `trigger_close` shuts it when the helper turns off:
   `automations/kitchen_weather_popup_close.json` does that after 30 s, and closing it by hand does too
   (`close_action`). The helper is not exposed to Assist.
+- **Other places:** the same pop-up as `#place-weather`, on `weather.place_weather` (see "weather anywhere"
+  above). `automations/kitchen_place_weather_popup_open.json` turns on `input_boolean.kitchen_place_weather_popup`
+  on `place_weather_shown` from the Kitchen Echo, closing the home pop-up first (and the home answer closes
+  this one). The close automation handles both helpers.

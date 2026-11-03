@@ -3,26 +3,34 @@
 Web pages fill in live weather with scripts, so a web search or fetch sees stale numbers. This asks Open-Meteo
 directly (free, no key): the place name goes to its geocoder (weather.py picks the right match), then the forecast
 comes back in °F, mph and inches. Offered to conversation agents as the LLM API "Weather anywhere".
+
+Each answer also goes to the weather entity (weather.py), which takes the place's name and forecast for a
+dashboard pop-up, and fires place_weather_shown with the place and the asking device, for an automation to
+open that pop-up on the screen that asked.
 """
 
 from __future__ import annotations
 
 from typing import Any, override
+from zoneinfo import ZoneInfo
 
 import aiohttp
 import probatio
 
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import llm
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .config_flow import DOMAIN
-from .weather import choose, label, shape, split_place
+from .openmeteo import card_data, choose, label, shape, short_label, split_place
 
 GEOCODE = "https://geocoding-api.open-meteo.com/v1/search"
 FORECAST = "https://api.open-meteo.com/v1/forecast"
 TIMEOUT = aiohttp.ClientTimeout(total=15)
+PLATFORMS = [Platform.WEATHER]
+EVENT_SHOWN = "place_weather_shown"
 API_PROMPT = (
     "For weather anywhere other than home (another town, a mountain, a ski area, a trip destination), use "
     "get_place_weather instead of searching the web; web pages show stale weather. For spots that aren't towns, "
@@ -74,22 +82,22 @@ class PlaceWeatherTool(llm.Tool):
                         data={"error": f"Couldn't find '{place}'. Try adding the state or country, or give coordinates."},
                         error=True,
                     )
-                lat, lon, where = hit["latitude"], hit["longitude"], label(hit)
+                lat, lon, where, card = hit["latitude"], hit["longitude"], label(hit), short_label(hit)
             else:
-                where = place or f"{lat:.3f}, {lon:.3f}"
+                where = card = place or f"{lat:.3f}, {lon:.3f}"
             params = {
                 "latitude": str(lat),
                 "longitude": str(lon),
                 "current": "temperature_2m,apparent_temperature,relative_humidity_2m,precipitation,snowfall,"
-                "weather_code,wind_speed_10m,wind_gusts_10m",
-                "hourly": "temperature_2m,precipitation_probability,weather_code",
+                "weather_code,wind_speed_10m,wind_gusts_10m,wind_direction_10m,pressure_msl,is_day",
+                "hourly": "temperature_2m,precipitation_probability,weather_code,is_day",
                 "daily": "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,"
                 "precipitation_sum,snowfall_sum,wind_speed_10m_max",
                 "temperature_unit": "fahrenheit",
                 "wind_speed_unit": "mph",
                 "precipitation_unit": "inch",
                 "timezone": "auto",
-                "forecast_days": str(max(days, 2)),
+                "forecast_days": "7",
             }
             async with session.get(FORECAST, params=params, timeout=TIMEOUT) as resp:
                 resp.raise_for_status()
@@ -98,6 +106,10 @@ class PlaceWeatherTool(llm.Tool):
             return llm.ToolResult(data={"error": f"Open-Meteo didn't answer: {err}"}, error=True)
         result = shape(where, forecast)
         result["days"] = result["days"][:days]
+        if (entity := hass.data.get(DOMAIN, {}).get("entity")) is not None:
+            now, hourly, daily = card_data(forecast, ZoneInfo(hass.config.time_zone))
+            await entity.async_show(card, now, hourly, daily)
+            hass.bus.async_fire(EVENT_SHOWN, {"place": card, "device_id": llm_context.device_id})
         return llm.ToolResult(data=result)
 
 
@@ -114,8 +126,11 @@ class PlaceWeatherAPI(llm.API):
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     entry.async_on_unload(llm.async_register_api(hass, PlaceWeatherAPI(hass)))
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    return True
+    if unloaded := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
+        hass.data.pop(DOMAIN, None)
+    return unloaded
