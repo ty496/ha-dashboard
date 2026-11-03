@@ -1,0 +1,13 @@
+{
+  "domain": "place_weather",
+  "name": "Weather anywhere",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/ty496/ha-dashboard/tree/main/custom_components/place_weather",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

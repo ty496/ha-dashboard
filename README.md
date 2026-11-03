@@ -151,3 +151,12 @@ terms, excluded paths), so nothing personal lives in this public code. Pages ref
 fetching only changed files. It registers an LLM API, "House wiki" (`house_wiki`), with two read-only tools,
 `search_house_wiki` and `read_house_wiki_page`; select it next to Assist in the conversation agent's settings.
 Scope and search are in `wiki.py` (no Home Assistant imports).
+
+## Voice: weather anywhere (2026-11-03)
+
+Weather sites fill in their numbers with scripts, so the agent's web search and fetch only see stale copies.
+`custom_components/place_weather` registers the LLM API "Weather anywhere" (`place_weather`) with one read-only tool,
+`get_place_weather`: a place name (or latitude/longitude for ski areas and trailheads) goes to Open-Meteo's geocoder
+and forecast API (free, no key) and comes back as current conditions, the next 12 hours and up to 7 days, in °F, mph
+and inches. Ambiguous names prefer matches within 350 miles of home ("Vail" is Colorado); "Vail, AZ" or
+"Paris, France" picks by the qualifier. Matching and shaping are in `weather.py` (no Home Assistant imports).

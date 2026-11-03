@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Weather anywhere",
+        "description": "Gives voice assistants a tool for current weather and the forecast at any place, from Open-Meteo (free, no account)."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Weather anywhere is already set up."
+    }
+  }
+}
