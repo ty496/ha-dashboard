@@ -141,3 +141,13 @@ Timed changes are written in UTC. The logic is in `events.py` (no Home Assistant
 Install: Downloader the files into `/config/custom_components/caldav_edit`, restart, then add the "CalDAV edit"
 integration (one confirm step). The voice tools are the scripts `add_calendar_event`, `change_calendar_event` and
 `delete_calendar_event` (exposed to Assist); "Home" means the shared iCloud Home calendar (`calendar.home_2`).
+
+## Voice: read-only house wiki for Claude (2026-11-03)
+
+`custom_components/house_wiki` gives the voice agent read-only access to household notes kept in a private GitHub
+repo (an Obsidian vault). Setup takes a fine-grained token limited to that repo with Contents: Read-only; the entry's
+options decide which pages are in scope (included folders, folders whose pages count only when they mention given
+terms, excluded paths), so nothing personal lives in this public code. Pages refresh from GitHub every 30 minutes,
+fetching only changed files. It registers an LLM API, "House wiki" (`house_wiki`), with two read-only tools,
+`search_house_wiki` and `read_house_wiki_page`; select it next to Assist in the conversation agent's settings.
+Scope and search are in `wiki.py` (no Home Assistant imports).

@@ -1,0 +1,36 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "House wiki",
+        "description": "Gives voice assistants read-only access to notes kept in a GitHub repo (for example an Obsidian vault). Use a fine-grained token limited to that one repository with Contents: Read-only.",
+        "data": {
+          "token": "GitHub token (read-only)",
+          "repo": "Repository (owner/name)",
+          "branch": "Branch"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "GitHub refused the token for that repository. Check the token's repository access and the owner/name.",
+      "cannot_connect": "Could not reach GitHub."
+    },
+    "abort": {
+      "single_instance_allowed": "The house wiki is already set up."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Pages in scope",
+        "description": "One entry per line. Everything under an included folder is read. Pages under a mention folder are read only when they contain one of the mention terms. Any path containing an excluded text is skipped.",
+        "data": {
+          "include": "Included folders",
+          "mention_in": "Mention folders",
+          "mention_terms": "Mention terms",
+          "exclude": "Excluded paths"
+        }
+      }
+    }
+  }
+}
