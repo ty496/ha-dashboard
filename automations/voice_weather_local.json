@@ -1,0 +1,66 @@
+{
+  "id": "voice_weather_local",
+  "alias": "Voice: weather (local)",
+  "description": "Answers home weather questions on the local agent from weather.forecast_home (Met.no), so they never wait on Claude, and opens the #weather pop-up on the Kitchen Echo when the question came from it. Weather for other places still goes to Claude (get_place_weather).",
+  "triggers": [
+    {
+      "trigger": "conversation",
+      "id": "today",
+      "command": [
+        "(what's|what is|whats) the weather [like] [(today|right now|now|outside|out there)]",
+        "(how's|how is|hows) the weather [(today|right now|now|outside|out there)]",
+        "(what's|what is|whats) it like (outside|out there)",
+        "(what's|what is|whats) [the] forecast [(today|for today)]",
+        "(what's|what is|whats) today's forecast",
+        "(what's|what is|whats) the temperature (outside|out there)",
+        "how (cold|warm|hot) is it (outside|out there)",
+        "(is it|will it|is it going to) (rain|snow) today"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "tomorrow",
+      "command": [
+        "(what's|what is|whats) the weather [going to be] [like] tomorrow",
+        "(how's|how is|hows) the weather [going to be] tomorrow",
+        "(what's|what is|whats) [the] forecast [for] tomorrow",
+        "(what's|what is|whats) tomorrow's forecast",
+        "(is it|will it|is it going to) (rain|snow) tomorrow",
+        "how (cold|warm|hot) (will it be|is it going to be) tomorrow"
+      ]
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "action": "weather.get_forecasts",
+      "target": {
+        "entity_id": "weather.forecast_home"
+      },
+      "data": {
+        "type": "daily"
+      },
+      "response_variable": "fc"
+    },
+    {
+      "if": [
+        {
+          "condition": "template",
+          "value_template": "{{ trigger.device_id == '41248314eeef303ff96af4da61090f36' }}"
+        }
+      ],
+      "then": [
+        {
+          "action": "input_boolean.turn_on",
+          "target": {
+            "entity_id": "input_boolean.kitchen_weather_popup"
+          }
+        }
+      ]
+    },
+    {
+      "set_conversation_response": "{%- set names = {'clear-night':'clear','cloudy':'cloudy','exceptional':'unusual out there','fog':'foggy','hail':'hailing','lightning':'stormy','lightning-rainy':'stormy','partlycloudy':'partly cloudy','pouring':'pouring','rainy':'rainy','snowy':'snowy','snowy-rainy':'wet with rain and snow','sunny':'sunny','windy':'windy','windy-variant':'windy'} -%}\n{%- set days = fc['weather.forecast_home'].forecast -%}\n{%- set target = now().date() + timedelta(days=1) if trigger.id == 'tomorrow' else now().date() -%}\n{%- set ns = namespace(d=none) -%}\n{%- for x in days if ns.d is none and as_local(as_datetime(x.datetime)).date() == target -%}{%- set ns.d = x -%}{%- endfor -%}\n{%- set d = ns.d or days[0] -%}\n{%- set p = d.precipitation | float(0) -%}\n{%- set kind = 'snow' if d.condition in ['snowy', 'snowy-rainy'] else 'rain' -%}\n{%- set wet = ', with about ' ~ (p | round(1)) ~ ' inches of ' ~ kind if p >= 0.05 else ', and no rain or snow is expected' -%}\n{%- if trigger.id == 'tomorrow' -%}\nTomorrow will be {{ names.get(d.condition, d.condition) }}, with a high of {{ d.temperature | round(0) | int }} and a low of {{ d.templow | round(0) | int }}{{ wet }}.\n{%- else -%}\nIt's {{ state_attr('weather.forecast_home', 'temperature') | round(0) | int }} degrees and {{ names.get(states('weather.forecast_home'), states('weather.forecast_home')) }}. Today's high is {{ d.temperature | round(0) | int }} with a low of {{ d.templow | round(0) | int }}{{ wet }}.\n{%- endif -%}"
+    }
+  ],
+  "mode": "parallel"
+}

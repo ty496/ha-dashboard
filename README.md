@@ -160,3 +160,18 @@ Weather sites fill in their numbers with scripts, so the agent's web search and 
 and forecast API (free, no key) and comes back as current conditions, the next 12 hours and up to 7 days, in °F, mph
 and inches. Ambiguous names prefer matches within 350 miles of home ("Vail" is Colorado); "Vail, AZ" or
 "Paris, France" picks by the qualifier. Matching and shaping are in `weather.py` (no Home Assistant imports).
+
+## Voice: home weather answered locally, with a pop-up (2026-11-03)
+
+- **Answer:** `automations/voice_weather_local.json`. Conversation (sentence) triggers for home weather
+  ("what's the weather today", "how's it outside", "will it rain tomorrow", ...) answer from
+  `weather.forecast_home` with `set_conversation_response`. Sentence triggers run before the voice
+  pipeline's agent, so these never wait on Claude (9 ms through the pipeline, against 3-5 s). Weather for
+  another place has no trigger and still goes to Claude's `get_place_weather`. "What's the temperature"
+  alone is left to Claude on purpose, since it may mean inside.
+- **Pop-up:** `scripts/weather-popup.js` adds a Bubble Card pop-up (`#weather`) to the home view: the
+  hourly forecast with current conditions over the week's daily forecast. It opens when
+  `input_boolean.kitchen_weather_popup` turns on, which the answer does only when the question came from
+  the Kitchen Echo (`trigger.device_id`), and `trigger_close` shuts it when the helper turns off:
+  `automations/kitchen_weather_popup_close.json` does that after 30 s, and closing it by hand does too
+  (`close_action`). The helper is not exposed to Assist.

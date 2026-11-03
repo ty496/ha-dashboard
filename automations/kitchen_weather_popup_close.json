@@ -1,0 +1,25 @@
+{
+  "id": "kitchen_weather_popup_close",
+  "alias": "Kitchen weather popup: close after 30 s",
+  "description": "Closes the #weather pop-up on the Show dashboard 30 s after a voice weather answer opened it (Bubble Card trigger_close follows the helper).",
+  "triggers": [
+    {
+      "trigger": "state",
+      "entity_id": "input_boolean.kitchen_weather_popup",
+      "to": "on",
+      "for": {
+        "seconds": 30
+      }
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "action": "input_boolean.turn_off",
+      "target": {
+        "entity_id": "input_boolean.kitchen_weather_popup"
+      }
+    }
+  ],
+  "mode": "restart"
+}
