@@ -1,7 +1,7 @@
 {
   "id": "family_room_pioneer_auto_off",
   "alias": "Family room music: Pioneer off after 15 quiet minutes",
-  "description": "Turns the Pioneer SX-780 off once the WiiM hasn't played for 15 minutes. Not while the WiiM is on a wired input (TV, Phono, Line In, Optical), where it may be passing sound through without reporting it as playing.",
+  "description": "Turns the Pioneer SX-780 off once the WiiM hasn't played for 15 minutes, in a session where the WiiM played (input_boolean.family_room_wiim_session). A Pioneer turned on for a record (the turntable uses the Pioneer's phono stage, invisible to the WiiM) is left alone. Not while the WiiM is on a wired input (TV, Phono, Line In, Optical), where it may be passing sound through without reporting it as playing.",
   "triggers": [
     {
       "trigger": "state",
@@ -24,6 +24,11 @@
     {
       "condition": "state",
       "entity_id": "switch.family_room_pioneer_sx_780",
+      "state": "on"
+    },
+    {
+      "condition": "state",
+      "entity_id": "input_boolean.family_room_wiim_session",
       "state": "on"
     },
     {

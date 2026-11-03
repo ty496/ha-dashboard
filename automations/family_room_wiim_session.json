@@ -1,0 +1,59 @@
+{
+  "id": "family_room_wiim_session",
+  "alias": "Family room music: note when the WiiM is the source",
+  "description": "On when the WiiM plays; off when the Pioneer SX-780 turns off. The auto-off only acts on sessions where the WiiM played, because the turntable runs through the Pioneer's own phono stage and the WiiM can't see a record playing.",
+  "triggers": [
+    {
+      "trigger": "state",
+      "entity_id": "media_player.family_room_family_room_wiim",
+      "to": "playing",
+      "id": "wiim"
+    },
+    {
+      "trigger": "state",
+      "entity_id": "switch.family_room_pioneer_sx_780",
+      "to": "off",
+      "id": "amp_off"
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "choose": [
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "wiim"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "input_boolean.turn_on",
+              "target": {
+                "entity_id": "input_boolean.family_room_wiim_session"
+              }
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "amp_off"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "input_boolean.turn_off",
+              "target": {
+                "entity_id": "input_boolean.family_room_wiim_session"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mode": "queued"
+}
