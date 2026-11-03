@@ -138,16 +138,18 @@ def _wire(value: date | datetime) -> date | datetime:
 
 
 def _save(obj: Any) -> None:
-    """Save a just-re-read event. If the server still rejects the cached ETag / Schedule-Tag (412), drop the tag
-    and save once more: the event was read a moment ago, so there is no stale copy to overwrite."""
+    """Save a just-re-read event with a plain PUT to its own URL. Not save(no_create=True): that first looks the
+    UID up with a text-match REPORT, which iCloud answers with 412 Precondition Failed. If the server rejects the
+    cached ETag / Schedule-Tag (412 on the PUT), drop the tag and save once more: the event was read a moment ago,
+    so there is no stale copy to overwrite."""
     try:
-        obj.save(no_create=True, obj_type="event")
+        obj.save()
     except Exception as err:  # caldav's ETagMismatchError / ScheduleTagMismatchError; no caldav import here
         if type(err).__name__ not in ("ETagMismatchError", "ScheduleTagMismatchError"):
             raise
         for key in [k for k in obj.props if str(k).endswith(("getetag", "schedule-tag"))]:
             obj.props.pop(key, None)
-        obj.save(no_create=True, obj_type="event")
+        obj.save()
 
 
 def describe(m: Match, tz: tzinfo) -> dict[str, str]:
