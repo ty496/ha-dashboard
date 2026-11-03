@@ -769,7 +769,7 @@
               "name": "Live map",
               "icon": "mdi:radar",
               "popup_mode": "centered",
-              "width_desktop": "820px",
+              "width_desktop": "580px",
               "slide_to_close": true,
               "close_by_clicking_outside": true,
               "cards": [
@@ -777,12 +777,16 @@
                   "type": "custom:flightradar24-card",
                   "entity": "sensor.flightradar24_current_in_area",
                   "show_header": false,
-                  "show_flights": true,
+                  "show_flights": false,
                   "show_tracks": true,
                   "show_area": true,
                   "show_area_center": true,
                   "interactive_map": false,
-                  "map_style": "osm"
+                  "map_style": "osm",
+                  "grid_options": {
+                    "columns": "full",
+                    "rows": "auto"
+                  }
                 }
               ]
             },

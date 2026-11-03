@@ -97,7 +97,10 @@ const takeover = {
 };
 
 // Same shape as the #controls, #rooms and #scores pop-ups. The map stays non-interactive so a drag closes the
-// pop-up instead of panning.
+// pop-up instead of panning. The pop-up lays its cards out on the sections grid, which held the map card to a
+// few fixed rows (184 px of a 490 px map, hiding the search area's lower half and home): rows 'auto' lets it
+// take its own height. The flight list is left out so the 16:10 map fits the Echo's 1280x800 without
+// scrolling; a tap on a plane on the map shows the same details.
 const mapPopup = {
   type: 'custom:bubble-card',
   card_type: 'pop-up',
@@ -105,19 +108,20 @@ const mapPopup = {
   name: 'Live map',
   icon: 'mdi:radar',
   popup_mode: 'centered',
-  width_desktop: '820px',
+  width_desktop: '580px', // the card shapes its map like the search area (a square): 820 px made it 780 px tall
   slide_to_close: true,
   close_by_clicking_outside: true,
   cards: [{
     type: 'custom:flightradar24-card',
     entity: 'sensor.flightradar24_current_in_area',
     show_header: false,
-    show_flights: true,
+    show_flights: false,
     show_tracks: true,
     show_area: true,
     show_area_center: true,
     interactive_map: false,
     map_style: 'osm',
+    grid_options: { columns: 'full', rows: 'auto' },
   }],
 };
 
