@@ -186,3 +186,11 @@ after a restart, and is not exposed to Assist.
   above). `automations/kitchen_place_weather_popup_open.json` turns on `input_boolean.kitchen_place_weather_popup`
   on `place_weather_shown` from the Kitchen Echo, closing the home pop-up first (and the home answer closes
   this one). The close automation handles both helpers.
+- **The Echo's own forecast page:** TECHO5 opens it after any weather question once the answer ends, over
+  the dashboard, with no setting or Home Assistant action to stop it (firmware `display.go`: only a tap or
+  "go home" clears it). So it wears the dashboard's colors instead: TECHO5 custom themes set on the device's
+  setup page (Screen & Photos, Custom colors). Light: ground `#96d3f0` (Glass Day's sky), accent `#2e7d32`,
+  text `#1b2230`, dim `#4a5568`, rules `#78bde3`. Dark: ground `#132e48` (Glass Night's sky), accent
+  `#6ee7b7`, text `#f2f4f8`, dim `#b4bccb`, rules `#24466a`. The accent is also the colour of the listening
+  light. `show_glass_follows_the_sky` now sets `select.kitchen_theme_mode` to Dark with the dark glass themes
+  and Light otherwise, only when it changes.
