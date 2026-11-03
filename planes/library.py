@@ -43,6 +43,7 @@ COMBOS = [
     ("GEN", "CL35", "", "Bombardier Challenger 350"),
     ("GEN", "GLEX", "", "Bombardier Global Express"),
     ("GEN", "HELI", "", "Airbus Helicopters H125"),
+    ("MIL", "H47", "U.S. Army", "Boeing CH-47F Chinook"),  # 2026-11-03, ref: Commons 11-08097 FDK MD1 + 13-08436 EGLF
     ("GEN", "NARROW", "", "Boeing 737-800"),
     ("GEN", "REGIONAL", "", "Embraer 175"),
     ("GEN", "WIDE", "", "Boeing 787-9"),

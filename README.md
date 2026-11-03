@@ -114,7 +114,7 @@ An "Overhead now" glass card at the top of the home view's right column, plus a 
 
 - **Data:** Flightradar24 custom integration (HACS, AlexandrErohin), 8 km around `zone.home`, 30 s polling.
   `sensor.flightradar24_current_in_area` carries a `flights` list; `flightradar24_entry` fires per new plane.
-- **Art:** `www/planes/<airline ICAO>-<type ICAO>.webp` (31 combos) and `GEN-*.webp` (12 white fallbacks),
+- **Art:** `www/planes/<airline ICAO>-<type ICAO>.webp` (31 combos), `GEN-*.webp` (12 white fallbacks) and `MIL-H47.webp` (Army CH-47F Chinook, added 2026-11-03),
   served from `/config/www/planes` at `/local/planes`. Made in `planes/` (Nano Banana from Commons photos,
   keyed off magenta by `planes/cutout.py`); the 2K masters stay local.
 - **Lookup:** `custom_templates/planes.jinja` (macros `plane_key`, `plane_art`, `plane_where`, ...) maps a flight to

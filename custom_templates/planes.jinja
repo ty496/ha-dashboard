@@ -21,6 +21,8 @@
 {%- set cat = (f.aircraft_category or '') | lower -%}
 {%- if airline and (airline ~ '-' ~ t) in have -%}{{ airline }}-{{ t }}
 {%- elif airline and (airline ~ '-' ~ sibling.get(t, '')) in have -%}{{ airline }}-{{ sibling.get(t, '') }}
+{#- The CH-47 Chinooks that cross Denver are Army or Army National Guard, all in Army tan. -#}
+{%- elif t in ['H47', 'CH47'] -%}MIL-H47
 {%- elif 'heli' in cat or t in ['R22', 'R44', 'R66', 'EC20', 'EC30', 'EC35', 'EC45', 'AS50', 'AS55', 'B06', 'B407', 'B429', 'H125', 'H135', 'H145', 'A109', 'A119', 'S76'] -%}GEN-HELI
 {%- elif t in ['C150', 'C152', 'C162', 'C170', 'C172', 'C175', 'C177', 'C180', 'C182', 'C185', 'C195', 'C205', 'C206', 'C207', 'C208', 'C210', 'P210', 'T210'] -%}GEN-C172
 {%- elif t in ['SR20', 'SR22', 'S22T', 'COL3', 'COL4', 'C400'] -%}GEN-SR22
