@@ -45,6 +45,15 @@ COMBOS = [
     ("GEN", "HELI", "", "Airbus Helicopters H125"),
     ("MIL", "H47", "U.S. Army", "Boeing CH-47F Chinook"),  # 2026-11-03, ref: Commons 11-08097 FDK MD1 + 13-08436 EGLF
     ("GEN", "BALLOON", "", "Stratospheric balloon"),  # 2026-11-04 (Urban Sky, N37UY at 52,200 ft), ref: Commons NASA Super Pressure Balloon 26978370252; 1600x540 canvas so it sits like the planes
+    # 2026-11-04, from the recorder's flightradar24_entry events (Nov 3-4): the most frequent planes still on generic art.
+    ("JBU", "A321", "JetBlue", "Airbus A321"),
+    ("UPS", "B763", "UPS Airlines", "Boeing 767-300F"),
+    ("FDX", "B763", "FedEx Express", "Boeing 767-300F"),
+    ("FDX", "A306", "FedEx Express", "Airbus A300-600F"),
+    ("DAL", "B763", "Delta Air Lines", "Boeing 767-300"),
+    ("AAL", "E75L", "American Eagle", "Embraer 175"),
+    ("ASA", "E75L", "Alaska Airlines", "Embraer 175"),
+    ("GEN", "TWINPROP", "", "Beechcraft 1900D"),
     ("GEN", "NARROW", "", "Boeing 737-800"),
     ("GEN", "REGIONAL", "", "Embraer 175"),
     ("GEN", "WIDE", "", "Boeing 787-9"),

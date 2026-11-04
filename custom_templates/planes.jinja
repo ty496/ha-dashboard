@@ -5,16 +5,18 @@
     Lives in /config/custom_templates; after changing it run homeassistant.reload_custom_templates. -#}
 
 {%- macro plane_key(f) -%}
-{%- set have = ['AAL-A319', 'AAL-A321', 'AAL-B738', 'AAY-A320', 'ACA-BCS3', 'ASA-B39M', 'ASA-B739', 'BAW-A35K',
-  'DAL-A320', 'DAL-A321', 'DAL-B739', 'DAL-BCS3', 'FFT-A20N', 'FFT-A21N', 'SCX-B738', 'SWA-B737', 'SWA-B738',
-  'SWA-B38M', 'UAL-A319', 'UAL-A320', 'UAL-A21N', 'UAL-B38M', 'UAL-B39M', 'UAL-B738', 'UAL-B739', 'UAL-B752',
-  'UAL-B772', 'UAL-B789', 'UAX-CRJ2', 'UAX-CRJ7', 'UAX-E75L'] -%}
-{#- Regional operators out of DEN mostly fly as United Express; Horizon wears Alaska colours. -#}
-{%- set operator = {'SKW': 'UAX', 'RPA': 'UAX', 'ASH': 'UAX', 'GJS': 'UAX', 'UCA': 'UAX', 'AWI': 'UAX', 'QXE': 'ASA'} -%}
+{%- set have = ['AAL-A319', 'AAL-A321', 'AAL-B738', 'AAL-E75L', 'AAY-A320', 'ACA-BCS3', 'ASA-B39M', 'ASA-B739',
+  'ASA-E75L', 'BAW-A35K', 'DAL-A320', 'DAL-A321', 'DAL-B739', 'DAL-B763', 'DAL-BCS3', 'FDX-A306', 'FDX-B763',
+  'FFT-A20N', 'FFT-A21N', 'JBU-A321', 'SCX-B738', 'SWA-B737', 'SWA-B738', 'SWA-B38M', 'UAL-A319', 'UAL-A320',
+  'UAL-A21N', 'UAL-B38M', 'UAL-B39M', 'UAL-B738', 'UAL-B739', 'UAL-B752', 'UAL-B772', 'UAL-B789', 'UAX-CRJ2',
+  'UAX-CRJ7', 'UAX-E75L', 'UPS-B763'] -%}
+{#- Regional operators out of DEN mostly fly as United Express; Horizon wears Alaska colours, Envoy American Eagle's. -#}
+{%- set operator = {'SKW': 'UAX', 'RPA': 'UAX', 'ASH': 'UAX', 'GJS': 'UAX', 'UCA': 'UAX', 'AWI': 'UAX', 'QXE': 'ASA', 'ENY': 'AAL'} -%}
 {#- When an airline has no drawing for this exact type, the nearest sibling it does have. -#}
 {%- set sibling = {'B78X': 'B789', 'B788': 'B789', 'B77W': 'B772', 'B77L': 'B772', 'B753': 'B752', 'A320': 'A20N',
   'A321': 'A21N', 'A21N': 'A321', 'A20N': 'A320', 'B38M': 'B738', 'B738': 'B739', 'B739': 'B738', 'B39M': 'B739',
-  'BCS1': 'BCS3', 'E75S': 'E75L', 'E170': 'E75L', 'CRJ9': 'CRJ7', 'CRJ5': 'CRJ7', 'B737': 'B738', 'A319': 'A320'} -%}
+  'BCS1': 'BCS3', 'E75S': 'E75L', 'E170': 'E75L', 'CRJ9': 'CRJ7', 'CRJ5': 'CRJ7', 'B737': 'B738', 'A319': 'A320', 'B762': 'B763',
+  'B764': 'B763', 'A30B': 'A306'} -%}
 {%- set icao = (f.airline_icao or '') | upper -%}
 {%- set t = (f.aircraft_code or '') | upper -%}
 {#- Flightradar24 often files United Express flights under United itself (UAL with an E175 or CRJ, 2026-11-04). -#}
@@ -36,6 +38,8 @@
 {%- elif t in ['CL30', 'CL35', 'CL60', 'G280', 'GALX', 'FA50', 'F2TH', 'FA20', 'ASTR', 'G150', 'G200'] -%}GEN-CL35
 {%- elif t in ['GLEX', 'GL5T', 'GL7T', 'GL8T', 'GLF4', 'GLF5', 'GLF6', 'GLF7', 'G650', 'FA7X', 'FA8X', 'F900', 'FA6X'] -%}GEN-GLEX
 {%- elif t[:3] in ['B74', 'B76', 'B77', 'B78', 'A33', 'A34', 'A35', 'A38', 'MD1'] or t in ['A306', 'A310'] -%}GEN-WIDE
+{#- Small twin turboprops: Key Lime Air's Metroliners and Brasilias, Beech 1900s and 99s (2026-11-04; they were drawn as a 737). -#}
+{%- elif t in ['SW2', 'SW3', 'SW4', 'E110', 'E120', 'BE99', 'B190', 'JS31', 'JS32', 'JS41', 'SF34', 'D228', 'L410', 'C212'] -%}GEN-TWINPROP
 {%- elif t[:3] in ['E17', 'E19', 'E75', 'E13', 'E14', 'CRJ', 'DH8', 'AT4', 'AT7', 'D32', 'SF3', 'J32'] -%}GEN-REGIONAL
 {#- Airliners can arrive with no airline code (Amazon Air flown by Sun Country, charters, ferry flights). -#}
 {%- elif t[:3] in ['B73', 'B71', 'B75', 'A31', 'A32', 'MD8', 'MD9', 'BCS'] or t in ['B37M', 'B38M', 'B39M', 'B3XM', 'A19N', 'A20N', 'A21N'] -%}GEN-NARROW
