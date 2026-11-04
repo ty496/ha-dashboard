@@ -1,0 +1,87 @@
+{
+  "id": "music_pause_watchdog",
+  "alias": "Music: make sure the Kitchen and HomePod stop",
+  "description": "When a pause, play/pause or stop for the Kitchen Echo or the HomePod (the Whole House group's members) leaves it still playing 3 s later, stops the Whole House group and pauses the speaker again, then powers it off if it is still playing. Whatever sent the command: the Show's buttons, voice, a script. On 2026-11-04 a switch from Whole House to Kitchen, with a play tap in the middle of the move, left Music Assistant counting the Kitchen as a group member while it played its own queue; it redirected every pause and stop for the Kitchen to the idle group ('Player Kitchen is synced or grouped and can not accept playback related commands itself') and Hotel California played on for three minutes. Stopping the group freed it. A play/pause tap on a speaker that was not playing is ignored. Source: ha-dashboard/automations/music_pause_watchdog.json",
+  "mode": "single",
+  "max_exceeded": "silent",
+  "triggers": [
+    {
+      "trigger": "event",
+      "event_type": "call_service",
+      "event_data": {
+        "domain": "media_player"
+      }
+    }
+  ],
+  "conditions": [
+    {
+      "condition": "template",
+      "value_template": "{% set d = trigger.event.data %}{% set ids = d.service_data.entity_id | default([]) %}{% set ids = [ids] if ids is string else ids %}{% set hit = ids | select('in', ['media_player.kitchen', 'media_player.homepod']) | list %}{{ d.service in ['media_pause', 'media_play_pause', 'media_stop'] and hit | count > 0 and is_state(hit[0], 'playing') }}"
+    }
+  ],
+  "actions": [
+    {
+      "variables": {
+        "speaker": "{% set ids = trigger.event.data.service_data.entity_id %}{% set ids = [ids] if ids is string else ids %}{{ (ids | select('in', ['media_player.kitchen', 'media_player.homepod']) | list)[0] }}"
+      }
+    },
+    {
+      "delay": {
+        "seconds": 3
+      }
+    },
+    {
+      "condition": "template",
+      "value_template": "{{ is_state(speaker, 'playing') }}"
+    },
+    {
+      "action": "media_player.media_stop",
+      "target": {
+        "entity_id": "media_player.whole_house"
+      },
+      "continue_on_error": true
+    },
+    {
+      "delay": {
+        "seconds": 1
+      }
+    },
+    {
+      "action": "media_player.media_pause",
+      "target": {
+        "entity_id": "{{ speaker }}"
+      },
+      "continue_on_error": true
+    },
+    {
+      "delay": {
+        "seconds": 3
+      }
+    },
+    {
+      "if": [
+        {
+          "condition": "template",
+          "value_template": "{{ is_state(speaker, 'playing') }}"
+        }
+      ],
+      "then": [
+        {
+          "action": "media_player.turn_off",
+          "target": {
+            "entity_id": "{{ speaker }}"
+          },
+          "continue_on_error": true
+        }
+      ]
+    },
+    {
+      "action": "logbook.log",
+      "data": {
+        "name": "Music watchdog",
+        "entity_id": "{{ speaker }}",
+        "message": "a {{ trigger.event.data.service }} did not take; stopped the Whole House group and paused it again ({{ states(speaker) }} now)"
+      }
+    }
+  ]
+}
