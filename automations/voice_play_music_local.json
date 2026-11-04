@@ -1,0 +1,189 @@
+{
+  "id": "voice_play_music_local",
+  "alias": "Voice: play music (local)",
+  "description": "\"Play X [on/in Y]\" answered on the local agent through Music Assistant, so music requests skip Claude. Y: the family room stereo (also the default), the HomePod, the kitchen, the basement. \"X by Y\" is a song with its artist; \"X playlist\" or \"X album\" sets the type. A request naming another target (a TV) or too vague to search (\"some music\") is handed to Claude as said. If Music Assistant finds nothing, it says so. One wildcard sentence, with the speaker read from its end: separate sentences per speaker lost to the bare wildcard.",
+  "triggers": [
+    {
+      "trigger": "conversation",
+      "command": [
+        "play {query}",
+        "put on {query}"
+      ]
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "variables": {
+        "keys": {
+          "family room stereo": "stereo",
+          "family room": "stereo",
+          "stereo": "stereo",
+          "big speakers": "stereo",
+          "homepod": "homepod",
+          "home pod": "homepod",
+          "kitchen speaker": "kitchen",
+          "kitchen echo": "kitchen",
+          "kitchen": "kitchen",
+          "basement stereo": "basement",
+          "basement speakers": "basement",
+          "basement receiver": "basement",
+          "basement": "basement"
+        },
+        "players": {
+          "stereo": "media_player.family_room_stereo",
+          "homepod": "media_player.homepod",
+          "kitchen": "media_player.kitchen",
+          "basement": "media_player.basement_stereo"
+        },
+        "spoken": {
+          "stereo": "on the family room stereo",
+          "homepod": "on the HomePod",
+          "kitchen": "in the kitchen",
+          "basement": "on the basement stereo"
+        },
+        "raw": "{{ trigger.slots.query | trim }}",
+        "found": "{{ trigger.slots.query | trim | regex_findall('^(.*?) (?:on|in|through|to) (?:the )?(family room stereo|family room|stereo|big speakers|homepod|home pod|kitchen speaker|kitchen echo|kitchen|basement stereo|basement speakers|basement receiver|basement)$', ignorecase=True) }}"
+      }
+    },
+    {
+      "variables": {
+        "key": "{{ keys[found[0][1] | lower] if found else 'stereo' }}",
+        "named": "{{ found | count > 0 }}",
+        "q": "{{ (found[0][0] if found else raw) | trim | regex_replace('^(me |us )?(some|a little|a bit of) ', '') | trim }}"
+      }
+    },
+    {
+      "variables": {
+        "player": "{{ players[key] }}",
+        "where": "{{ spoken[key] }}",
+        "vague": "{{ q | lower in ['music', 'something', 'anything', 'a song', 'songs', 'some music', 'something good', 'tunes'] }}",
+        "elsewhere": "{{ not named and (q | lower) is search(' (on|in|through|to) (the )?[a-z0-9 ]+$') }}",
+        "kind": "{{ 'playlist' if q | lower is search(' playlist$') else ('album' if q | lower is search(' album$') else '') }}",
+        "name": "{{ q | regex_replace('(?i) (playlist|album)$', '') | trim }}"
+      }
+    },
+    {
+      "variables": {
+        "title": "{{ name.split(' by ')[0] | trim if ' by ' in name else name }}",
+        "artist": "{{ name.split(' by ', 1)[1] | trim if ' by ' in name else '' }}",
+        "before": "{{ state_attr(player, 'media_content_id') }}"
+      }
+    },
+    {
+      "choose": [
+        {
+          "conditions": [
+            {
+              "condition": "template",
+              "value_template": "{{ vague or elsewhere }}"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "conversation.process",
+              "data": {
+                "agent_id": "conversation.claude_conversation",
+                "text": "{{ trigger.sentence }}"
+              },
+              "response_variable": "claude"
+            },
+            {
+              "set_conversation_response": "{{ claude.response.speech.plain.speech | default('Done.') }}"
+            }
+          ]
+        }
+      ],
+      "default": [
+        {
+          "choose": [
+            {
+              "conditions": [
+                {
+                  "condition": "template",
+                  "value_template": "{{ artist != '' }}"
+                }
+              ],
+              "sequence": [
+                {
+                  "action": "music_assistant.play_media",
+                  "target": {
+                    "entity_id": "{{ player }}"
+                  },
+                  "data": {
+                    "media_id": "{{ title }}",
+                    "artist": "{{ artist }}",
+                    "media_type": "track",
+                    "enqueue": "replace"
+                  },
+                  "continue_on_error": true
+                }
+              ]
+            },
+            {
+              "conditions": [
+                {
+                  "condition": "template",
+                  "value_template": "{{ kind != '' }}"
+                }
+              ],
+              "sequence": [
+                {
+                  "action": "music_assistant.play_media",
+                  "target": {
+                    "entity_id": "{{ player }}"
+                  },
+                  "data": {
+                    "media_id": "{{ name }}",
+                    "media_type": "{{ kind }}",
+                    "enqueue": "replace"
+                  },
+                  "continue_on_error": true
+                }
+              ]
+            }
+          ],
+          "default": [
+            {
+              "action": "music_assistant.play_media",
+              "target": {
+                "entity_id": "{{ player }}"
+              },
+              "data": {
+                "media_id": "{{ name }}",
+                "enqueue": "replace"
+              },
+              "continue_on_error": true
+            }
+          ]
+        },
+        {
+          "wait_template": "{{ states(player) in ['playing', 'buffering', 'paused'] and state_attr(player, 'media_content_id') != before }}",
+          "timeout": {
+            "seconds": 6
+          },
+          "continue_on_timeout": true
+        },
+        {
+          "if": [
+            {
+              "condition": "template",
+              "value_template": "{{ wait.completed }}"
+            }
+          ],
+          "then": [
+            {
+              "set_conversation_response": "Playing {{ state_attr(player, 'media_title') or name }}{{ (' by ' ~ state_attr(player, 'media_artist')) if state_attr(player, 'media_artist') and state_attr(player, 'media_artist') | lower not in (state_attr(player, 'media_title') or '') | lower else '' }} {{ where }}."
+            }
+          ],
+          "else": [
+            {
+              "set_conversation_response": "I couldn't find {{ name }} in your music."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mode": "parallel"
+}
