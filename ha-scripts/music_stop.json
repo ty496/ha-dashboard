@@ -1,0 +1,49 @@
+{
+  "id": "music_stop",
+  "alias": "Music: stop a speaker",
+  "icon": "mdi:stop",
+  "description": "The Stop button inside each Now Playing player on the Show (2026-11-03). The Family Room Stereo and the Whole House group go through script.family_room_stereo_stop (the group stopped and cleared; the stereo stopped, cleared and the Pioneer turned off). Any other speaker (Kitchen, HomePod) is stopped and its Music Assistant queue cleared, and the Pioneer is left alone.",
+  "fields": {
+    "speaker": {
+      "name": "Speaker",
+      "required": true,
+      "selector": {
+        "entity": {
+          "domain": "media_player"
+        }
+      }
+    }
+  },
+  "sequence": [
+    {
+      "if": [
+        {
+          "condition": "template",
+          "value_template": "{{ speaker in ['media_player.whole_house', 'media_player.family_room_stereo', 'media_player.family_room_family_room_wiim'] }}"
+        }
+      ],
+      "then": [
+        {
+          "action": "script.family_room_stereo_stop"
+        }
+      ],
+      "else": [
+        {
+          "action": "media_player.media_stop",
+          "target": {
+            "entity_id": "{{ speaker }}"
+          },
+          "continue_on_error": true
+        },
+        {
+          "action": "media_player.clear_playlist",
+          "target": {
+            "entity_id": "{{ speaker }}"
+          },
+          "continue_on_error": true
+        }
+      ]
+    }
+  ],
+  "mode": "single"
+}

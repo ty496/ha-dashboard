@@ -1,11 +1,14 @@
-// Now Playing on the Show's home view (2026-11-03), idempotently, for the Family Room Stereo and for
-// Music Assistant's Whole House group (Kitchen Echo + HomePod; the group wins when both are on):
-// - HA's own media card at the foot of the left column while the WiiM plays or is paused (the style of the
-//   HomePod's card, which Ty preferred to the compact mini-media-player: it shows more), with a Stop button
-//   beside it (script.family_room_stereo_stop: stop, clear Music Assistant's queue, Pioneer off). The WiiM's
-//   own entity's card shows music started outside Music Assistant too; Music Assistant's player's card takes
-//   over while it streams, because the WiiM's entity then has no next or previous.
-// - While the WiiM plays, the dashboard background is the album art (the matt8707 community look, Tidal
+// Now Playing on the Show's home view (2026-11-03), idempotently, for every speaker Music Assistant plays on:
+// - One player at the foot of the left column for whichever speaker is playing or paused, first in this
+//   order: the Whole House group, the Family Room Stereo (Music Assistant's player, then the WiiM's own for
+//   music started outside it), the HomePod (Music Assistant's, then Apple's for AirPlay from a phone), the
+//   Kitchen Echo. mini-media-player in its material artwork mode, laid out like HA's own media card (Ty
+//   preferred that look: it shows more) but keeping a Stop button inside the card (script.music_stop: the
+//   stereo and the group through script.family_room_stereo_stop, Pioneer off with the stereo; any other
+//   speaker stopped and its queue cleared), the volume slider, and a tap opening the Music pop-up
+//   (music-popup.js). HA's media card itself was tried the same evening: it takes no extra button, and it
+//   covered no speaker alone but the HomePod (switching to the Kitchen alone left nothing on screen).
+// - While any of them plays, the dashboard background is its album art (the matt8707 community look, Tidal
 //   and Spotify style): the cover, sharp, in the middle at about two-thirds of the screen's height, over a
 //   heavily blurred stretch of the same art that fills the rest with its average colours. Two fixed
 //   markdown cards behind the glass cards (z-index -1, the colour wash first). Ty: a blurred, screen-high
@@ -26,33 +29,61 @@ const popups = home.sections.find(s => s.cards.some(c => c.card_type === 'pop-up
 const E = 'media_player.family_room_family_room_wiim';
 const MA = 'media_player.family_room_stereo';
 const WH = 'media_player.whole_house';
-const MA_ON = { condition: 'state', entity: MA, state: ['playing', 'paused'] };
-const MA_OFF = { condition: 'state', entity: MA, state_not: ['playing', 'paused'] };
-const WH_ON = { condition: 'state', entity: WH, state: ['playing', 'paused'] };
-const WH_OFF = { condition: 'state', entity: WH, state_not: ['playing', 'paused'] };
-const ART = `{{ state_attr('${WH}' if is_state('${WH}', 'playing') else '${E}', 'entity_picture') or '' }}`;
-const SHOWING = { condition: 'or', conditions: [{ condition: 'state', entity: E, state: 'playing' }, { condition: 'state', entity: WH, state: 'playing' }] };
+const HP = 'media_player.homepod';
+const HP_APPLE = 'media_player.family_room_family_room_homepod';
+const KITCHEN = 'media_player.kitchen';
+// Highest first: a speaker's player shows only while none above it is playing or paused (the group's
+// members and the WiiM under Music Assistant play too, so the group's or Music Assistant's player wins).
+const PLAYERS = [WH, MA, E, HP, HP_APPLE, KITCHEN];
+const on = entity => ({ condition: 'state', entity, state: ['playing', 'paused'] });
+const off = entity => ({ condition: 'state', entity, state_not: ['playing', 'paused'] });
+// The art behind the cards: the first of them playing that has a picture (the WiiM's own before Music
+// Assistant's stereo player, as it always was).
+const ART_ORDER = [WH, E, MA, HP, HP_APPLE, KITCHEN];
+const ART = `{% set ns = namespace(p='') %}{% for e in ${JSON.stringify(ART_ORDER).replace(/"/g, "'")} %}{% if ns.p == '' and is_state(e, 'playing') and state_attr(e, 'entity_picture') %}{% set ns.p = state_attr(e, 'entity_picture') %}{% endif %}{% endfor %}{{ ns.p }}`;
+const SHOWING = { condition: 'or', conditions: PLAYERS.map(entity => ({ condition: 'state', entity, state: 'playing' })) };
 const FULL_SCREEN = 'position: fixed !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; max-height: none !important;';
 
-const playerFor = (entity, visibility) => ({ type: 'media-control', entity, grid_options: { columns: 9 }, visibility });
-const stop = {
-  type: 'button',
-  name: 'Stop',
-  icon: 'mdi:stop',
-  show_name: true,
-  show_icon: true,
-  tap_action: { action: 'perform-action', perform_action: 'script.family_room_stereo_stop' },
-  hold_action: { action: 'none' },
-  grid_options: { columns: 3, rows: 'auto' },
-  visibility: [{ condition: 'or', conditions: [{ condition: 'state', entity: E, state: ['playing', 'paused'] }, MA_ON, WH_ON] }],
-  card_mod: { style: 'ha-card { border-radius: 24px; height: 100% !important; } ha-state-icon { --mdc-icon-size: 40px; }' },
+// Laid out like HA's media card, mirrored (Ty: "artwork on the left, controls on the right"): the material
+// cover pinned to the left with its fade turned round; to its right the speaker's icon and name, the title
+// over the artist (not "title - artist" on one scrolling line), then one row of previous, play, next, the
+// volume slider and Stop, the shortcut shrunk to a bare icon.
+const PLAYER_STYLE = {
+  '.': [
+    'ha-card { --mmp-unit: 40px; }',
+    '.mmp-player { padding: 16px 18px 20px 196px !important; }',
+    '.cover { left: 0 !important; right: auto !important; }',
+    '.cover-gradient { transform: scaleX(-1); }',
+    '.entity__icon { width: 24px !important; height: 24px !important; min-width: 24px !important; margin: 0 8px 0 0 !important; }',
+    '.mmp-player__core { align-items: flex-start !important; }',
+    '.entity__info__name { font-size: 14px !important; line-height: 24px !important; opacity: .85; }',
+    '.entity__info__media { display: block !important; height: auto !important; max-height: none !important; margin: 12px 0 0 0 !important; white-space: normal !important; }',
+    '.entity__info__media > div { display: none !important; }',
+    '.entity__info__media > span { display: block !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }',
+    '.attr__media_title { font-size: 19px !important; font-weight: 500 !important; line-height: 26px; color: var(--primary-text-color) !important; opacity: 1 !important; }',
+    '.attr__media_artist { font-size: 14px !important; line-height: 20px; opacity: .8; }',
+    '.attr__media_artist::before { content: none !important; display: none !important; }',
+    '.mmp-player__adds { margin: 10px 0 0 -4px !important; display: flex !important; flex-direction: row !important; align-items: center !important; }',
+    'mmp-media-controls { flex: 1 1 auto !important; flex-direction: row-reverse !important; }',
+    'mmp-shortcuts { flex: 0 0 auto !important; margin: 0 !important; }',
+  ].join('\n'),
+  'mmp-media-controls$': '.mmp-media-controls__media { margin: 0 !important; justify-content: flex-start !important; } .mmp-media-controls__volume { flex: 1 1 auto !important; }',
+  'mmp-shortcuts$': '.mmp-shortcuts__buttons { display: flex !important; } .mmp-shortcuts__button { min-height: 40px !important; height: 40px !important; width: 40px !important; min-width: 40px !important; padding: 0 !important; margin: 0 !important; background: none !important; box-shadow: none !important; border-radius: 50% !important; } .mmp-shortcuts__button .ellipsis { display: none !important; } .mmp-shortcuts__button ha-icon { margin: 0 !important; --mdc-icon-size: 26px; }',
 };
-const cards = [
-  playerFor(WH, [WH_ON]),
-  playerFor(MA, [MA_ON, WH_OFF]),
-  playerFor(E, [{ condition: 'state', entity: E, state: ['playing', 'paused'] }, MA_OFF, WH_OFF]),
-  stop,
-];
+const playerFor = (entity, i) => ({
+  type: 'custom:mini-media-player',
+  entity,
+  artwork: 'material',
+  info: 'scroll',
+  volume_step: 5,
+  hide: { power: true, source: true },
+  shortcuts: { columns: 1, buttons: [{ icon: 'mdi:stop', name: 'Stop', type: 'service', id: 'script.music_stop', data: { speaker: entity } }] },
+  tap_action: { action: 'navigate', navigation_path: '#music' },
+  grid_options: { columns: 'full' },
+  visibility: [on(entity), ...PLAYERS.slice(0, i).map(off)],
+  card_mod: { style: PLAYER_STYLE },
+});
+const cards = PLAYERS.map(playerFor);
 const wash = {
   type: 'markdown',
   name: 'Now playing background',
@@ -68,23 +99,11 @@ const coverArt = {
   card_mod: { style: `ha-card { ${FULL_SCREEN} top: 18vh !important; left: calc(50vw - 32vh) !important; width: 64vh !important; height: 64vh !important; border-radius: 16px !important; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5) !important; background: center / cover no-repeat url('${ART}') !important; filter: brightness(0.6); }` },
 };
 
-// The player and its Stop button sit at the foot of the left column; anything earlier is cleared out.
-const old = right.findIndex(c => c.type === 'media-control' && c.entity === E);
-if (old >= 0) right.splice(old, 1);
-const mine = c => (['custom:mini-media-player', 'media-control'].includes(c.type) && [E, MA, WH].includes(c.entity)) ||(c.type === 'button' && c.tap_action && c.tap_action.perform_action === 'script.family_room_stereo_stop');
+// The players sit at the foot of the left column; anything earlier (the HA media cards, the separate Stop
+// button, the HomePod's stock card) is cleared out.
+const mine = c => (['custom:mini-media-player', 'media-control'].includes(c.type) && PLAYERS.includes(c.entity)) || (c.type === 'button' && c.tap_action && c.tap_action.perform_action === 'script.family_room_stereo_stop');
 for (const list of [left, right]) for (let i = list.length - 1; i >= 0; i--) if (mine(list[i])) list.splice(i, 1);
 left.push(...cards);
-// The HomePod's stock media card, shown while the HomePod plays on its own (Music Assistant or AirPlay from a
-// phone), sits under the player in the left column (Ty liked it there better than in the right column, under
-// the calendar), and stays out of the way while the HomePod is playing as part of the Whole House group.
-const isHomepodCard = c => c.type === 'media-control' && c.entity === 'media_player.family_room_family_room_homepod';
-const homepod = [...left, ...right].find(isHomepodCard);
-for (const list of [left, right]) for (let i = list.length - 1; i >= 0; i--) if (isHomepodCard(list[i])) list.splice(i, 1);
-if (homepod) {
-  homepod.visibility = [{ condition: 'state', entity: 'media_player.family_room_family_room_homepod', state: 'playing' }, WH_OFF];
-  left.push(homepod);
-}
-
 // The sun and moon tiles, side by side in one row: horizontal tiles, inside a grid card because the sections
 // grid gives a horizontal tile at least half the column (Moon wrapped to a second row).
 const SUN_MOON = ['Sunrise', 'Sunset', 'Moon'];
