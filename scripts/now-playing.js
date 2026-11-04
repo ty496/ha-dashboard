@@ -5,9 +5,10 @@
 //   read the WiiM's own entity, so music started outside Music Assistant shows too; controls use Music
 //   Assistant's player while it streams, because the WiiM's entity then has no next or previous.
 // - While the WiiM plays, the dashboard background is the album art (the matt8707 community look, Tidal
-//   and Spotify style): the whole cover, fitted to the screen's height, over a heavily blurred stretch of
-//   the same art that fills the sides with its average colours. Two fixed, full-screen markdown cards
-//   behind the glass cards (z-index -1, the colour wash first).
+//   and Spotify style): the cover, sharp, in the middle at about two-thirds of the screen's height, over a
+//   heavily blurred stretch of the same art that fills the rest with its average colours. Two fixed
+//   markdown cards behind the glass cards (z-index -1, the colour wash first). Ty: a blurred, screen-high
+//   cover looked "like a bad screen shot of the art".
 // Ty dropped the 30 s full-screen pop-up on each new song the same day ("I like it just staying as a
 // small control"); this removes it if present.
 const fs = require('fs');
@@ -66,7 +67,7 @@ const coverArt = {
   name: 'Now playing cover',
   content: ' ',
   visibility: [{ condition: 'state', entity: E, state: 'playing' }],
-  card_mod: { style: `ha-card { ${FULL_SCREEN} top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; background: center / contain no-repeat url('${ART}') !important; filter: blur(3px) brightness(0.6); }` },
+  card_mod: { style: `ha-card { ${FULL_SCREEN} top: 18vh !important; left: calc(50vw - 32vh) !important; width: 64vh !important; height: 64vh !important; border-radius: 16px !important; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5) !important; background: center / cover no-repeat url('${ART}') !important; filter: brightness(0.6); }` },
 };
 
 // The player and its Stop button sit at the foot of the left column; anything earlier is cleared out.
