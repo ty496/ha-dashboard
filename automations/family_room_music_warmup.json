@@ -1,7 +1,7 @@
 {
   "id": "family_room_music_warmup",
   "alias": "Family room music: warm up the Pioneer first",
-  "description": "When the WiiM starts playing while the Pioneer SX-780 is off: mute and pause the WiiM, power the Pioneer, give it 6 s to settle (its old capacitors and speaker relay), set the start volume, rewind a track that had only just begun, then unmute and play. Covers every source: Music Assistant, the WiiM app, AirPlay, Spotify Connect and the Hubitat rules.",
+  "description": "When the WiiM starts playing while the Pioneer SX-780 is off: mute and pause the WiiM, power the Pioneer, give it 7 s to settle (its old capacitors and speaker relay), set the start volume, rewind a track that had only just begun, then unmute and play. Covers every source: Music Assistant, the WiiM app, AirPlay, Spotify Connect and the Hubitat rules.",
   "triggers": [
     {
       "trigger": "state",
@@ -47,7 +47,7 @@
     },
     {
       "delay": {
-        "seconds": 6
+        "seconds": 7
       }
     },
     {
