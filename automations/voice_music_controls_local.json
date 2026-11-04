@@ -1,7 +1,7 @@
 {
   "id": "voice_music_controls_local",
   "alias": "Voice: music controls (local)",
-  "description": "Pause, resume, skip, volume, mute and \"what's playing\" by voice, answered locally on whichever Music Assistant speaker is playing (the Whole House group first, so a group is paused or skipped as one, then Family Room Stereo, HomePod, Kitchen, Basement Stereo), or the Family Room Stereo when none is. HA's built-in media intents look only in the asking satellite's area, so from the kitchen Echo they failed for music in the family room. Bare \"stop\" is left to the Echo, whose stop word silences timers and alarms.",
+  "description": "Pause, resume, skip, volume, mute and \"what's playing\" by voice, answered locally on whichever Music Assistant speaker is playing (the Whole House group first, so a group is paused or skipped as one, then Family Room Stereo, HomePod, Kitchen, Basement Stereo), or the Family Room Stereo when none is. HA's built-in media intents look only in the asking satellite's area, so from the kitchen Echo they failed for music in the family room. Bare \"stop\" (2026-11-04) stops a ringing Kitchen timer or alarm if one is sounding, otherwise pauses whatever is playing; before that it went to Claude, which checked only the alarms and left Hotel California playing.",
   "triggers": [
     {
       "trigger": "conversation",
@@ -11,6 +11,13 @@
         "(stop|kill|cut) [the] (music|stereo|song|track|it|this|tunes)",
         "turn off the (music|stereo|tunes)",
         "hold the music"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "stop",
+      "command": [
+        "stop [that] [please]"
       ]
     },
     {
@@ -131,7 +138,35 @@
           "conditions": [
             {
               "condition": "trigger",
-              "id": "pause"
+              "id": "stop"
+            },
+            {
+              "condition": "state",
+              "entity_id": "binary_sensor.kitchen_sounding",
+              "state": "on"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "button.press",
+              "target": {
+                "entity_id": "button.kitchen_stop_alarm_or_timer"
+              },
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "Stopped."
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": [
+                "pause",
+                "stop"
+              ]
             }
           ],
           "sequence": [
