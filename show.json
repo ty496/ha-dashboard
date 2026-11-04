@@ -1000,7 +1000,9 @@
                       ],
                       "features_position": "inline",
                       "exclude_entities": [
-                        "light.family_room_motion_sensor_family_room"
+                        "light.family_room_motion_sensor_family_room",
+                        "light.family_room_wiim_family_room",
+                        "light.family_room_wiim_volume"
                       ]
                     },
                     {
