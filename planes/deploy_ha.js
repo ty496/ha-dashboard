@@ -35,6 +35,10 @@ async function planesPhase1() {
     await h.callWS({ type: 'input_text/create', name: 'Plane takeover id', max: 64, icon: 'mdi:airplane' });
   if (!have.has('counter.planes_today'))
     await h.callWS({ type: 'counter/create', name: 'Planes today', icon: 'mdi:airplane', initial: 0, step: 1, restore: true });
+  if (!have.has('todo.plane_posters_today')) {
+    const flow = await h.callApi('POST', 'config/config_entries/flow', { handler: 'local_todo' });
+    await h.callApi('POST', `config/config_entries/flow/${flow.flow_id}`, { todo_list_name: 'Plane posters today' });
+  }
   log.push('helpers ok');
 
   // 3. Files: the art into /config/www/planes, the macros into /config/custom_templates (Downloader, download_dir ".").
@@ -48,7 +52,11 @@ async function planesPhase1() {
     const cfg = await (await fetch(raw(s, `automations/${id}.json`))).json();
     await h.callApi('POST', `config/automation/config/${id}`, cfg);
   }
-  log.push('automations saved');
+  const poster = await (await fetch(raw(s, 'ha-scripts/plane_poster.json'))).json();
+  delete poster.id;
+  await h.callApi('POST', 'config/script/config/plane_poster', poster);
+  await h.callWS({ type: 'homeassistant/expose_entity', assistants: ['conversation'], entity_ids: ['todo.plane_posters_today'], should_expose: false });
+  log.push('automations and script.plane_poster saved');
   return log;
 }
 

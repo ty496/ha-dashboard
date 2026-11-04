@@ -124,15 +124,22 @@ An "Overhead now" glass card at the top of the home view's right column, plus a 
   `position: fixed` by card-mod; it shows while `input_boolean.plane_takeover` is on.
 - **Live map:** tapping the card's drawing opens the `#plane` Bubble Card pop-up, which holds the integration's own
   `custom:flightradar24-card` (Leaflet map of the area, every flight with its trail; loaded from `/flightradar24/`).
-- **Automations:** `automations/planes_overhead_takeover.json` (07:00-22:00, airborne only, at most every
-  5 min, sets `input_text.plane_takeover_id`) and `automations/planes_overhead_count.json` (`counter.planes_today`,
-  reset at midnight, shown in the poster footer).
+- **Automations:** `automations/planes_overhead_takeover.json` (07:00-22:00, airborne only; picks the planes
+  that get the poster) calls `ha-scripts/plane_poster.json` (`script.plane_poster`: at most every 5 min, sets
+  `input_text.plane_takeover_id`), and `automations/planes_overhead_count.json` (`counter.planes_today`, reset at
+  midnight, shown in the poster footer).
 - **Flight-school filter (2026-11-03):** `plane_boring(f)` in `planes.jinja` marks a light piston plane (the
   GEN-C172, GEN-P28A, GEN-SR22 and GEN-PA44 classes, which include unknown private types) with no destination:
   the C172s and Archers circling on VFR all day. Those don't get a poster or a place in `counter.planes_today`,
   and `plane_pick` skips them for the card. The card shows while `sensor.planes_worth_showing` (a template helper:
   `{% from 'planes.jinja' import plane_count %}{{ plane_count() | trim }}`) is above 0. Anything with a
   destination, helicopters (the Chinooks have none) and everything bigger still shows. The Live map shows all.
+- **Poster only for some planes (2026-11-04):** Denver departures brought the poster up every 9 minutes, so it now goes
+  to the first plane of each kind a day (airline and type, `UAL-B738`; `PVT-<type>` for private aircraft) and to
+  unusual ones: helicopters, wide-bodies, people of interest and private jets with a registered owner (the last two
+  wait up to 40 s for `sensor.plane_details` to pair the flight). Kinds that had a poster go in the local to-do list
+  `todo.plane_posters_today` (not exposed to Assist), which `planes_overhead_count` clears at midnight. Every plane
+  worth showing is still on the card.
 - **Install:** paste `planes/deploy_ha.js` into a signed-in admin HA tab, then `await planesPhase1()`,
   `await planesRestart()`, reload, `await planesPhase2()`. `await planesTestTakeover()` previews the poster.
 - **Plane details (2026-11-03):** `custom_components/plane_details`, a second source. Flightradar24 honours the

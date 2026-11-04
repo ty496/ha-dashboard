@@ -1,0 +1,22 @@
+{
+  "id": "plane_poster",
+  "alias": "Plane poster",
+  "icon": "mdi:airplane",
+  "description": "Shows the Show's full-screen plane poster for 20 s (input_boolean.plane_takeover, the flight in input_text.plane_takeover_id) and notes the flight's kind in todo.plane_posters_today. Automation planes_overhead_takeover picks the planes; this keeps posters at least 5 minutes apart, and in single mode a call that comes while a poster shows is dropped (so that kind can still get one later). 2026-11-04. Source: ha-dashboard/ha-scripts/plane_poster.json",
+  "fields": {
+    "id": {"name": "Flight", "description": "Flightradar24 flight id.", "required": true, "selector": {"text": {}}},
+    "kind": {"name": "Kind", "description": "Airline and type, e.g. UAL-B738 (PVT-<type> for private aircraft).", "selector": {"text": {}}}
+  },
+  "sequence": [
+    {"condition": "template", "value_template": "{{ is_state('input_boolean.plane_takeover', 'off') and (now() - states.input_boolean.plane_takeover.last_changed).total_seconds() > 280 }}"},
+    {"action": "todo.get_items", "target": {"entity_id": "todo.plane_posters_today"}, "response_variable": "seen"},
+    {"if": [{"condition": "template", "value_template": "{{ (kind | default('')) != '' and kind not in (seen['todo.plane_posters_today']['items'] | map(attribute='summary') | list) }}"}],
+     "then": [{"action": "todo.add_item", "target": {"entity_id": "todo.plane_posters_today"}, "data": {"item": "{{ kind }}"}}]},
+    {"action": "input_text.set_value", "target": {"entity_id": "input_text.plane_takeover_id"}, "data": {"value": "{{ id }}"}},
+    {"action": "input_boolean.turn_on", "target": {"entity_id": "input_boolean.plane_takeover"}},
+    {"delay": {"seconds": 20}},
+    {"action": "input_boolean.turn_off", "target": {"entity_id": "input_boolean.plane_takeover"}}
+  ],
+  "mode": "single",
+  "max_exceeded": "silent"
+}
