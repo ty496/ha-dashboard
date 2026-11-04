@@ -1,0 +1,63 @@
+{
+  "id": "music_block_list_skip",
+  "alias": "Music: skip anything on the block list",
+  "description": "Whenever a Music Assistant speaker starts a song, it is checked against Ty's block list (todo.music_block_list, open items) and skipped at once if it matches, whatever started it: Claude, radio mode, a playlist or the Music pop-up. 'Title — Artist' (or 'Title - Artist') blocks a song: same title once brackets like (feat. ...) and ' - Remastered' are dropped, and that artist among the song's artists. A bare name blocks the artist. While the Whole House group plays, its Kitchen and HomePod members are ignored so the group skips once. Script music_block (the voice agent's Block song tool) adds to the list. Ty, 2026-11-04.",
+  "triggers": [
+    {
+      "trigger": "state",
+      "entity_id": ["media_player.whole_house", "media_player.family_room_stereo", "media_player.homepod", "media_player.kitchen", "media_player.basement_stereo"],
+      "attribute": "media_title"
+    },
+    {
+      "trigger": "state",
+      "entity_id": ["media_player.whole_house", "media_player.family_room_stereo", "media_player.homepod", "media_player.kitchen", "media_player.basement_stereo"],
+      "to": "playing"
+    }
+  ],
+  "conditions": [
+    {
+      "condition": "template",
+      "value_template": "{{ is_state(trigger.entity_id, 'playing') and state_attr(trigger.entity_id, 'media_title') }}"
+    },
+    {
+      "condition": "template",
+      "value_template": "{{ not (trigger.entity_id in ['media_player.kitchen', 'media_player.homepod'] and is_state('media_player.whole_house', ['playing', 'paused'])) }}"
+    }
+  ],
+  "actions": [
+    {
+      "action": "todo.get_items",
+      "target": { "entity_id": "todo.music_block_list" },
+      "data": { "status": "needs_action" },
+      "response_variable": "list"
+    },
+    {
+      "variables": {
+        "hit": "{% macro norm(s) %}{{ s | lower | regex_replace('\\s*[\\(\\[][^\\)\\]]*[\\)\\]]', '') | regex_replace('\\s+-\\s+.*$', '') | regex_replace('[^a-z0-9 ]', '') | regex_replace('\\s+', ' ') | trim }}{% endmacro %}{% set t = norm(state_attr(trigger.entity_id, 'media_title') or '') | trim %}{% set names = (state_attr(trigger.entity_id, 'media_artist') or '') | lower | regex_replace('\\s*(/|,|&|;| feat\\.? | ft\\.? | x | and | with )\\s*', '|') | regex_replace('[^a-z0-9 |]', '') | regex_replace('\\s+', ' ') %}{% set names = names.split('|') | map('trim') | reject('eq', '') | list %}{% set ns = namespace(hit='') %}{% for i in list['todo.music_block_list']['items'] %}{% set s = i.summary %}{% set sep = ' — ' if ' — ' in s else (' - ' if ' - ' in s else '') %}{% if sep %}{% set it = norm(s.split(sep, 1)[0]) | trim %}{% set ia = norm(s.split(sep, 1)[1]) | trim %}{% if ns.hit == '' and it == t and ia in names %}{% set ns.hit = s %}{% endif %}{% else %}{% if ns.hit == '' and (norm(s) | trim) in names %}{% set ns.hit = s %}{% endif %}{% endif %}{% endfor %}{{ ns.hit }}"
+      }
+    },
+    {
+      "if": [
+        { "condition": "template", "value_template": "{{ hit != '' }}" }
+      ],
+      "then": [
+        {
+          "action": "media_player.media_next_track",
+          "target": { "entity_id": "{{ trigger.entity_id }}" },
+          "continue_on_error": true
+        },
+        {
+          "action": "logbook.log",
+          "data": {
+            "name": "Music block list",
+            "entity_id": "{{ trigger.entity_id }}",
+            "message": "skipped {{ state_attr(trigger.entity_id, 'media_title') }} by {{ state_attr(trigger.entity_id, 'media_artist') }} (blocked: {{ hit }})"
+          }
+        },
+        { "delay": { "seconds": 2 } }
+      ]
+    }
+  ],
+  "mode": "queued",
+  "max": 10
+}
