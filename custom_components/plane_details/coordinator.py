@@ -1,4 +1,4 @@
-"""Every 30 s: the aircraft round home from adsb.lol, paired with Flightradar24's flights, with owners and notable
+"""Every 30 s: the aircraft round home from adsb.fi (or adsb.lol), paired with Flightradar24's flights, with owners and notable
 aircraft added."""
 
 from __future__ import annotations
@@ -21,9 +21,14 @@ from .data import match_aircraft, parse_alert_db, record
 
 _LOGGER = logging.getLogger(__name__)
 
-# adsb.lol: an unfiltered, free ADS-B network (it shows what owners ask Flightradar24 to block). The area is a
-# little wider than Flightradar24's 8 km circle so a flight near its edge still finds its pair.
-ADSB_POINT = "https://api.adsb.lol/v2/point/{lat:.4f}/{lon:.4f}/{nm}"
+# Unfiltered, free ADS-B networks (they show what owners ask Flightradar24 to block), tried in order: adsb.fi's
+# open data API first, adsb.lol's after it (adsb.lol banned the house's address on 2026-11-03 after a whole
+# day's history was downloaded from it in one go; never bulk-download from either). The area is a little wider
+# than Flightradar24's 8 km circle so a flight near its edge still finds its pair.
+SOURCES = (
+    "https://opendata.adsb.fi/api/v2/lat/{lat:.4f}/lon/{lon:.4f}/dist/{nm}",
+    "https://api.adsb.lol/v2/point/{lat:.4f}/{lon:.4f}/{nm}",
+)
 AREA_NM = 6
 # adsbdb: registered owner by ICAO hex (registries such as the FAA's). Free; kept for a month per aircraft.
 ADSBDB = "https://api.adsbdb.com/v0/aircraft/{hex}"
@@ -94,11 +99,17 @@ class PlaneDetailsCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     async def _async_update_data(self) -> dict[str, Any]:
         home = (self.hass.config.latitude, self.hass.config.longitude)
         await self._refresh_alerts()
-        try:
-            body = await self._get_json(ADSB_POINT.format(lat=home[0], lon=home[1], nm=AREA_NM))
-        except (aiohttp.ClientError, TimeoutError, ValueError) as err:
-            raise UpdateFailed(f"adsb.lol: {err}") from err
-        aircraft = [a for a in (body.get("ac") or []) if a.get("hex") and not str(a["hex"]).startswith("~")]
+        body, errors = None, []
+        for url in SOURCES:
+            try:
+                body = await self._get_json(url.format(lat=home[0], lon=home[1], nm=AREA_NM))
+                break
+            except (aiohttp.ClientError, TimeoutError, ValueError) as err:
+                errors.append(f"{url.split('/')[2]}: {err}")
+        if body is None:
+            raise UpdateFailed("; ".join(errors))
+        found = body.get("ac") or body.get("aircraft") or []
+        aircraft = [a for a in found if a.get("hex") and not str(a["hex"]).startswith("~")]
 
         state = self.hass.states.get(FR24_SENSOR)
         flights = (state.attributes.get("flights") if state else None) or []

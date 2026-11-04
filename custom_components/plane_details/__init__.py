@@ -1,7 +1,7 @@
 """Plane details (2026-11-03): a second source for the planes over the house.
 
 Flightradar24 honours the FAA's LADD list, so private aircraft whose owners asked come through as "Blocked", no
-registration or callsign. adsb.lol is an unfiltered ADS-B network: this polls it for the area every 30 s, pairs its
+registration or callsign. adsb.fi and adsb.lol are unfiltered ADS-B networks: this polls one for the area every 30 s, pairs its
 aircraft with Flightradar24's flights (by registration, callsign, else nearest of the same type), and adds the
 registered owner (adsbdb) and whether the aircraft is a notable one (plane-alert-db: celebrities' and billionaires'
 jets, VIPs, governments). One sensor, sensor.plane_details, holds it for the dashboard: by_fr24 keyed by
