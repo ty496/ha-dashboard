@@ -731,6 +731,10 @@
                   "blocklist": "^(Trash day!|Recycling day!|Check In Night.*)$"
                 },
                 {
+                  "entity": "calendar.home_2",
+                  "color": "var(--show-cal-home)"
+                },
+                {
                   "entity": "calendar.personal",
                   "color": "var(--show-cal-personal)"
                 },
