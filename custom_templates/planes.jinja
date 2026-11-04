@@ -23,8 +23,9 @@
 {%- elif airline and (airline ~ '-' ~ sibling.get(t, '')) in have -%}{{ airline }}-{{ sibling.get(t, '') }}
 {#- The CH-47 Chinooks that cross Denver are Army or Army National Guard, all in Army tan. -#}
 {%- elif t in ['H47', 'CH47'] -%}MIL-H47
-{%- elif 'heli' in cat or t in ['R22', 'R44', 'R66', 'EC20', 'EC30', 'EC35', 'EC45', 'AS50', 'AS55', 'B06', 'B407', 'B429', 'H125', 'H135', 'H145', 'A109', 'A119', 'S76'] -%}GEN-HELI
-{%- elif t in ['C150', 'C152', 'C162', 'C170', 'C172', 'C175', 'C177', 'C180', 'C182', 'C185', 'C195', 'C205', 'C206', 'C207', 'C208', 'C210', 'P210', 'T210'] -%}GEN-C172
+{#- Helicopters by type first; FR24's category alone comes last (it calls the Zenith CH-750, a high-wing plane, a helicopter). -#}
+{%- elif t in ['R22', 'R44', 'R66', 'EC20', 'EC30', 'EC35', 'EC45', 'AS50', 'AS55', 'B06', 'B407', 'B429', 'H125', 'H135', 'H145', 'A109', 'A119', 'S76'] -%}GEN-HELI
+{%- elif t in ['C150', 'C152', 'C162', 'C170', 'C172', 'C175', 'C177', 'C180', 'C182', 'C185', 'C195', 'C205', 'C206', 'C207', 'C208', 'C210', 'P210', 'T210', 'CH70', 'CH75'] -%}GEN-C172
 {%- elif t in ['SR20', 'SR22', 'S22T', 'COL3', 'COL4', 'C400'] -%}GEN-SR22
 {%- elif t in ['PA44', 'PA34', 'PA23', 'PA30', 'PA31', 'BE76', 'BE55', 'BE58', 'BE95', 'DA42', 'DA62', 'C310', 'C340', 'C414', 'C421', 'P68', 'AC50'] -%}GEN-PA44
 {%- elif t in ['PC12', 'PC6T', 'TBM7', 'TBM8', 'TBM9', 'P46T', 'PA46', 'M600', 'KODI', 'BE20', 'BE9L', 'BE30', 'B350'] -%}GEN-PC12
@@ -35,7 +36,8 @@
 {%- elif t[:3] in ['E17', 'E19', 'E75', 'E13', 'E14', 'CRJ', 'DH8', 'AT4', 'AT7', 'D32', 'SF3', 'J32'] -%}GEN-REGIONAL
 {#- Airliners can arrive with no airline code (Amazon Air flown by Sun Country, charters, ferry flights). -#}
 {%- elif t[:3] in ['B73', 'B71', 'B75', 'A31', 'A32', 'MD8', 'MD9', 'BCS'] or t in ['B37M', 'B38M', 'B39M', 'B3XM', 'A19N', 'A20N', 'A21N'] -%}GEN-NARROW
-{%- elif t in ['P28A', 'P28B', 'P28R', 'P28T', 'P32R', 'P32T', 'PA32', 'DA20', 'DA40', 'DV20', 'M20P', 'M20T', 'BE23', 'BE24', 'BE33', 'BE35', 'BE36', 'A210', 'AA5', 'TB20', 'TOBA', 'RV6', 'RV7', 'RV8', 'RV10', 'RV12', 'GLAS', 'LNC4'] -%}GEN-P28A
+{%- elif t in ['P28A', 'P28B', 'P28R', 'P28T', 'P32R', 'P32T', 'PA32', 'DA20', 'DA40', 'DV20', 'M20P', 'M20T', 'BE23', 'BE24', 'BE33', 'BE35', 'BE36', 'A210', 'AA5', 'TB20', 'TOBA', 'RV6', 'RV7', 'RV8', 'RV10', 'RV12', 'GLAS', 'LNC4', 'CH60', 'CH65'] -%}GEN-P28A
+{%- elif 'heli' in cat -%}GEN-HELI
 {#- Unknown type: no airline means private, and private traffic here is mostly light aircraft. -#}
 {%- elif not airline -%}GEN-C172
 {%- else -%}GEN-NARROW
