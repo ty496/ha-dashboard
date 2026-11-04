@@ -75,7 +75,7 @@
 {%- set x = (state_attr('sensor.plane_details', 'by_fr24') or {}).get(f.id | string) or {} -%}
 {%- set name = f.airline_short or f.airline -%}
 {%- set num = (f.flight_number or '') | replace(f.airline_iata or '~', '', 1) -%}
-{{ (name ~ ' ' ~ num) | trim if name else (f.aircraft_registration or x.registration or x.callsign or f.callsign or 'Aircraft') }}
+{{ (name ~ ' ' ~ num) | trim if name else (f.aircraft_registration or x.get('registration') or x.get('callsign') or f.callsign or 'Aircraft') }}
 {%- endmacro -%}
 
 {%- macro plane_route(f) -%}
@@ -99,7 +99,7 @@
     Chinooks), anything bigger, and any person of interest's aircraft (plane_details) still is. -#}
 {%- macro plane_boring(f) -%}
 {%- set x = (state_attr('sensor.plane_details', 'by_fr24') or {}).get(f.id | string) or {} -%}
-{%- if not x.poi and not (f.airport_destination_code_iata or f.airport_destination_city)
+{%- if not x.get('poi') and not (f.airport_destination_code_iata or f.airport_destination_city)
      and plane_key(f) | trim in ['GEN-C172', 'GEN-P28A', 'GEN-SR22', 'GEN-PA44'] -%}y{%- endif -%}
 {%- endmacro -%}
 
