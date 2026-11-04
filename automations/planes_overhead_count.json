@@ -1,7 +1,7 @@
 {
   "id": "planes_overhead_count",
   "alias": "Planes overhead count",
-  "description": "counter.planes_today: +1 per aircraft entering the Flightradar24 area that is worth showing (not plane_boring: flight-school and local VFR traffic), reset at midnight. Feeds the poster footer. Also clears todo.plane_posters_today (the kinds that had a poster, see planes_overhead_takeover) at midnight. Also turns the poster (input_boolean.plane_takeover) off if it has been on for 40 s: saving the takeover automation mid-poster once cancelled the run that turns it off, and the Show sat on an empty red poster for an hour (2026-11-04). Source: ha-dashboard/automations/planes_overhead_count.json",
+  "description": "counter.planes_today: +1 per aircraft entering the Flightradar24 area that is worth showing (not plane_boring: flight-school and local VFR traffic), reset at midnight. Feeds the poster footer. Also clears todo.plane_posters_today (the kinds that had a poster, see planes_overhead_takeover) at midnight. Also turns the poster (input_boolean.plane_takeover) off if it has been on for 40 s: saving the takeover automation mid-poster once cancelled the run that turns it off, and the Show sat on an empty red poster for ten minutes (2026-11-04). Source: ha-dashboard/automations/planes_overhead_count.json",
   "mode": "queued",
   "max": 20,
   "triggers": [
