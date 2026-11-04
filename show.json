@@ -975,7 +975,10 @@
                           ]
                         }
                       ],
-                      "features_position": "inline"
+                      "features_position": "inline",
+                      "exclude_entities": [
+                        "switch.sun_room_deco_polling"
+                      ]
                     },
                     {
                       "type": "area",
