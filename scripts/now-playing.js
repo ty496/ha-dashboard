@@ -4,14 +4,18 @@
 //   the album art: the cover large on the left, title, artist and album, and play/pause/skip with a
 //   volume slider. It opens while input_boolean.kitchen_now_playing_popup is on (automation
 //   kitchen_now_playing_popup_open) and closes when that goes off (kitchen_weather_popup_close, 30 s).
-// - A large Now Playing card near the top of the right column while the WiiM plays or is paused. It
-//   replaces the small media-control card that sat under the calendar, mostly below the screen.
+// - A compact player at the foot of the left column, under the sun and moon tiles, while the WiiM plays
+//   or is paused: a small square of album art, title and artist, then a strip of controls and volume.
+//   It replaced the small media-control card under the calendar (and, briefly, a big full-cover card).
+// - While the WiiM plays, the whole dashboard background is a blurred copy of the album art (the
+//   matt8707 community look): a fixed, full-screen markdown card behind the glass cards (z-index -1).
 // Art and words read the native WiiM entity, so music started outside Music Assistant shows too.
 const fs = require('fs');
 const path = require('path');
 const file = path.join(__dirname, '..', 'show.json');
 const cfg = JSON.parse(fs.readFileSync(file, 'utf8'));
 const home = cfg.views.find(v => v.path === 'home');
+const left = home.sections[0].cards;
 const right = home.sections[1].cards;
 const popups = home.sections.find(s => s.cards.some(c => c.card_type === 'pop-up')).cards;
 
@@ -76,29 +80,37 @@ const popup = {
   ].join('\n'),
   cards: [{ type: 'horizontal-stack', cards: [cover, { type: 'vertical-stack', cards: [words, ...controls] }] }],
 };
-const cardFor = (entity, visibility) => ({
+const playerFor = (entity, visibility) => ({
   type: 'custom:mini-media-player',
   entity,
-  name: 'Family Room Stereo',
-  artwork: 'full-cover',
+  artwork: 'default',
   info: 'scroll',
   volume_step: 5,
-  hide: { power: true, source: true, icon: true },
+  hide: { power: true, source: true, name: true },
   grid_options: { columns: 'full' },
   visibility,
-  card_mod: { style: 'ha-card { border-radius: 24px; overflow: hidden; --mmp-text-color: #fff; --mmp-icon-color: #fff; }' },
+  card_mod: { style: 'ha-card { border-radius: 24px; --mmp-unit: 36px; } .entity__artwork, .entity__icon { width: 60px !important; height: 60px !important; min-width: 60px !important; border-radius: 12px !important; background-size: cover !important; } .entity__info__media, .entity__info__media span { font-size: 18px !important; font-weight: 600 !important; color: var(--primary-text-color) !important; opacity: 1 !important; }' },
 });
 const cards = [
-  cardFor(MA, [MA_ON]),
-  cardFor(E, [{ condition: 'state', entity: E, state: ['playing', 'paused'] }, MA_OFF]),
+  playerFor(MA, [MA_ON]),
+  playerFor(E, [{ condition: 'state', entity: E, state: ['playing', 'paused'] }, MA_OFF]),
 ];
+const backdrop = {
+  type: 'markdown',
+  name: 'Now playing background',
+  content: ' ',
+  visibility: [{ condition: 'state', entity: E, state: 'playing' }],
+  card_mod: { style: `ha-card { position: fixed !important; top: -80px !important; left: -80px !important; width: calc(100vw + 160px) !important; height: calc(100vh + 160px) !important; max-height: none !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: center / cover no-repeat url('{{ state_attr('${E}', 'entity_picture') or '' }}') !important; filter: blur(40px) saturate(1.3) brightness(0.55); }` },
+};
 
-// The old small control under the calendar goes; the new card sits under "Needs attention".
+// The old small control under the calendar goes; the player sits at the foot of the left column.
 const old = right.findIndex(c => c.type === 'media-control' && c.entity === E);
 if (old >= 0) right.splice(old, 1);
-for (let i = right.length - 1; i >= 0; i--) if (right[i].type === 'custom:mini-media-player' && [E, MA].includes(right[i].entity)) right.splice(i, 1);
-const after = right.findIndex(c => c.name === 'Needs attention');
-right.splice(after + 1, 0, ...cards);
+for (const list of [left, right]) for (let i = list.length - 1; i >= 0; i--) if (list[i].type === 'custom:mini-media-player' && [E, MA].includes(list[i].entity)) list.splice(i, 1);
+left.push(...cards);
+
+const bg = popups.findIndex(c => c.name === 'Now playing background');
+if (bg >= 0) popups[bg] = backdrop; else popups.push(backdrop);
 
 const at = popups.findIndex(c => c.hash === '#now-playing');
 if (at >= 0) popups[at] = popup; else popups.push(popup);
@@ -107,4 +119,4 @@ fs.writeFileSync(file, JSON.stringify(cfg, null, 2) + '\n');
 fs.writeFileSync(path.join(__dirname, '..', 'show.min.json'), JSON.stringify(cfg));
 const s = JSON.stringify(cfg); let x = 0x811c9dc5; for (let i = 0; i < s.length; i++) { x ^= s.charCodeAt(i); x = Math.imul(x, 0x01000193) >>> 0; }
 console.log('show.json', x.toString(16), s.length);
-if (process.argv.includes('--print')) console.log(JSON.stringify({ cards, popup }));
+if (process.argv.includes('--print')) console.log(JSON.stringify({ cards, backdrop }));
