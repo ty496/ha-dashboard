@@ -1,7 +1,7 @@
 {
   "id": "voice_play_music_local",
   "alias": "Voice: play music (local)",
-  "description": "\"Play X [on/in Y]\" answered on the local agent through Music Assistant, so music requests skip Claude. Y: the family room stereo (also the default), the HomePod, the kitchen, the basement. \"X by Y\" is a song with its artist; \"X playlist\" or \"X album\" sets the type. A request naming another target (a TV) or too vague to search (\"some music\") is handed to Claude as said. If Music Assistant finds nothing, it says so. One wildcard sentence, with the speaker read from its end: separate sentences per speaker lost to the bare wildcard.",
+  "description": "\"Play X [on/in Y]\" answered on the local agent through Music Assistant, so music requests skip Claude. Y: the family room stereo (also the default), the HomePod, the kitchen, the basement. \"X by Y\" is a song with its artist; \"X playlist\" or \"X album\" sets the type. Songs or music by X, and X songs, play the artist X when Music Assistant knows one by that exact name. A request naming another target (a TV) or too vague to search (\"some music\") is handed to Claude as said. If Music Assistant finds nothing, it says so. One wildcard sentence, with the speaker read from its end: separate sentences per speaker lost to the bare wildcard.",
   "triggers": [
     {
       "trigger": "conversation",
@@ -71,6 +71,11 @@
       }
     },
     {
+      "variables": {
+        "artist_q": "{% set g = ['song', 'songs', 'a song', 'some songs', 'music', 'some music', 'something', 'anything', 'stuff', 'tracks', 'tunes', 'hits', 'the hits'] %}{% if artist != '' and title | lower in g %}{{ artist }}{% else %}{% set m = name | regex_findall('^(.+?) (?:songs|music|tracks|tunes|hits)$', ignorecase=True) %}{{ m[0] if m else '' }}{% endif %}"
+      }
+    },
+    {
       "choose": [
         {
           "conditions": [
@@ -97,6 +102,68 @@
       "default": [
         {
           "choose": [
+            {
+              "conditions": [
+                {
+                  "condition": "template",
+                  "value_template": "{{ artist_q != '' }}"
+                }
+              ],
+              "sequence": [
+                {
+                  "action": "music_assistant.search",
+                  "data": {
+                    "config_entry_id": "{{ config_entry_id(player) }}",
+                    "name": "{{ artist_q }}",
+                    "media_type": [
+                      "artist"
+                    ]
+                  },
+                  "response_variable": "found",
+                  "continue_on_error": true
+                },
+                {
+                  "variables": {
+                    "match": "{% set want = artist_q | lower | regex_replace('^the ', '') %}{% set ns = namespace(m='') %}{% for x in ((found.artists if found is defined and found is mapping and 'artists' in found else []) or []) %}{% if ns.m == '' and (x.name | lower | regex_replace('^the ', '')) == want %}{% set ns.m = x.name %}{% endif %}{% endfor %}{{ ns.m }}"
+                  }
+                },
+                {
+                  "if": [
+                    {
+                      "condition": "template",
+                      "value_template": "{{ match != '' }}"
+                    }
+                  ],
+                  "then": [
+                    {
+                      "action": "music_assistant.play_media",
+                      "target": {
+                        "entity_id": "{{ player }}"
+                      },
+                      "data": {
+                        "media_id": "{{ match }}",
+                        "media_type": "artist",
+                        "enqueue": "replace"
+                      },
+                      "continue_on_error": true
+                    }
+                  ],
+                  "else": [
+                    {
+                      "action": "music_assistant.play_media",
+                      "target": {
+                        "entity_id": "{{ player }}"
+                      },
+                      "data": {
+                        "media_id": "{{ name }}",
+                        "enqueue": "replace"
+                      },
+                      "continue_on_error": true
+                    }
+                  ]
+                }
+              ]
+            },
             {
               "conditions": [
                 {
