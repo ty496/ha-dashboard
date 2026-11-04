@@ -54,6 +54,7 @@ COMBOS = [
     ("AAL", "E75L", "American Eagle", "Embraer 175"),
     ("ASA", "E75L", "Alaska Airlines", "Embraer 175"),
     ("GEN", "TWINPROP", "", "Beechcraft 1900D"),
+    ("MIL", "H60", "U.S. Army", "Sikorsky UH-60A Black Hawk"),  # 2026-11-04, ref: Commons 0-26745 UH-60A Laramie + PR ARNG UH-60A, with the MIL-H47 drawing as style
     ("GEN", "NARROW", "", "Boeing 737-800"),
     ("GEN", "REGIONAL", "", "Embraer 175"),
     ("GEN", "WIDE", "", "Boeing 787-9"),
