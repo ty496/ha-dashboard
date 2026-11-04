@@ -1,0 +1,361 @@
+{
+  "id": "voice_music_controls_local",
+  "alias": "Voice: music controls (local)",
+  "description": "Pause, resume, skip, volume, mute and \"what's playing\" by voice, answered locally on whichever Music Assistant speaker is playing (Family Room Stereo, HomePod, Kitchen, Basement Stereo), or the Family Room Stereo when none is. HA's built-in media intents look only in the asking satellite's area, so from the kitchen Echo they failed for music in the family room. Bare \"stop\" is left to the Echo, whose stop word silences timers and alarms.",
+  "triggers": [
+    {
+      "trigger": "conversation",
+      "id": "pause",
+      "command": [
+        "pause [[the] (music|stereo|song|track|it|this|tunes)]",
+        "(stop|kill|cut) [the] (music|stereo|song|track|it|this|tunes)",
+        "turn off the (music|stereo|tunes)",
+        "hold the music"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "resume",
+      "command": [
+        "(resume|unpause|continue) [[the] (music|stereo|song|track|it|this|tunes)]",
+        "keep playing",
+        "start the music again",
+        "turn the music back on"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "next",
+      "command": [
+        "next [(song|track)]",
+        "skip [(this|the)] [(song|track)]",
+        "skip it"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "previous",
+      "command": [
+        "previous [(song|track)]",
+        "go back [(a|one)] [(song|track)]",
+        "last (song|track)"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "up",
+      "command": [
+        "turn [the] (music|stereo|song|track|it|this|tunes) up",
+        "turn up [the] (music|stereo|song|track|it|this|tunes)",
+        "turn [the] volume up",
+        "turn up [the] volume",
+        "(louder|volume up|make it louder)",
+        "raise [the] volume"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "down",
+      "command": [
+        "turn [the] (music|stereo|song|track|it|this|tunes) down",
+        "turn down [the] (music|stereo|song|track|it|this|tunes)",
+        "turn [the] volume down",
+        "turn down [the] volume",
+        "(quieter|softer|volume down|make it quieter)",
+        "lower [the] volume"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "set",
+      "command": [
+        "set [the] [(music|stereo)] volume to {level} [percent]",
+        "(volume|set volume) [to] {level} [percent]"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "mute",
+      "command": [
+        "mute [the] (music|stereo|song|track|it|this|tunes)",
+        "mute"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "unmute",
+      "command": [
+        "unmute [[the] (music|stereo|song|track|it|this|tunes)]"
+      ]
+    },
+    {
+      "trigger": "conversation",
+      "id": "what",
+      "command": [
+        "(what's|what is|whats) (playing|this song|this|on)",
+        "what (song|track) is (this|playing|on)",
+        "who (sings|is singing|sang|is) this [song]",
+        "(name|what is) (this|that) song"
+      ]
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "variables": {
+        "players": [
+          "media_player.family_room_stereo",
+          "media_player.homepod",
+          "media_player.kitchen",
+          "media_player.basement_stereo"
+        ],
+        "playing": "{{ expand(players) | selectattr('state', 'eq', 'playing') | map(attribute='entity_id') | list }}",
+        "paused": "{{ expand(players) | selectattr('state', 'eq', 'paused') | sort(attribute='last_changed', reverse=true) | map(attribute='entity_id') | list }}"
+      }
+    },
+    {
+      "variables": {
+        "target": "{{ (paused[0] if paused else 'media_player.family_room_stereo') if trigger.id == 'resume' else (playing[0] if playing else 'media_player.family_room_stereo') }}"
+      }
+    },
+    {
+      "variables": {
+        "vol": "{{ state_attr(target, 'volume_level') | float(0.2) }}",
+        "label": "{{ state_attr(target, 'friendly_name') or 'stereo' }}"
+      }
+    },
+    {
+      "choose": [
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "pause"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "media_player.media_pause",
+              "target": {
+                "entity_id": "{{ target }}"
+              },
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "{{ 'Paused.' if playing else 'Nothing is playing.' }}"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "resume"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "media_player.media_play",
+              "target": {
+                "entity_id": "{{ target }}"
+              },
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "{{ ('Resuming on the ' if paused else 'Playing on the ') ~ label ~ '.' }}"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "next"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "media_player.media_next_track",
+              "target": {
+                "entity_id": "{{ target }}"
+              },
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "{{ 'Skipping.' if playing else 'Nothing is playing.' }}"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "previous"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "media_player.media_previous_track",
+              "target": {
+                "entity_id": "{{ target }}"
+              },
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "{{ 'Going back.' if playing else 'Nothing is playing.' }}"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "up"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "media_player.volume_set",
+              "target": {
+                "entity_id": "{{ target }}"
+              },
+              "data": {
+                "volume_level": "{{ [vol + 0.05, 1.0] | min | round(2) }}"
+              },
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "Volume {{ ([vol + 0.05, 1.0] | min * 100) | round(0) | int }}."
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "down"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "media_player.volume_set",
+              "target": {
+                "entity_id": "{{ target }}"
+              },
+              "data": {
+                "volume_level": "{{ [vol - 0.05, 0.0] | max | round(2) }}"
+              },
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "Volume {{ ([vol - 0.05, 0.0] | max * 100) | round(0) | int }}."
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "set"
+            }
+          ],
+          "sequence": [
+            {
+              "variables": {
+                "lvl": "{{ trigger.slots.level | regex_replace('[^0-9]', '') | int(-1) }}"
+              }
+            },
+            {
+              "if": [
+                {
+                  "condition": "template",
+                  "value_template": "{{ 0 <= lvl <= 100 }}"
+                }
+              ],
+              "then": [
+                {
+                  "action": "media_player.volume_set",
+                  "target": {
+                    "entity_id": "{{ target }}"
+                  },
+                  "data": {
+                    "volume_level": "{{ lvl / 100 }}"
+                  },
+                  "continue_on_error": true
+                },
+                {
+                  "set_conversation_response": "Volume {{ lvl }}."
+                }
+              ],
+              "else": [
+                {
+                  "set_conversation_response": "Say a volume from 0 to 100."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "mute"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "media_player.volume_mute",
+              "target": {
+                "entity_id": "{{ target }}"
+              },
+              "data": {
+                "is_volume_muted": true
+              },
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "Muted."
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "unmute"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "media_player.volume_mute",
+              "target": {
+                "entity_id": "{{ target }}"
+              },
+              "data": {
+                "is_volume_muted": false
+              },
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "Unmuted."
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "trigger",
+              "id": "what"
+            }
+          ],
+          "sequence": [
+            {
+              "set_conversation_response": "{% if playing %}{% set t = state_attr(target, 'media_title') %}{% set ar = state_attr(target, 'media_artist') %}{{ ('This is ' ~ t ~ ((' by ' ~ ar) if ar else '') ~ '.') if t else ('Something is playing on the ' ~ label ~ ', but it has no title.') }}{% else %}Nothing is playing right now.{% endif %}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mode": "parallel"
+}
