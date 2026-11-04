@@ -1,0 +1,58 @@
+{
+  "id": "show_buttons_music_volume",
+  "alias": "Music: the Show's volume buttons move the speaker that's playing",
+  "description": "When music plays on a speaker other than the Kitchen Echo (the Family Room Stereo's WiiM, the HomePod or the basement), each press of the Echo's volume buttons steps that speaker's volume 2% up or down. The speaker is the one the Music pop-up is pointed at (input_text.music_speaker), and only while it is playing. The Whole House group is left to whole_house_show_buttons_volume (the Echo is in that group). The Echo's own volume still moves too: the buttons act on it before Home Assistant hears the press. Ty, 2026-11-04: eight presses during 'good morning music' raised only the Echo.",
+  "triggers": [
+    {
+      "trigger": "state",
+      "entity_id": "event.kitchen_volume_up_button",
+      "id": "up"
+    },
+    {
+      "trigger": "state",
+      "entity_id": "event.kitchen_volume_down_button",
+      "id": "down"
+    }
+  ],
+  "conditions": [
+    {
+      "condition": "template",
+      "value_template": "{{ trigger.from_state is not none and trigger.from_state.state not in ['unavailable', 'unknown'] and trigger.to_state.state not in ['unavailable', 'unknown'] }}"
+    },
+    {
+      "condition": "template",
+      "value_template": "{% set p = states('input_text.music_speaker') %}{{ p in ['media_player.family_room_stereo', 'media_player.homepod', 'media_player.basement_stereo'] and is_state(p, 'playing') and not is_state('media_player.whole_house', ['playing', 'paused']) }}"
+    }
+  ],
+  "actions": [
+    {
+      "variables": {
+        "player": "{{ states('input_text.music_speaker') }}",
+        "step": "{{ 0.02 if trigger.id == 'up' else -0.02 }}"
+      }
+    },
+    {
+      "variables": {
+        "target": "{{ ([([(state_attr(player, 'volume_level') | float(0)) + step, 0] | max), 1] | min) | round(2) }}"
+      }
+    },
+    {
+      "action": "media_player.volume_set",
+      "target": {
+        "entity_id": "{{ player }}"
+      },
+      "data": {
+        "volume_level": "{{ target }}"
+      }
+    },
+    {
+      "wait_template": "{{ (state_attr(player, 'volume_level') | float(0)) | round(2) == target }}",
+      "timeout": {
+        "seconds": 2
+      },
+      "continue_on_timeout": true
+    }
+  ],
+  "mode": "queued",
+  "max": 30
+}
