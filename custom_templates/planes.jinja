@@ -62,11 +62,20 @@
 {{ 'climbing' if vs > 300 else ('descending' if vs < -300 else 'level') }}
 {%- endmacro -%}
 
-{#- "United 1523" for airline flights, the registration for private aircraft. -#}
+{#- What the Plane details integration (custom_components/plane_details) knows about a flight: adsb.lol's
+    registration and callsign (Flightradar24 says "Blocked" for aircraft on the FAA's LADD list), the registered
+    owner, and plane-alert-db's entry (poi, notable_name, notable_category) for notable aircraft. JSON; {} when
+    it has nothing. -#}
+{%- macro plane_extra(f) -%}
+{{ ((state_attr('sensor.plane_details', 'by_fr24') or {}).get(f.id | string) or {}) | tojson }}
+{%- endmacro -%}
+
+{#- "United 1523" for airline flights, the registration for private aircraft (adsb.lol's when blocked). -#}
 {%- macro plane_flight(f) -%}
+{%- set x = (state_attr('sensor.plane_details', 'by_fr24') or {}).get(f.id | string) or {} -%}
 {%- set name = f.airline_short or f.airline -%}
 {%- set num = (f.flight_number or '') | replace(f.airline_iata or '~', '', 1) -%}
-{{ (name ~ ' ' ~ num) | trim if name else (f.aircraft_registration or f.callsign or 'Aircraft') }}
+{{ (name ~ ' ' ~ num) | trim if name else (f.aircraft_registration or x.registration or x.callsign or f.callsign or 'Aircraft') }}
 {%- endmacro -%}
 
 {%- macro plane_route(f) -%}
@@ -87,9 +96,10 @@
 {#- Flight-school and local VFR traffic (2026-11-03): a light piston plane (the C172, P28A, SR22 and PA44
     art classes, which take in unknown private types too) going nowhere in particular, no destination
     filed. Those circle all day and aren't shown. Anything with a destination, any helicopter (the
-    Chinooks) and anything bigger still is. -#}
+    Chinooks), anything bigger, and any person of interest's aircraft (plane_details) still is. -#}
 {%- macro plane_boring(f) -%}
-{%- if not (f.airport_destination_code_iata or f.airport_destination_city)
+{%- set x = (state_attr('sensor.plane_details', 'by_fr24') or {}).get(f.id | string) or {} -%}
+{%- if not x.poi and not (f.airport_destination_code_iata or f.airport_destination_city)
      and plane_key(f) | trim in ['GEN-C172', 'GEN-P28A', 'GEN-SR22', 'GEN-PA44'] -%}y{%- endif -%}
 {%- endmacro -%}
 

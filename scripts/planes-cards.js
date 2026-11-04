@@ -12,9 +12,11 @@ const file = path.join(__dirname, '..', 'show.json');
 const cfg = JSON.parse(fs.readFileSync(file, 'utf8'));
 const home = cfg.views.find(v => v.path === 'home');
 
-const IMPORT = "{% from 'planes.jinja' import plane_pick, plane_art, plane_where, plane_trend, plane_flight, plane_route, plane_model, plane_alt, plane_mph %}";
+const IMPORT = "{% from 'planes.jinja' import plane_pick, plane_art, plane_where, plane_trend, plane_flight, plane_route, plane_model, plane_alt, plane_mph, plane_extra %}";
 const FLIGHT = id => `{% set id = plane_pick(${id}) | trim %}` +
-  "{% set f = (state_attr('sensor.flightradar24_current_in_area', 'flights') or []) | selectattr('id', 'eq', id) | first if id else none %}";
+  "{% set f = (state_attr('sensor.flightradar24_current_in_area', 'flights') or []) | selectattr('id', 'eq', id) | first if id else none %}" +
+  // What the Plane details integration adds: the registration Flightradar24 blocks, the owner, a notable aircraft.
+  "{% set x = plane_extra(f) | from_json if f else {} %}";
 
 const overhead = {
   type: 'markdown',
@@ -29,11 +31,12 @@ const overhead = {
     '<a href="#plane"><img src="{{ plane_art(f) }}"></a>',
     '',
     '# {{ plane_flight(f) }}',
-    '{{ plane_route(f) }}',
+    '{% if x.poi %}### ★ {{ x.notable_name }} <span>{{ x.notable_category }}</span>{% endif %}',
+    "{{ plane_route(f) }}{% if x.owner and not f.airline %}<br>Owned by {{ x.owner }}{% endif %}",
     '',
     '- **{{ plane_alt(f) }}** ft',
     '- **{{ plane_mph(f) }}** mph',
-    "- **{{ plane_model(f) }}** {{ f.aircraft_registration or 'type' }}",
+    "- **{{ plane_model(f) }}** {{ f.aircraft_registration or x.registration or 'type' }}",
     '{% endif %}',
   ].join('\n'),
   card_mod: {
@@ -47,6 +50,9 @@ const overhead = {
         'img { display: block; width: 100%; margin: 8px 0 4px; filter: drop-shadow(0 10px 12px rgba(20, 30, 60, .22)); }',
         'h1 { margin: 0; font-size: 28px; font-weight: 700; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
         'p { margin: 2px 0 0; font-size: 17px; color: var(--secondary-text-color); }',
+        // A person of interest's aircraft (plane-alert-db), under the flight name.
+        'h3 { margin: 4px 0 0; font-size: 18px; font-weight: 700; color: var(--accent-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }',
+        'h3 span { font-size: 13px; font-weight: 500; color: var(--secondary-text-color); }',
         'ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 2px !important; padding: 0 !important; list-style: none; }',
         'li { display: flex; flex-direction: column; align-items: center; min-width: 64px; padding: 7px 16px 6px; border-radius: 14px;',
         '  background: color-mix(in srgb, var(--primary-text-color) 8%, transparent); border: 1px solid color-mix(in srgb, var(--primary-text-color) 12%, transparent);',
@@ -69,8 +75,8 @@ const takeover = {
     '',
     '<img src="{{ plane_art(f) }}">',
     '',
-    "## {{ f.airline or 'Private' }} · {{ f.aircraft_model or f.aircraft_code }}",
-    "{{ [f.flight_number, plane_route(f), f.aircraft_registration, plane_alt(f) ~ ' ft'] | select | join(' · ') }}",
+    "## {{ ('★ ' ~ x.notable_name) if x.poi else (f.airline or 'Private') }} · {{ f.aircraft_model or f.aircraft_code }}",
+    "{{ [f.flight_number, plane_route(f), f.aircraft_registration or x.registration, ('Owned by ' ~ x.owner) if (x.owner and not f.airline) else '', plane_alt(f) ~ ' ft'] | select | join(' · ') }}",
     '',
     "###### No {{ states('counter.planes_today') }} today · {{ now().strftime('%A %-d %B %Y') }} · " +
       "{{ '%.2f' | format(lat | abs) }}° {{ 'N' if lat >= 0 else 'S' }} {{ '%.2f' | format(lon | abs) }}° {{ 'W' if lon < 0 else 'E' }} · Wheat Ridge, Colorado",
@@ -128,12 +134,16 @@ const mapPopup = {
 
 // Right column: after "Needs attention" (index 0). Takeover: anywhere, it is position: fixed; put it in the
 // bottom-bar section with the pop-ups.
+// Each replaced where it stands when already there, so the cards around them keep their order.
 const right = home.sections[1].cards;
 const bar = home.sections[2].cards;
-const strip = cards => cards.filter(c => c.name !== 'Overhead now' && c.name !== 'Plane poster takeover' && c.hash !== '#plane');
-home.sections[1].cards = strip(right);
-home.sections[1].cards.splice(1, 0, overhead);
-home.sections[2].cards = [...strip(bar), mapPopup, takeover];
+const put = (list, card, isIt, at) => {
+  const i = list.findIndex(isIt);
+  if (i >= 0) list[i] = card; else if (at === undefined) list.push(card); else list.splice(at, 0, card);
+};
+put(right, overhead, c => c.name === 'Overhead now', 1);
+put(bar, mapPopup, c => c.hash === '#plane');
+put(bar, takeover, c => c.name === 'Plane poster takeover');
 
 fs.writeFileSync(file, JSON.stringify(cfg, null, 2) + '\n');
 fs.writeFileSync(path.join(__dirname, '..', 'show.min.json'), JSON.stringify(cfg));

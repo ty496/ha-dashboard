@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Plane details",
+        "description": "Fills in what Flightradar24 blocks (registration, callsign) from adsb.lol, adds the registered owner from adsbdb and flags notable aircraft from plane-alert-db. All free, no account."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Plane details is already set up."
+    }
+  }
+}
