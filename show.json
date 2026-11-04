@@ -998,7 +998,10 @@
                           ]
                         }
                       ],
-                      "features_position": "inline"
+                      "features_position": "inline",
+                      "exclude_entities": [
+                        "light.family_room_motion_sensor_family_room"
+                      ]
                     },
                     {
                       "type": "area",
@@ -1020,7 +1023,10 @@
                           ]
                         }
                       ],
-                      "features_position": "inline"
+                      "features_position": "inline",
+                      "exclude_entities": [
+                        "light.kitchen_coffee_bar_motion_sensor"
+                      ]
                     },
                     {
                       "type": "area",
@@ -1043,7 +1049,10 @@
                           ]
                         }
                       ],
-                      "features_position": "inline"
+                      "features_position": "inline",
+                      "exclude_entities": [
+                        "light.basement_motion_sensor_basement"
+                      ]
                     },
                     {
                       "type": "area",
@@ -1066,7 +1075,10 @@
                           ]
                         }
                       ],
-                      "features_position": "inline"
+                      "features_position": "inline",
+                      "exclude_entities": [
+                        "light.primary_bathroom_night_light_primary"
+                      ]
                     },
                     {
                       "type": "area",
