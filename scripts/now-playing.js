@@ -1,6 +1,7 @@
 // Now Playing for the Family Room Stereo on the Show's home view (2026-11-03), idempotently:
 // - A compact player at the foot of the left column while the WiiM plays or is paused: a small square of
-//   album art, title and artist, then a strip of controls and volume, with a Stop button beside it
+//   album art, title and artist, then a strip of controls and volume (36 px icons in HA's 48 px buttons:
+//   the compact 36 px unit left them at 22 px, too small to hit), with a Stop button beside it
 //   (script.family_room_stereo_stop: stop, clear Music Assistant's queue, Pioneer off). Art and words
 //   read the WiiM's own entity, so music started outside Music Assistant shows too; controls use Music
 //   Assistant's player while it streams, because the WiiM's entity then has no next or previous.
@@ -36,7 +37,7 @@ const playerFor = (entity, visibility) => ({
   hide: { power: true, source: true, name: true },
   grid_options: { columns: 9 },
   visibility,
-  card_mod: { style: 'ha-card { border-radius: 24px; --mmp-unit: 36px; } .entity__artwork, .entity__icon { width: 60px !important; height: 60px !important; min-width: 60px !important; border-radius: 12px !important; background-size: cover !important; } .entity__info__media, .entity__info__media span { font-size: 18px !important; font-weight: 600 !important; color: var(--primary-text-color) !important; opacity: 1 !important; }' },
+  card_mod: { style: 'ha-card { border-radius: 24px; --mmp-unit: 36px; } .entity__artwork, .entity__icon { width: 60px !important; height: 60px !important; min-width: 60px !important; border-radius: 12px !important; background-size: cover !important; } .entity__info__media, .entity__info__media span { font-size: 18px !important; font-weight: 600 !important; color: var(--primary-text-color) !important; opacity: 1 !important; } .mmp-player__adds { margin-left: 0 !important; } mmp-media-controls { --mdc-icon-size: 36px !important; }' },
 });
 const stop = {
   type: 'button',
