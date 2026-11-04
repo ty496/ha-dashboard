@@ -1,0 +1,31 @@
+{
+  "id": "whole_house_homepod_start_volume",
+  "alias": "Whole House: the HomePod starts at 40%",
+  "description": "Each time Music Assistant's Whole House group (Kitchen Echo + HomePod) starts playing from idle or off, the HomePod is set to 40%. During the session the Show's volume buttons move it in proportion (whole_house_show_buttons_volume), so without this it began wherever the last session left it. A pause and resume is not a new start. Ty, 2026-11-04: the HomePod sounded quieter at 30%.",
+  "triggers": [
+    {
+      "trigger": "state",
+      "entity_id": "media_player.whole_house",
+      "to": "playing"
+    }
+  ],
+  "conditions": [
+    {
+      "condition": "template",
+      "value_template": "{{ trigger.from_state is not none and trigger.from_state.state not in ['playing', 'paused', 'buffering'] }}"
+    }
+  ],
+  "actions": [
+    {
+      "action": "media_player.volume_set",
+      "target": {
+        "entity_id": "media_player.homepod"
+      },
+      "data": {
+        "volume_level": 0.4
+      },
+      "continue_on_error": true
+    }
+  ],
+  "mode": "single"
+}
