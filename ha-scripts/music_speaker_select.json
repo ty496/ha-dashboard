@@ -1,0 +1,61 @@
+{
+  "id": "music_speaker_select",
+  "alias": "Music: switch speaker",
+  "icon": "mdi:speaker-wireless",
+  "description": "The Music pop-up's speaker buttons (2026-11-03). Points both music cards at the chosen speaker (input_text.music_speaker) and, like a device picker, moves what was on the previous one there: Music Assistant's queue is transferred, still playing if it was playing, paused if it was paused. Nothing moves when the previous speaker was idle. A Kitchen or HomePod pick while the Whole House group plays counts as the group: their own queues are empty then, and moving one once wiped the group's song (2026-11-03). Moving onto the Family Room Stereo runs the Pioneer warm-up as usual.",
+  "fields": {
+    "speaker": {
+      "name": "Speaker",
+      "required": true,
+      "selector": {
+        "entity": {
+          "domain": "media_player",
+          "integration": "music_assistant"
+        }
+      }
+    }
+  },
+  "sequence": [
+    {
+      "variables": {
+        "picked": "{{ states('input_text.music_speaker') }}"
+      }
+    },
+    {
+      "variables": {
+        "current": "{{ 'media_player.whole_house' if picked in ['media_player.kitchen', 'media_player.homepod'] and is_state('media_player.whole_house', ['playing', 'paused']) else picked }}"
+      }
+    },
+    {
+      "action": "input_text.set_value",
+      "target": {
+        "entity_id": "input_text.music_speaker"
+      },
+      "data": {
+        "value": "{{ speaker }}"
+      }
+    },
+    {
+      "if": [
+        {
+          "condition": "template",
+          "value_template": "{{ speaker != current and current.startswith('media_player.') and states(current) in ['playing', 'paused'] }}"
+        }
+      ],
+      "then": [
+        {
+          "action": "music_assistant.transfer_queue",
+          "target": {
+            "entity_id": "{{ speaker }}"
+          },
+          "data": {
+            "source_player": "{{ current }}",
+            "auto_play": "{{ is_state(current, 'playing') }}"
+          },
+          "continue_on_error": true
+        }
+      ]
+    }
+  ],
+  "mode": "queued"
+}

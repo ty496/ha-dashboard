@@ -21,7 +21,10 @@ const SPEAKERS = [
   ['media_player.homepod', 'HomePod'],
   ['media_player.kitchen', 'Kitchen'],
 ];
-const speakers = SPEAKERS.map(([entity_id, name]) => ({ entity_id, name, music_assistant_entity: entity_id }));
+// The Whole House group's members are never picked automatically: while the group plays, YAMP otherwise jumps
+// to its sync leader (the Kitchen Echo), and the header showed Kitchen instead of Whole House.
+const GROUP_MEMBERS = ['media_player.homepod', 'media_player.kitchen'];
+const speakers = SPEAKERS.map(([entity_id, name]) => ({ entity_id, name, music_assistant_entity: entity_id, ...(GROUP_MEMBERS.includes(entity_id) ? { disable_auto_select: true } : {}) }));
 // One speaker choice for both cards: each writes its chosen speaker to input_text.music_speaker (a helper
 // made for this) and follows it, so a playlist tapped on the right plays where the left card points.
 const SYNC = { sync_entity_type: 'yamp_playback_entity', sync_entity_helper: 'input_text.music_speaker', in_menu: 'hidden', card_trigger: 'none' };
@@ -84,12 +87,13 @@ const music = {
   width_desktop: '1180px',
   slide_to_close: true,
   close_by_clicking_outside: true,
-  // The speaker picker, right of the title: each button writes its speaker to input_text.music_speaker, which
-  // both cards follow (and write back when playback moves the player to another speaker). Same pills as the
-  // chips, the chosen one solid white.
+  // The speaker picker, right of the title, works like a device picker: script.music_speaker_select writes the
+  // speaker to input_text.music_speaker, which both cards follow (and write back when playback moves the player
+  // to another speaker), and moves what was playing on the previous speaker there. Same pills as the chips,
+  // the chosen one solid white.
   sub_button: SPEAKERS.map(([entity_id, name]) => ({
     name, icon: entity_id === 'media_player.whole_house' ? 'mdi:speaker-multiple' : 'mdi:speaker', show_name: true, show_icon: true, show_background: false,
-    tap_action: { action: 'perform-action', perform_action: 'input_text.set_value', target: { entity_id: 'input_text.music_speaker' }, data: { value: entity_id } },
+    tap_action: { action: 'perform-action', perform_action: 'script.music_speaker_select', data: { speaker: entity_id } },
   })),
   styles: [
     '.bubble-sub-button { background: rgba(20, 26, 43, 0.72) !important; border: 1px solid rgba(242, 244, 248, 0.9) !important; color: #f2f4f8 !important; border-radius: 24px !important; height: 40px !important; padding: 0 14px !important; font-size: 14px !important; font-weight: 400 !important; }',

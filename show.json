@@ -1129,12 +1129,9 @@
                   "show_background": false,
                   "tap_action": {
                     "action": "perform-action",
-                    "perform_action": "input_text.set_value",
-                    "target": {
-                      "entity_id": "input_text.music_speaker"
-                    },
+                    "perform_action": "script.music_speaker_select",
                     "data": {
-                      "value": "media_player.family_room_stereo"
+                      "speaker": "media_player.family_room_stereo"
                     }
                   }
                 },
@@ -1146,12 +1143,9 @@
                   "show_background": false,
                   "tap_action": {
                     "action": "perform-action",
-                    "perform_action": "input_text.set_value",
-                    "target": {
-                      "entity_id": "input_text.music_speaker"
-                    },
+                    "perform_action": "script.music_speaker_select",
                     "data": {
-                      "value": "media_player.whole_house"
+                      "speaker": "media_player.whole_house"
                     }
                   }
                 },
@@ -1163,12 +1157,9 @@
                   "show_background": false,
                   "tap_action": {
                     "action": "perform-action",
-                    "perform_action": "input_text.set_value",
-                    "target": {
-                      "entity_id": "input_text.music_speaker"
-                    },
+                    "perform_action": "script.music_speaker_select",
                     "data": {
-                      "value": "media_player.homepod"
+                      "speaker": "media_player.homepod"
                     }
                   }
                 },
@@ -1180,12 +1171,9 @@
                   "show_background": false,
                   "tap_action": {
                     "action": "perform-action",
-                    "perform_action": "input_text.set_value",
-                    "target": {
-                      "entity_id": "input_text.music_speaker"
-                    },
+                    "perform_action": "script.music_speaker_select",
                     "data": {
-                      "value": "media_player.kitchen"
+                      "speaker": "media_player.kitchen"
                     }
                   }
                 }
@@ -1214,12 +1202,14 @@
                         {
                           "entity_id": "media_player.homepod",
                           "name": "HomePod",
-                          "music_assistant_entity": "media_player.homepod"
+                          "music_assistant_entity": "media_player.homepod",
+                          "disable_auto_select": true
                         },
                         {
                           "entity_id": "media_player.kitchen",
                           "name": "Kitchen",
-                          "music_assistant_entity": "media_player.kitchen"
+                          "music_assistant_entity": "media_player.kitchen",
+                          "disable_auto_select": true
                         }
                       ],
                       "show_chip_row": "always",
@@ -1266,12 +1256,14 @@
                         {
                           "entity_id": "media_player.homepod",
                           "name": "HomePod",
-                          "music_assistant_entity": "media_player.homepod"
+                          "music_assistant_entity": "media_player.homepod",
+                          "disable_auto_select": true
                         },
                         {
                           "entity_id": "media_player.kitchen",
                           "name": "Kitchen",
-                          "music_assistant_entity": "media_player.kitchen"
+                          "music_assistant_entity": "media_player.kitchen",
+                          "disable_auto_select": true
                         }
                       ],
                       "show_chip_row": "always",
