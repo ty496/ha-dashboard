@@ -11,6 +11,7 @@
 //   heavily blurred stretch of the same art that fills the rest with its average colours. Two fixed
 //   markdown cards behind the glass cards (z-index -1, the colour wash first). Ty: a blurred, screen-high
 //   cover looked "like a bad screen shot of the art".
+// Tapping the player (not its buttons) opens the Music pop-up (music-popup.js).
 // Ty dropped the 30 s full-screen pop-up on each new song the same day ("I like it just staying as a
 // small control"); this removes it if present.
 const fs = require('fs');
@@ -41,6 +42,7 @@ const playerFor = (entity, visibility) => ({
   volume_step: 5,
   hide: { power: true, source: true, name: true },
   grid_options: { columns: 9 },
+  tap_action: { action: 'navigate', navigation_path: '#music' },
   visibility,
   card_mod: { style: 'ha-card { border-radius: 24px; --mmp-unit: 36px; } .entity__artwork, .entity__icon { width: 60px !important; height: 60px !important; min-width: 60px !important; border-radius: 12px !important; background-size: cover !important; } .entity__info__media, .entity__info__media span { font-size: 18px !important; font-weight: 600 !important; color: var(--primary-text-color) !important; opacity: 1 !important; } .mmp-player__adds { margin-left: 0 !important; } mmp-media-controls { --mdc-icon-size: 36px !important; }' },
 });

@@ -177,6 +177,10 @@
               "grid_options": {
                 "columns": 9
               },
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "#music"
+              },
               "visibility": [
                 {
                   "condition": "state",
@@ -204,6 +208,10 @@
               },
               "grid_options": {
                 "columns": 9
+              },
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "#music"
               },
               "visibility": [
                 {
@@ -240,6 +248,10 @@
               },
               "grid_options": {
                 "columns": 9
+              },
+              "tap_action": {
+                "action": "navigate",
+                "navigation_path": "#music"
               },
               "visibility": [
                 {
@@ -901,7 +913,7 @@
             {
               "type": "custom:bubble-card",
               "card_type": "horizontal-buttons-stack",
-              "width_desktop": "540px",
+              "width_desktop": "720px",
               "is_sidebar_hidden": true,
               "rise_animation": false,
               "highlight_current_view": true,
@@ -917,7 +929,10 @@
               "hide_gradient": true,
               "card_mod": {
                 "style": "ha-card.horizontal-buttons-stack-card { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; box-shadow: none !important; border: none !important; background: none !important; }"
-              }
+              },
+              "4_name": "Music",
+              "4_icon": "mdi:music",
+              "4_link": "#music"
             },
             {
               "type": "custom:bubble-card",
@@ -1094,6 +1109,96 @@
               "card_mod": {
                 "style": "ha-card { position: fixed !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; max-height: none !important; top: 18vh !important; left: calc(50vw - 32vh) !important; width: 64vh !important; height: 64vh !important; border-radius: 16px !important; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5) !important; background: center / cover no-repeat url('{{ state_attr('media_player.whole_house' if is_state('media_player.whole_house', 'playing') else 'media_player.family_room_family_room_wiim', 'entity_picture') or '' }}') !important; filter: brightness(0.6); }"
               }
+            },
+            {
+              "type": "custom:bubble-card",
+              "card_type": "pop-up",
+              "hash": "#music",
+              "name": "Music",
+              "icon": "mdi:music",
+              "popup_mode": "centered",
+              "width_desktop": "1180px",
+              "slide_to_close": true,
+              "close_by_clicking_outside": true,
+              "cards": [
+                {
+                  "type": "grid",
+                  "columns": 2,
+                  "square": false,
+                  "cards": [
+                    {
+                      "type": "custom:yet-another-media-player",
+                      "template": "large_modern",
+                      "entities": [
+                        {
+                          "entity_id": "media_player.family_room_stereo",
+                          "name": "Family Room",
+                          "music_assistant_entity": "media_player.family_room_stereo"
+                        },
+                        {
+                          "entity_id": "media_player.whole_house",
+                          "name": "Whole House",
+                          "music_assistant_entity": "media_player.whole_house"
+                        },
+                        {
+                          "entity_id": "media_player.homepod",
+                          "name": "HomePod",
+                          "music_assistant_entity": "media_player.homepod"
+                        },
+                        {
+                          "entity_id": "media_player.kitchen",
+                          "name": "Kitchen",
+                          "music_assistant_entity": "media_player.kitchen"
+                        }
+                      ],
+                      "show_chip_row": "always",
+                      "match_theme": true,
+                      "appearance": "dark",
+                      "card_height": 560,
+                      "idle_timeout_ms": 0,
+                      "show_player_search": false
+                    },
+                    {
+                      "type": "custom:yet-another-media-player",
+                      "card_type": "search",
+                      "entities": [
+                        {
+                          "entity_id": "media_player.family_room_stereo",
+                          "name": "Family Room",
+                          "music_assistant_entity": "media_player.family_room_stereo"
+                        },
+                        {
+                          "entity_id": "media_player.whole_house",
+                          "name": "Whole House",
+                          "music_assistant_entity": "media_player.whole_house"
+                        },
+                        {
+                          "entity_id": "media_player.homepod",
+                          "name": "HomePod",
+                          "music_assistant_entity": "media_player.homepod"
+                        },
+                        {
+                          "entity_id": "media_player.kitchen",
+                          "name": "Kitchen",
+                          "music_assistant_entity": "media_player.kitchen"
+                        }
+                      ],
+                      "show_chip_row": "always",
+                      "match_theme": true,
+                      "appearance": "dark",
+                      "card_height": 560,
+                      "hide_menu_player": true,
+                      "artwork_object_fit": "no_artwork",
+                      "default_search_favorites": true,
+                      "disable_autofocus": true,
+                      "search_view": "card",
+                      "search_card_columns": 3,
+                      "pin_search_headers": true,
+                      "show_player_search": false
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
