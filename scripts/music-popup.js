@@ -15,16 +15,19 @@ const cfg = JSON.parse(fs.readFileSync(file, 'utf8'));
 const home = cfg.views.find(v => v.path === 'home');
 const popups = home.sections.find(s => s.cards.some(c => c.card_type === 'pop-up')).cards;
 
-const speakers = [
+const SPEAKERS = [
   ['media_player.family_room_stereo', 'Family Room'],
   ['media_player.whole_house', 'Whole House'],
   ['media_player.homepod', 'HomePod'],
   ['media_player.kitchen', 'Kitchen'],
-].map(([entity_id, name]) => ({ entity_id, name, music_assistant_entity: entity_id }));
+];
+const speakers = SPEAKERS.map(([entity_id, name]) => ({ entity_id, name, music_assistant_entity: entity_id }));
 // One speaker choice for both cards: each writes its chosen speaker to input_text.music_speaker (a helper
 // made for this) and follows it, so a playlist tapped on the right plays where the left card points.
 const SYNC = { sync_entity_type: 'yamp_playback_entity', sync_entity_helper: 'input_text.music_speaker', in_menu: 'hidden', card_trigger: 'none' };
-const actions = [{ action: 'sync_selected_entity', ...SYNC }, { action: 'select_entity', ...SYNC }];
+// select_entity also names the helper as its entity: YAMP 2026.11.0 re-renders on a change only for the
+// entities its actions name there, so without it the player card never noticed the header's choice.
+const actions = [{ action: 'sync_selected_entity', ...SYNC }, { action: 'select_entity', ...SYNC, entity: 'input_text.music_speaker' }];
 
 // Dressed like the rest of the Show (Ty: the card's own orange chips "don't match the overall aesthetic"):
 // chips are the bottom row's pills (navy glass, a thin near-white border, white text), the chosen one solid
@@ -35,9 +38,10 @@ const DRESS = [
   '.chip[selected] { background: #f2f4f8 !important; color: #141a2b !important; }',
   '.chip ha-icon, .chip .chip-icon { color: inherit !important; }',
 ].join(' ');
-// The search card: no speaker chips (the player's choose for both), and no search box (the Show has no
-// keyboard).
-const BROWSE_DRESS = DRESS + ' .chip-row:not(.search-filter-chips) { display: none !important; } .entity-options-search-row { display: none !important; }';
+// Neither card shows its own speaker chips: the pop-up's header picks the speaker for both. The search card
+// has no search box either (the Show has no keyboard).
+const NO_SPEAKER_CHIPS = ' .chip-row:not(.search-filter-chips) { display: none !important; }';
+const BROWSE_DRESS = DRESS + NO_SPEAKER_CHIPS + ' .entity-options-search-row { display: none !important; }';
 const player = {
   type: 'custom:yet-another-media-player',
   template: 'large_modern',
@@ -49,7 +53,7 @@ const player = {
   idle_timeout_ms: 0,
   show_player_search: false,
   actions,
-  card_mod: { style: DRESS },
+  card_mod: { style: DRESS + NO_SPEAKER_CHIPS },
 };
 const browse = {
   type: 'custom:yet-another-media-player',
@@ -80,6 +84,18 @@ const music = {
   width_desktop: '1180px',
   slide_to_close: true,
   close_by_clicking_outside: true,
+  // The speaker picker, right of the title: each button writes its speaker to input_text.music_speaker, which
+  // both cards follow (and write back when playback moves the player to another speaker). Same pills as the
+  // chips, the chosen one solid white.
+  sub_button: SPEAKERS.map(([entity_id, name]) => ({
+    name, icon: entity_id === 'media_player.whole_house' ? 'mdi:speaker-multiple' : 'mdi:speaker', show_name: true, show_icon: true, show_background: false,
+    tap_action: { action: 'perform-action', perform_action: 'input_text.set_value', target: { entity_id: 'input_text.music_speaker' }, data: { value: entity_id } },
+  })),
+  styles: [
+    '.bubble-sub-button { background: rgba(20, 26, 43, 0.72) !important; border: 1px solid rgba(242, 244, 248, 0.9) !important; color: #f2f4f8 !important; border-radius: 24px !important; height: 40px !important; padding: 0 14px !important; font-size: 14px !important; font-weight: 400 !important; }',
+    '.bubble-sub-button ha-icon { color: inherit !important; }',
+    ...SPEAKERS.map(([entity_id], i) => `.bubble-sub-button-${i + 1} { \${hass.states['input_text.music_speaker']?.state === '${entity_id}' ? 'background: #f2f4f8 !important; color: #141a2b !important;' : ''} }`),
+  ].join('\n'),
   cards: [{ type: 'grid', columns: 2, square: false, cards: [player, browse] }],
 };
 for (let i = popups.length - 1; i >= 0; i--) if (popups[i].hash === '#music') popups.splice(i, 1);
