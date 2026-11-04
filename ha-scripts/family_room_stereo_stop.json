@@ -1,0 +1,41 @@
+{
+  "id": "family_room_stereo_stop",
+  "alias": "Family room stereo: stop and turn off",
+  "icon": "mdi:stop",
+  "description": "Stops the music on the Family Room Stereo, clears Music Assistant's queue, stops the WiiM's stream, then turns the Pioneer SX-780 off a second later (silence first, then power). The Now Playing player's Stop button runs it.",
+  "sequence": [
+    {
+      "action": "media_player.media_stop",
+      "target": {
+        "entity_id": "media_player.family_room_stereo"
+      },
+      "continue_on_error": true
+    },
+    {
+      "action": "media_player.clear_playlist",
+      "target": {
+        "entity_id": "media_player.family_room_stereo"
+      },
+      "continue_on_error": true
+    },
+    {
+      "action": "media_player.media_stop",
+      "target": {
+        "entity_id": "media_player.family_room_family_room_wiim"
+      },
+      "continue_on_error": true
+    },
+    {
+      "delay": {
+        "seconds": 1
+      }
+    },
+    {
+      "action": "switch.turn_off",
+      "target": {
+        "entity_id": "switch.family_room_pioneer_sx_780"
+      }
+    }
+  ],
+  "mode": "single"
+}

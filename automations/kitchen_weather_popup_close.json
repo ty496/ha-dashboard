@@ -1,14 +1,13 @@
 {
   "id": "kitchen_weather_popup_close",
-  "alias": "Kitchen pop-ups: close after 30 s",
-  "description": "Closes the #weather, #place-weather or #now-playing pop-up on the Show dashboard 30 s after it opened (Bubble Card trigger_close follows each helper).",
+  "alias": "Kitchen weather pop-ups: close after 30 s",
+  "description": "Closes the #weather or #place-weather pop-up on the Show dashboard 30 s after a voice answer opened it (Bubble Card trigger_close follows each helper).",
   "triggers": [
     {
       "trigger": "state",
       "entity_id": [
         "input_boolean.kitchen_weather_popup",
-        "input_boolean.kitchen_place_weather_popup",
-        "input_boolean.kitchen_now_playing_popup"
+        "input_boolean.kitchen_place_weather_popup"
       ],
       "to": "on",
       "for": {
