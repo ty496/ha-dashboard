@@ -1,7 +1,7 @@
 {
   "id": "voice_play_music_local",
   "alias": "Voice: play music (local)",
-  "description": "\"Play X [on/in Y]\" answered on the local agent through Music Assistant, so music requests skip Claude. Y: the family room stereo (also the default), the HomePod, the kitchen, the basement, or the whole house (also \"everywhere\", \"all speakers\", \"every room\"): Music Assistant's Whole House sync group of the Kitchen Echo and the HomePod (Ty left the basement out: no whole-house music downstairs). The Family Room Stereo can't join it: the WiiM Ultra has no AirPlay and can't run Sendspin over Cast. \"X by Y\" is a song with its artist; \"X playlist\" or \"X album\" sets the type. Songs or music by X, and X songs, play the artist X when Music Assistant knows one by that exact name. A request naming another target (a TV) or too vague to search (\"some music\") is handed to Claude as said. If Music Assistant finds nothing, it says so; if nothing started because another speaker is already streaming Tidal (the account allows one stream at a time), it says that instead. One wildcard sentence, with the speaker read from its end: separate sentences per speaker lost to the bare wildcard.",
+  "description": "\"Play X [on/in Y]\" answered on the local agent through Music Assistant, so music requests skip Claude. Y: the family room stereo (also the default), the HomePod, the kitchen, the basement, or the whole house (also \"everywhere\", \"all speakers\", \"every room\"): Music Assistant's Whole House sync group of the Kitchen Echo and the HomePod (Ty left the basement out: no whole-house music downstairs). The Family Room Stereo can't join it: the WiiM Ultra has no AirPlay and can't run Sendspin over Cast. \"X by Y\" is a song with its artist; \"X playlist\" or \"X album\" sets the type. Songs or music by X, and X songs, play the artist X when Music Assistant knows one by that exact name. A request naming another target (a TV) or too vague to search (\"some music\") is handed to Claude as said. If Music Assistant finds nothing, it says so; if nothing started because another speaker is already streaming Tidal (the account allows one stream at a time), it says that instead. Once it plays, the Show's Music pop-up is pointed at that speaker (input_text.music_speaker). One wildcard sentence, with the speaker read from its end: separate sentences per speaker lost to the bare wildcard.",
   "triggers": [
     {
       "trigger": "conversation",
@@ -249,6 +249,16 @@
             }
           ],
           "then": [
+            {
+              "action": "input_text.set_value",
+              "target": {
+                "entity_id": "input_text.music_speaker"
+              },
+              "data": {
+                "value": "{{ player }}"
+              },
+              "continue_on_error": true
+            },
             {
               "set_conversation_response": "Playing {{ state_attr(player, 'media_title') or name }}{{ (' by ' ~ state_attr(player, 'media_artist')) if state_attr(player, 'media_artist') and state_attr(player, 'media_artist') | lower not in (state_attr(player, 'media_title') or '') | lower else '' }} {{ where }}."
             }

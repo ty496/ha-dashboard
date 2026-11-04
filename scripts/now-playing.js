@@ -85,10 +85,16 @@ if (old >= 0) right.splice(old, 1);
 const mine = c => (c.type === 'custom:mini-media-player' && [E, MA, WH].includes(c.entity)) || (c.type === 'button' && c.tap_action && c.tap_action.perform_action === 'script.family_room_stereo_stop');
 for (const list of [left, right]) for (let i = list.length - 1; i >= 0; i--) if (mine(list[i])) list.splice(i, 1);
 left.push(...cards);
-// The HomePod's stock media card (right column, for AirPlay from a phone) stays out of the way while the
-// HomePod is playing as part of the Whole House group.
-const homepod = right.find(c => c.type === 'media-control' && c.entity === 'media_player.family_room_family_room_homepod');
-if (homepod) homepod.visibility = [{ condition: 'state', entity: 'media_player.family_room_family_room_homepod', state: 'playing' }, WH_OFF];
+// The HomePod's stock media card, shown while the HomePod plays on its own (Music Assistant or AirPlay from a
+// phone), sits under the player in the left column (Ty liked it there better than in the right column, under
+// the calendar), and stays out of the way while the HomePod is playing as part of the Whole House group.
+const isHomepodCard = c => c.type === 'media-control' && c.entity === 'media_player.family_room_family_room_homepod';
+const homepod = [...left, ...right].find(isHomepodCard);
+for (const list of [left, right]) for (let i = list.length - 1; i >= 0; i--) if (isHomepodCard(list[i])) list.splice(i, 1);
+if (homepod) {
+  homepod.visibility = [{ condition: 'state', entity: 'media_player.family_room_family_room_homepod', state: 'playing' }, WH_OFF];
+  left.push(homepod);
+}
 
 // Backdrop: colour wash first, then the cover over it. The pop-up goes.
 for (let i = popups.length - 1; i >= 0; i--) if (['Now playing background', 'Now playing cover'].includes(popups[i].name) || popups[i].hash === '#now-playing') popups.splice(i, 1);

@@ -334,6 +334,25 @@
               "card_mod": {
                 "style": "ha-card { border-radius: 24px; height: 100% !important; } ha-state-icon { --mdc-icon-size: 40px; }"
               }
+            },
+            {
+              "type": "media-control",
+              "entity": "media_player.family_room_family_room_homepod",
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "media_player.family_room_family_room_homepod",
+                  "state": "playing"
+                },
+                {
+                  "condition": "state",
+                  "entity": "media_player.whole_house",
+                  "state_not": [
+                    "playing",
+                    "paused"
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -532,25 +551,6 @@
               "card_mod": {
                 "style": ".event-title, .event-left, .event-time, .event-right, .hours, .relative-time { font-size: 19px !important; } .event-left { min-width: 120px !important; } .single-event-container { line-height: 1.5 !important; } .header { font-size: 1.25em !important; } ha-card { height: 100%; }"
               }
-            },
-            {
-              "type": "media-control",
-              "entity": "media_player.family_room_family_room_homepod",
-              "visibility": [
-                {
-                  "condition": "state",
-                  "entity": "media_player.family_room_family_room_homepod",
-                  "state": "playing"
-                },
-                {
-                  "condition": "state",
-                  "entity": "media_player.whole_house",
-                  "state_not": [
-                    "playing",
-                    "paused"
-                  ]
-                }
-              ]
             },
             {
               "type": "media-control",
