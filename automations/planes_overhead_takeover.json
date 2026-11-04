@@ -1,30 +1,70 @@
 {
   "id": "planes_overhead_takeover",
   "alias": "Planes overhead takeover",
-  "description": "Picks the planes that get the Show's full-screen poster; every other plane stays on the small card, route and all. A plane gets it when it is the first of its kind today (airline and type, e.g. UAL-B738, or PVT-<type> for private aircraft; kinds that had a poster are kept in todo.plane_posters_today, which planes_overhead_count clears at midnight) or when it is unusual: a helicopter, a wide-body, a person of interest's aircraft (plane-alert-db) or a private jet with a registered owner. The last two come from sensor.plane_details, which pairs a flight up to 30 s after it enters, so a plane that is neither waits up to 40 s for that. Never 22:00-07:00, never on the ground, never flight-school and local VFR traffic (plane_boring). script.plane_poster shows the poster, at most once every 5 minutes. Before 2026-11-04 every plane got one and Denver departures brought it up every 9 minutes. Source: ha-dashboard/automations/planes_overhead_takeover.json",
+  "description": "Picks the planes that get the Show's full-screen poster; every other plane stays on the small card, route and all. A plane gets it when it is the first of its kind today (airline and type, e.g. UAL-B738, or PVT-<type> for private aircraft; kinds that had a poster are kept in todo.plane_posters_today, which planes_overhead_count clears at midnight) or when it is unusual: a helicopter, a balloon, a wide-body, a person of interest's aircraft (plane-alert-db) or a private jet with a registered owner. The last two come from sensor.plane_details, which pairs a flight up to 30 s after it enters, so a plane that is neither waits up to 40 s for that. Never 22:00-07:00, never on the ground, never flight-school and local VFR traffic (plane_boring). script.plane_poster shows the poster, at most once every 5 minutes. Before 2026-11-04 every plane got one and Denver departures brought it up every 9 minutes. Source: ha-dashboard/automations/planes_overhead_takeover.json",
   "mode": "parallel",
   "max": 15,
-  "triggers": [{"trigger": "event", "event_type": "flightradar24_entry"}],
+  "triggers": [
+    {
+      "trigger": "event",
+      "event_type": "flightradar24_entry"
+    }
+  ],
   "conditions": [
-    {"condition": "time", "after": "07:00:00", "before": "22:00:00"},
-    {"condition": "template", "value_template": "{{ (trigger.event.data.on_ground | default(0) | int(0)) == 0 }}"},
-    {"condition": "template", "value_template": "{% from 'planes.jinja' import plane_boring %}{{ not (plane_boring(trigger.event.data) | trim) }}"}
+    {
+      "condition": "time",
+      "after": "07:00:00",
+      "before": "22:00:00"
+    },
+    {
+      "condition": "template",
+      "value_template": "{{ (trigger.event.data.on_ground | default(0) | int(0)) == 0 }}"
+    },
+    {
+      "condition": "template",
+      "value_template": "{% from 'planes.jinja' import plane_boring %}{{ not (plane_boring(trigger.event.data) | trim) }}"
+    }
   ],
   "actions": [
-    {"variables": {
-      "fid": "{{ trigger.event.data.id | string }}",
-      "kind": "{{ (trigger.event.data.airline_icao or 'PVT') | upper }}-{{ (trigger.event.data.aircraft_code or '?') | upper }}",
-      "special": "{% from 'planes.jinja' import plane_key %}{% set t = (trigger.event.data.aircraft_code or '') | upper %}{{ plane_key(trigger.event.data) | trim in ['MIL-H47', 'GEN-HELI'] or t[:3] in ['B74', 'B76', 'B77', 'B78', 'A33', 'A34', 'A35', 'A38', 'MD1'] or t in ['A306', 'A310'] }}"
-    }},
-    {"action": "todo.get_items", "target": {"entity_id": "todo.plane_posters_today"}, "response_variable": "seen"},
-    {"variables": {
-      "first": "{{ kind not in (seen['todo.plane_posters_today']['items'] | map(attribute='summary') | list) }}"
-    }},
-    {"wait_template": "{{ first or special or (state_attr('sensor.plane_details', 'by_fr24') or {}).get(fid) is not none }}", "timeout": 40, "continue_on_timeout": true},
-    {"variables": {
-      "notable": "{% from 'planes.jinja' import plane_key %}{% set x = (state_attr('sensor.plane_details', 'by_fr24') or {}).get(fid) or {} %}{{ x.get('poi', false) or (not trigger.event.data.airline_icao and x.get('owner', '') != '' and plane_key(trigger.event.data) | trim in ['GEN-C56X', 'GEN-CL35', 'GEN-GLEX', 'GEN-NARROW']) }}"
-    }},
-    {"condition": "template", "value_template": "{{ first or special or notable }}"},
-    {"action": "script.plane_poster", "data": {"id": "{{ fid }}", "kind": "{{ kind }}"}}
+    {
+      "variables": {
+        "fid": "{{ trigger.event.data.id | string }}",
+        "kind": "{{ (trigger.event.data.airline_icao or 'PVT') | upper }}-{{ (trigger.event.data.aircraft_code or '?') | upper }}",
+        "special": "{% from 'planes.jinja' import plane_key %}{% set t = (trigger.event.data.aircraft_code or '') | upper %}{{ plane_key(trigger.event.data) | trim in ['MIL-H47', 'GEN-HELI', 'GEN-BALLOON'] or t[:3] in ['B74', 'B76', 'B77', 'B78', 'A33', 'A34', 'A35', 'A38', 'MD1'] or t in ['A306', 'A310'] }}"
+      }
+    },
+    {
+      "action": "todo.get_items",
+      "target": {
+        "entity_id": "todo.plane_posters_today"
+      },
+      "response_variable": "seen"
+    },
+    {
+      "variables": {
+        "first": "{{ kind not in (seen['todo.plane_posters_today']['items'] | map(attribute='summary') | list) }}"
+      }
+    },
+    {
+      "wait_template": "{{ first or special or (state_attr('sensor.plane_details', 'by_fr24') or {}).get(fid) is not none }}",
+      "timeout": 40,
+      "continue_on_timeout": true
+    },
+    {
+      "variables": {
+        "notable": "{% from 'planes.jinja' import plane_key %}{% set x = (state_attr('sensor.plane_details', 'by_fr24') or {}).get(fid) or {} %}{{ x.get('poi', false) or (not trigger.event.data.airline_icao and x.get('owner', '') != '' and plane_key(trigger.event.data) | trim in ['GEN-C56X', 'GEN-CL35', 'GEN-GLEX', 'GEN-NARROW']) }}"
+      }
+    },
+    {
+      "condition": "template",
+      "value_template": "{{ first or special or notable }}"
+    },
+    {
+      "action": "script.plane_poster",
+      "data": {
+        "id": "{{ fid }}",
+        "kind": "{{ kind }}"
+      }
+    }
   ]
 }

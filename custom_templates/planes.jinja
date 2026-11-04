@@ -14,15 +14,18 @@
 {#- When an airline has no drawing for this exact type, the nearest sibling it does have. -#}
 {%- set sibling = {'B78X': 'B789', 'B788': 'B789', 'B77W': 'B772', 'B77L': 'B772', 'B753': 'B752', 'A320': 'A20N',
   'A321': 'A21N', 'A21N': 'A321', 'A20N': 'A320', 'B38M': 'B738', 'B738': 'B739', 'B739': 'B738', 'B39M': 'B739',
-  'BCS1': 'BCS3', 'E75S': 'E75L', 'E170': 'E75L', 'CRJ9': 'CRJ7', 'CRJ5': 'CRJ7'} -%}
+  'BCS1': 'BCS3', 'E75S': 'E75L', 'E170': 'E75L', 'CRJ9': 'CRJ7', 'CRJ5': 'CRJ7', 'B737': 'B738', 'A319': 'A320'} -%}
 {%- set icao = (f.airline_icao or '') | upper -%}
-{%- set airline = operator.get(icao, icao) -%}
 {%- set t = (f.aircraft_code or '') | upper -%}
+{#- Flightradar24 often files United Express flights under United itself (UAL with an E175 or CRJ, 2026-11-04). -#}
+{%- set airline = 'UAX' if icao == 'UAL' and t in ['E75L', 'E75S', 'E170', 'CRJ2', 'CRJ5', 'CRJ7', 'CRJ9'] else operator.get(icao, icao) -%}
 {%- set cat = (f.aircraft_category or '') | lower -%}
 {%- if airline and (airline ~ '-' ~ t) in have -%}{{ airline }}-{{ t }}
 {%- elif airline and (airline ~ '-' ~ sibling.get(t, '')) in have -%}{{ airline }}-{{ sibling.get(t, '') }}
 {#- The CH-47 Chinooks that cross Denver are Army or Army National Guard, all in Army tan. -#}
 {%- elif t in ['H47', 'CH47'] -%}MIL-H47
+{#- Balloons: Urban Sky's stratospheric imaging balloons out of Denver (2026-11-04). -#}
+{%- elif t == 'BALL' -%}GEN-BALLOON
 {#- Helicopters by type first; FR24's category alone comes last (it calls the Zenith CH-750, a high-wing plane, a helicopter). -#}
 {%- elif t in ['R22', 'R44', 'R66', 'EC20', 'EC30', 'EC35', 'EC45', 'AS50', 'AS55', 'B06', 'B407', 'B429', 'H125', 'H135', 'H145', 'A109', 'A119', 'S76'] -%}GEN-HELI
 {%- elif t in ['C150', 'C152', 'C162', 'C170', 'C172', 'C175', 'C177', 'C180', 'C182', 'C185', 'C195', 'C205', 'C206', 'C207', 'C208', 'C210', 'P210', 'T210', 'CH70', 'CH75'] -%}GEN-C172
