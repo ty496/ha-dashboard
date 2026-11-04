@@ -1,0 +1,22 @@
+{
+  "id": "weather_refresh",
+  "alias": "Weather: refresh every 10 minutes",
+  "description": "Asks Met.no for weather.forecast_home every 10 minutes. The integration polls only about hourly, so when api.met.no returned 502/503 at 14:02 on 2026-11-04 the Show's weather stayed blank until the next poll; now an outage clears within 10 minutes. 144 requests a day is far below the 20 requests a second at which Met.no asks an app to contact them. Source: ha-dashboard/automations/weather_refresh.json",
+  "mode": "single",
+  "triggers": [
+    {
+      "trigger": "time_pattern",
+      "minutes": "/10"
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "action": "homeassistant.update_entity",
+      "target": {
+        "entity_id": "weather.forecast_home"
+      },
+      "continue_on_error": true
+    }
+  ]
+}
