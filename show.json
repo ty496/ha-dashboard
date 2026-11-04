@@ -751,6 +751,10 @@
                   "color": "var(--show-cal-travel)"
                 },
                 {
+                  "entity": "calendar.work",
+                  "color": "var(--show-cal-work, #78909c)"
+                },
+                {
                   "entity": "calendar.birthdays",
                   "color": "var(--show-cal-birthdays)"
                 },
