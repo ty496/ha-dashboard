@@ -50,6 +50,7 @@ const light = {
   'show-cal-travel': '#d84315',
   'show-cal-birthdays': '#6a1b9a',
   'show-cal-gmail': '#1565c0',
+  'show-cal-social': '#00796b',
   // Bubble Card (pop-ups + bottom button bar on the TECHO5 Show): its defaults paint white on white
   // over the glass, so give it an explicit pane and tile fill per palette.
   'bubble-pop-up-background-color': 'rgba(255, 255, 255, 0.92)',
@@ -98,6 +99,7 @@ const dark = {
   'show-cal-travel': '#ffab8f',
   'show-cal-birthdays': '#dcb2ff',
   'show-cal-gmail': '#8fc9ff',
+  'show-cal-social': '#80cbc4',
   'bubble-pop-up-background-color': 'rgba(20, 26, 43, 0.92)',
   'bubble-pop-up-main-background-color': 'rgba(20, 26, 43, 0.92)',
   'bubble-main-background-color': 'rgba(255, 255, 255, 0.12)',

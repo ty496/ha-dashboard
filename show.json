@@ -731,19 +731,23 @@
                   "blocklist": "^(Trash day!|Recycling day!|Check In Night.*)$"
                 },
                 {
-                  "entity": "calendar.home_2",
+                  "entity": "calendar.home_3",
                   "color": "var(--show-cal-home)"
                 },
                 {
-                  "entity": "calendar.personal",
+                  "entity": "calendar.social",
+                  "color": "var(--show-cal-social, #26a69a)"
+                },
+                {
+                  "entity": "calendar.personal_2",
                   "color": "var(--show-cal-personal)"
                 },
                 {
-                  "entity": "calendar.olive",
+                  "entity": "calendar.olive_2",
                   "color": "var(--show-cal-olive)"
                 },
                 {
-                  "entity": "calendar.travel",
+                  "entity": "calendar.travel_2",
                   "color": "var(--show-cal-travel)"
                 },
                 {
