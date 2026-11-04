@@ -1,0 +1,29 @@
+{
+  "id": "planes_notable_logbook",
+  "alias": "Planes: log people of interest overhead",
+  "description": "Writes each person of interest's aircraft that comes into the area to the logbook (sensor.plane_details), so who flew over today can be looked up. The Plane details integration fires plane_details_notable once per visit, from adsb.lol's 6 nm circle and plane-alert-db's list (celebrities' and billionaires' jets, VIPs, governments). Ty, 2026-11-03.",
+  "triggers": [
+    {
+      "trigger": "event",
+      "event_type": "plane_details_notable"
+    }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "variables": {
+        "p": "{{ trigger.event.data }}"
+      }
+    },
+    {
+      "action": "logbook.log",
+      "data": {
+        "name": "Notable plane",
+        "entity_id": "sensor.plane_details",
+        "message": "{{ p.notable_name }} ({{ p.notable_category }}): {{ p.registration or p.hex }}{{ ' ' ~ p.type if p.type }}{{ ', ' ~ p.callsign if p.callsign }}{{ ', owned by ' ~ p.owner if p.owner and p.owner != p.notable_name }}{{ ', ' ~ ((p.distance | float(0)) * 0.621371) | round(1) ~ ' mi away' if p.distance is not none }}{{ ' at ' ~ '{:,}'.format(p.altitude | int) ~ ' ft' if p.altitude is number }}"
+      }
+    }
+  ],
+  "mode": "queued",
+  "max": 20
+}
