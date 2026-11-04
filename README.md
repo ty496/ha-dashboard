@@ -135,6 +135,20 @@ An "Overhead now" glass card at the top of the home view's right column, plus a 
   destination, helicopters (the Chinooks have none) and everything bigger still shows. The Live map shows all.
 - **Install:** paste `planes/deploy_ha.js` into a signed-in admin HA tab, then `await planesPhase1()`,
   `await planesRestart()`, reload, `await planesPhase2()`. `await planesTestTakeover()` previews the poster.
+- **Plane details (2026-11-03):** `custom_components/plane_details`, a second source. Flightradar24 honours the
+  FAA's LADD list, so private aircraft whose owners asked arrive as callsign "Blocked" with no registration.
+  Every 30 s the integration polls adsb.lol (unfiltered ADS-B, free, no key) for 6 nm round home, pairs its
+  aircraft with Flightradar24's flights (registration, callsign, else nearest of the same type within 15 km),
+  and adds the registered owner (adsbdb, cached a month, 6 lookups a poll) and plane-alert-db's entry for
+  notable aircraft (read once a day). People of interest are its categories Climate Crisis (celebrities' and
+  billionaires' jets), Don't you know who I am?, Joe Cool, Big Hello, Dictator Alert and Governments; the name
+  shown is the operator, or the first tag that reads like a person when the operator is a company (Elon Musk,
+  not Falcon Landing LLC). `sensor.plane_details` holds `by_fr24` (keyed by Flightradar24's flight id),
+  `aircraft` and `notable`; `plane_details_notable` fires when a person of interest's aircraft enters the area.
+  `plane_extra(f)` in `planes.jinja` returns a flight's record as JSON. The card adds "★ name category" and
+  "Owned by ..." (private aircraft), both cards use the unblocked registration, and `plane_boring` never hides a
+  person of interest. PIA aircraft (the FAA's anonymous addresses) can't be named by anyone. Install: Downloader
+  the folder into `/config/custom_components/plane_details`, restart, add "Plane details" (one confirm step).
 
 ## Voice: Claude can add, change and delete calendar events (2026-11-03)
 
