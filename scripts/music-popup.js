@@ -3,8 +3,8 @@
 // - on the left a Yet Another Media Player (HACS) player with a chip per speaker (Family Room Stereo, the
 //   Whole House group, HomePod, Kitchen), its controls showing even when idle;
 // - on the right a second one locked to its search sheet, opening on Music Assistant's favorites as artwork
-//   tiles (the clock button shows Recently Played). The Show has no keyboard, so there the right side is for
-//   browsing; typed search works from a phone, and voice covers the rest.
+//   tiles (the clock button shows Recently Played), following the player's speaker. The Show has no
+//   keyboard, so the right side is for browsing; voice covers search.
 // Opened by a fourth pill, Music, in the bottom row, and by tapping the Now Playing player (now-playing.js).
 // A /dashboard-show/music subview came first the same evening and is removed here: Ty closes the other
 // screens by tapping outside them, and the Show hides a subview's back arrow.
@@ -21,7 +21,23 @@ const speakers = [
   ['media_player.homepod', 'HomePod'],
   ['media_player.kitchen', 'Kitchen'],
 ].map(([entity_id, name]) => ({ entity_id, name, music_assistant_entity: entity_id }));
+// One speaker choice for both cards: each writes its chosen speaker to input_text.music_speaker (a helper
+// made for this) and follows it, so a playlist tapped on the right plays where the left card points.
+const SYNC = { sync_entity_type: 'yamp_playback_entity', sync_entity_helper: 'input_text.music_speaker', in_menu: 'hidden', card_trigger: 'none' };
+const actions = [{ action: 'sync_selected_entity', ...SYNC }, { action: 'select_entity', ...SYNC }];
 
+// Dressed like the rest of the Show (Ty: the card's own orange chips "don't match the overall aesthetic"):
+// chips are the bottom row's pills (navy glass, a thin near-white border, white text), the chosen one solid
+// white; the accent is the theme's light blue rather than its orange.
+const DRESS = [
+  'ha-card { --custom-accent: #7cc4ff; --yamp-chip-bg: rgba(20, 26, 43, 0.72); --yamp-chip-text: #f2f4f8; --yamp-chip-selected-bg: #f2f4f8; --yamp-chip-selected-text: #141a2b; }',
+  '.chip { background: rgba(20, 26, 43, 0.72) !important; border: 1px solid rgba(242, 244, 248, 0.9) !important; color: #f2f4f8 !important; box-shadow: none !important; font-size: 14px !important; font-weight: 400 !important; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }',
+  '.chip[selected] { background: #f2f4f8 !important; color: #141a2b !important; }',
+  '.chip ha-icon, .chip .chip-icon { color: inherit !important; }',
+].join(' ');
+// The search card: no speaker chips (the player's choose for both), and no search box (the Show has no
+// keyboard).
+const BROWSE_DRESS = DRESS + ' .chip-row:not(.search-filter-chips) { display: none !important; } .entity-options-search-row { display: none !important; }';
 const player = {
   type: 'custom:yet-another-media-player',
   template: 'large_modern',
@@ -32,6 +48,8 @@ const player = {
   card_height: 560,
   idle_timeout_ms: 0,
   show_player_search: false,
+  actions,
+  card_mod: { style: DRESS },
 };
 const browse = {
   type: 'custom:yet-another-media-player',
@@ -49,6 +67,8 @@ const browse = {
   search_card_columns: 3,
   pin_search_headers: true,
   show_player_search: false,
+  actions,
+  card_mod: { style: BROWSE_DRESS },
 };
 const music = {
   type: 'custom:bubble-card',
