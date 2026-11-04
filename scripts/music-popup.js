@@ -21,16 +21,19 @@ const SPEAKERS = [
   ['media_player.homepod', 'HomePod'],
   ['media_player.kitchen', 'Kitchen'],
 ];
-// The Whole House group's members are never picked automatically: while the group plays, YAMP otherwise jumps
-// to its sync leader (the Kitchen Echo), and the header showed Kitchen instead of Whole House.
-const GROUP_MEMBERS = ['media_player.homepod', 'media_player.kitchen'];
-const speakers = SPEAKERS.map(([entity_id, name]) => ({ entity_id, name, music_assistant_entity: entity_id, ...(GROUP_MEMBERS.includes(entity_id) ? { disable_auto_select: true } : {}) }));
-// One speaker choice for both cards: each writes its chosen speaker to input_text.music_speaker (a helper
-// made for this) and follows it, so a playlist tapped on the right plays where the left card points.
+// YAMP never picks a speaker by itself: only the header (through input_text.music_speaker) does. Left to it,
+// it jumped to the Whole House group's sync leader (Kitchen) while the group played, and with that turned off
+// for the group's members alone it treated a HomePod pick as passing and went back to Family Room as soon as
+// the HomePod started (2026-11-03).
+const speakers = SPEAKERS.map(([entity_id, name]) => ({ entity_id, name, music_assistant_entity: entity_id, disable_auto_select: true }));
+// One speaker choice for both cards: they follow input_text.music_speaker (a helper made for this), which only
+// the header's buttons write, so a playlist tapped on the right plays where the player points. The cards
+// don't write it back (sync_selected_entity): each wrote its default, Family Room, over the helper whenever
+// the Show's page loaded.
 const SYNC = { sync_entity_type: 'yamp_playback_entity', sync_entity_helper: 'input_text.music_speaker', in_menu: 'hidden', card_trigger: 'none' };
 // select_entity also names the helper as its entity: YAMP 2026.11.0 re-renders on a change only for the
 // entities its actions name there, so without it the player card never noticed the header's choice.
-const actions = [{ action: 'sync_selected_entity', ...SYNC }, { action: 'select_entity', ...SYNC, entity: 'input_text.music_speaker' }];
+const actions = [{ action: 'select_entity', ...SYNC, entity: 'input_text.music_speaker' }];
 
 // Dressed like the rest of the Show (Ty: the card's own orange chips "don't match the overall aesthetic"):
 // chips are the bottom row's pills (navy glass, a thin near-white border, white text), the chosen one solid

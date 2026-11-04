@@ -1192,12 +1192,14 @@
                         {
                           "entity_id": "media_player.family_room_stereo",
                           "name": "Family Room",
-                          "music_assistant_entity": "media_player.family_room_stereo"
+                          "music_assistant_entity": "media_player.family_room_stereo",
+                          "disable_auto_select": true
                         },
                         {
                           "entity_id": "media_player.whole_house",
                           "name": "Whole House",
-                          "music_assistant_entity": "media_player.whole_house"
+                          "music_assistant_entity": "media_player.whole_house",
+                          "disable_auto_select": true
                         },
                         {
                           "entity_id": "media_player.homepod",
@@ -1220,13 +1222,6 @@
                       "show_player_search": false,
                       "actions": [
                         {
-                          "action": "sync_selected_entity",
-                          "sync_entity_type": "yamp_playback_entity",
-                          "sync_entity_helper": "input_text.music_speaker",
-                          "in_menu": "hidden",
-                          "card_trigger": "none"
-                        },
-                        {
                           "action": "select_entity",
                           "sync_entity_type": "yamp_playback_entity",
                           "sync_entity_helper": "input_text.music_speaker",
@@ -1246,12 +1241,14 @@
                         {
                           "entity_id": "media_player.family_room_stereo",
                           "name": "Family Room",
-                          "music_assistant_entity": "media_player.family_room_stereo"
+                          "music_assistant_entity": "media_player.family_room_stereo",
+                          "disable_auto_select": true
                         },
                         {
                           "entity_id": "media_player.whole_house",
                           "name": "Whole House",
-                          "music_assistant_entity": "media_player.whole_house"
+                          "music_assistant_entity": "media_player.whole_house",
+                          "disable_auto_select": true
                         },
                         {
                           "entity_id": "media_player.homepod",
@@ -1279,13 +1276,6 @@
                       "pin_search_headers": true,
                       "show_player_search": false,
                       "actions": [
-                        {
-                          "action": "sync_selected_entity",
-                          "sync_entity_type": "yamp_playback_entity",
-                          "sync_entity_helper": "input_text.music_speaker",
-                          "in_menu": "hidden",
-                          "card_trigger": "none"
-                        },
                         {
                           "action": "select_entity",
                           "sync_entity_type": "yamp_playback_entity",
