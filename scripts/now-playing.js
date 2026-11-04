@@ -1,17 +1,17 @@
 // Now Playing on the Show's home view (2026-11-03), idempotently, for the Family Room Stereo and for
 // Music Assistant's Whole House group (Kitchen Echo + HomePod; the group wins when both are on):
-// - A compact player at the foot of the left column while the WiiM plays or is paused: a small square of
-//   album art, title and artist, then a strip of controls and volume (36 px icons in HA's 48 px buttons:
-//   the compact 36 px unit left them at 22 px, too small to hit), with a Stop button beside it
-//   (script.family_room_stereo_stop: stop, clear Music Assistant's queue, Pioneer off). Art and words
-//   read the WiiM's own entity, so music started outside Music Assistant shows too; controls use Music
-//   Assistant's player while it streams, because the WiiM's entity then has no next or previous.
+// - HA's own media card at the foot of the left column while the WiiM plays or is paused (the style of the
+//   HomePod's card, which Ty preferred to the compact mini-media-player: it shows more), with a Stop button
+//   beside it (script.family_room_stereo_stop: stop, clear Music Assistant's queue, Pioneer off). The WiiM's
+//   own entity's card shows music started outside Music Assistant too; Music Assistant's player's card takes
+//   over while it streams, because the WiiM's entity then has no next or previous.
 // - While the WiiM plays, the dashboard background is the album art (the matt8707 community look, Tidal
 //   and Spotify style): the cover, sharp, in the middle at about two-thirds of the screen's height, over a
 //   heavily blurred stretch of the same art that fills the rest with its average colours. Two fixed
 //   markdown cards behind the glass cards (z-index -1, the colour wash first). Ty: a blurred, screen-high
 //   cover looked "like a bad screen shot of the art".
-// Tapping the player (not its buttons) opens the Music pop-up (music-popup.js).
+// - The Sunrise, Sunset and Moon tiles above it are one row, icon beside the words, rather than two with the
+//   icon above (Ty: "a lot of open area in the tile"), to make room for the taller card.
 // Ty dropped the 30 s full-screen pop-up on each new song the same day ("I like it just staying as a
 // small control"); this removes it if present.
 const fs = require('fs');
@@ -34,18 +34,7 @@ const ART = `{{ state_attr('${WH}' if is_state('${WH}', 'playing') else '${E}', 
 const SHOWING = { condition: 'or', conditions: [{ condition: 'state', entity: E, state: 'playing' }, { condition: 'state', entity: WH, state: 'playing' }] };
 const FULL_SCREEN = 'position: fixed !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; max-height: none !important;';
 
-const playerFor = (entity, visibility) => ({
-  type: 'custom:mini-media-player',
-  entity,
-  artwork: 'default',
-  info: 'scroll',
-  volume_step: 5,
-  hide: { power: true, source: true, name: true },
-  grid_options: { columns: 9 },
-  tap_action: { action: 'navigate', navigation_path: '#music' },
-  visibility,
-  card_mod: { style: 'ha-card { border-radius: 24px; --mmp-unit: 36px; } .entity__artwork, .entity__icon { width: 60px !important; height: 60px !important; min-width: 60px !important; border-radius: 12px !important; background-size: cover !important; } .entity__info__media, .entity__info__media span { font-size: 18px !important; font-weight: 600 !important; color: var(--primary-text-color) !important; opacity: 1 !important; } .mmp-player__adds { margin-left: 0 !important; } mmp-media-controls { --mdc-icon-size: 36px !important; }' },
-});
+const playerFor = (entity, visibility) => ({ type: 'media-control', entity, grid_options: { columns: 9 }, visibility });
 const stop = {
   type: 'button',
   name: 'Stop',
@@ -82,7 +71,7 @@ const coverArt = {
 // The player and its Stop button sit at the foot of the left column; anything earlier is cleared out.
 const old = right.findIndex(c => c.type === 'media-control' && c.entity === E);
 if (old >= 0) right.splice(old, 1);
-const mine = c => (c.type === 'custom:mini-media-player' && [E, MA, WH].includes(c.entity)) || (c.type === 'button' && c.tap_action && c.tap_action.perform_action === 'script.family_room_stereo_stop');
+const mine = c => (['custom:mini-media-player', 'media-control'].includes(c.type) && [E, MA, WH].includes(c.entity)) ||(c.type === 'button' && c.tap_action && c.tap_action.perform_action === 'script.family_room_stereo_stop');
 for (const list of [left, right]) for (let i = list.length - 1; i >= 0; i--) if (mine(list[i])) list.splice(i, 1);
 left.push(...cards);
 // The HomePod's stock media card, shown while the HomePod plays on its own (Music Assistant or AirPlay from a
@@ -96,9 +85,24 @@ if (homepod) {
   left.push(homepod);
 }
 
-// Backdrop: colour wash first, then the cover over it. The pop-up goes.
-for (let i = popups.length - 1; i >= 0; i--) if (['Now playing background', 'Now playing cover'].includes(popups[i].name) || popups[i].hash === '#now-playing') popups.splice(i, 1);
-popups.push(wash, coverArt);
+// The sun and moon tiles, side by side in one row: horizontal tiles, inside a grid card because the sections
+// grid gives a horizontal tile at least half the column (Moon wrapped to a second row).
+const SUN_MOON = ['Sunrise', 'Sunset', 'Moon'];
+const isSunMoon = c => c.type === 'tile' && SUN_MOON.includes(c.name);
+const isSunMoonRow = c => c.type === 'grid' && (c.cards || []).some(isSunMoon);
+let rowAt = left.findIndex(c => isSunMoon(c) || isSunMoonRow(c));
+const tiles = left.flatMap(c => (isSunMoonRow(c) ? c.cards : [c])).filter(isSunMoon);
+for (let i = left.length - 1; i >= 0; i--) if (isSunMoon(left[i]) || isSunMoonRow(left[i])) left.splice(i, 1);
+for (const t of tiles) { t.vertical = false; delete t.grid_options; }
+if (rowAt >= 0) left.splice(rowAt, 0, { type: 'grid', columns: 3, square: false, grid_options: { columns: 'full' }, cards: SUN_MOON.map(n => tiles.find(t => t.name === n)).filter(Boolean) });
+
+// Backdrop: colour wash first, then the cover over it, each replaced where it stands (so the pop-ups after
+// them, Music's included, keep their order). The pop-up goes.
+for (let i = popups.length - 1; i >= 0; i--) if (popups[i].hash === '#now-playing') popups.splice(i, 1);
+for (const card of [wash, coverArt]) {
+  const at = popups.findIndex(c => c.name === card.name);
+  if (at >= 0) popups[at] = card; else popups.push(card);
+}
 
 fs.writeFileSync(file, JSON.stringify(cfg, null, 2) + '\n');
 fs.writeFileSync(path.join(__dirname, '..', 'show.min.json'), JSON.stringify(cfg));

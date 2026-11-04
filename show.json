@@ -124,62 +124,51 @@
               }
             },
             {
-              "type": "tile",
-              "entity": "sensor.sunrise_time",
-              "name": "Sunrise",
-              "icon": "mdi:weather-sunset-up",
-              "color": "orange",
-              "vertical": true,
-              "tap_action": {
-                "action": "none"
-              },
+              "type": "grid",
+              "columns": 3,
+              "square": false,
               "grid_options": {
-                "columns": 4
-              }
+                "columns": "full"
+              },
+              "cards": [
+                {
+                  "type": "tile",
+                  "entity": "sensor.sunrise_time",
+                  "name": "Sunrise",
+                  "icon": "mdi:weather-sunset-up",
+                  "color": "orange",
+                  "vertical": false,
+                  "tap_action": {
+                    "action": "none"
+                  }
+                },
+                {
+                  "type": "tile",
+                  "entity": "sensor.sunset_time",
+                  "name": "Sunset",
+                  "icon": "mdi:weather-sunset-down",
+                  "color": "amber",
+                  "vertical": false,
+                  "tap_action": {
+                    "action": "none"
+                  }
+                },
+                {
+                  "type": "tile",
+                  "entity": "sensor.moon_phase",
+                  "name": "Moon",
+                  "vertical": false,
+                  "tap_action": {
+                    "action": "none"
+                  }
+                }
+              ]
             },
             {
-              "type": "tile",
-              "entity": "sensor.sunset_time",
-              "name": "Sunset",
-              "icon": "mdi:weather-sunset-down",
-              "color": "amber",
-              "vertical": true,
-              "tap_action": {
-                "action": "none"
-              },
-              "grid_options": {
-                "columns": 4
-              }
-            },
-            {
-              "type": "tile",
-              "entity": "sensor.moon_phase",
-              "name": "Moon",
-              "vertical": true,
-              "tap_action": {
-                "action": "none"
-              },
-              "grid_options": {
-                "columns": 4
-              }
-            },
-            {
-              "type": "custom:mini-media-player",
+              "type": "media-control",
               "entity": "media_player.whole_house",
-              "artwork": "default",
-              "info": "scroll",
-              "volume_step": 5,
-              "hide": {
-                "power": true,
-                "source": true,
-                "name": true
-              },
               "grid_options": {
                 "columns": 9
-              },
-              "tap_action": {
-                "action": "navigate",
-                "navigation_path": "#music"
               },
               "visibility": [
                 {
@@ -190,28 +179,13 @@
                     "paused"
                   ]
                 }
-              ],
-              "card_mod": {
-                "style": "ha-card { border-radius: 24px; --mmp-unit: 36px; } .entity__artwork, .entity__icon { width: 60px !important; height: 60px !important; min-width: 60px !important; border-radius: 12px !important; background-size: cover !important; } .entity__info__media, .entity__info__media span { font-size: 18px !important; font-weight: 600 !important; color: var(--primary-text-color) !important; opacity: 1 !important; } .mmp-player__adds { margin-left: 0 !important; } mmp-media-controls { --mdc-icon-size: 36px !important; }"
-              }
+              ]
             },
             {
-              "type": "custom:mini-media-player",
+              "type": "media-control",
               "entity": "media_player.family_room_stereo",
-              "artwork": "default",
-              "info": "scroll",
-              "volume_step": 5,
-              "hide": {
-                "power": true,
-                "source": true,
-                "name": true
-              },
               "grid_options": {
                 "columns": 9
-              },
-              "tap_action": {
-                "action": "navigate",
-                "navigation_path": "#music"
               },
               "visibility": [
                 {
@@ -230,28 +204,13 @@
                     "paused"
                   ]
                 }
-              ],
-              "card_mod": {
-                "style": "ha-card { border-radius: 24px; --mmp-unit: 36px; } .entity__artwork, .entity__icon { width: 60px !important; height: 60px !important; min-width: 60px !important; border-radius: 12px !important; background-size: cover !important; } .entity__info__media, .entity__info__media span { font-size: 18px !important; font-weight: 600 !important; color: var(--primary-text-color) !important; opacity: 1 !important; } .mmp-player__adds { margin-left: 0 !important; } mmp-media-controls { --mdc-icon-size: 36px !important; }"
-              }
+              ]
             },
             {
-              "type": "custom:mini-media-player",
+              "type": "media-control",
               "entity": "media_player.family_room_family_room_wiim",
-              "artwork": "default",
-              "info": "scroll",
-              "volume_step": 5,
-              "hide": {
-                "power": true,
-                "source": true,
-                "name": true
-              },
               "grid_options": {
                 "columns": 9
-              },
-              "tap_action": {
-                "action": "navigate",
-                "navigation_path": "#music"
               },
               "visibility": [
                 {
@@ -278,10 +237,7 @@
                     "paused"
                   ]
                 }
-              ],
-              "card_mod": {
-                "style": "ha-card { border-radius: 24px; --mmp-unit: 36px; } .entity__artwork, .entity__icon { width: 60px !important; height: 60px !important; min-width: 60px !important; border-radius: 12px !important; background-size: cover !important; } .entity__info__media, .entity__info__media span { font-size: 18px !important; font-weight: 600 !important; color: var(--primary-text-color) !important; opacity: 1 !important; } .mmp-player__adds { margin-left: 0 !important; } mmp-media-controls { --mdc-icon-size: 36px !important; }"
-              }
+              ]
             },
             {
               "type": "button",
