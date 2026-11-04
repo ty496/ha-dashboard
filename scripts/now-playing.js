@@ -47,7 +47,10 @@ const FULL_SCREEN = 'position: fixed !important; z-index: -1 !important; pointer
 // Laid out like HA's media card, mirrored (Ty: "artwork on the left, controls on the right"): the material
 // cover pinned to the left with its fade turned round; to its right the speaker's icon and name, the title
 // over the artist (not "title - artist" on one scrolling line), then one row of previous, play, next, the
-// volume slider and Stop, the shortcut shrunk to a bare icon.
+// volume slider and Stop, the shortcut shrunk to a bare icon. Ty then asked for Stop right after Next, all of
+// them a bit bigger: 56 px buttons with 32 px icons (they were 48 and 24, Stop 40).
+const BTN = 56;
+const ICON = 32;
 const PLAYER_STYLE = {
   '.': [
     'ha-card { --mmp-unit: 40px; }',
@@ -63,12 +66,13 @@ const PLAYER_STYLE = {
     '.attr__media_title { font-size: 19px !important; font-weight: 500 !important; line-height: 26px; color: var(--primary-text-color) !important; opacity: 1 !important; }',
     '.attr__media_artist { font-size: 14px !important; line-height: 20px; opacity: .8; }',
     '.attr__media_artist::before { content: none !important; display: none !important; }',
-    '.mmp-player__adds { margin: 10px 0 0 -4px !important; display: flex !important; flex-direction: row !important; align-items: center !important; }',
+    '.mmp-player__adds { position: relative !important; margin: 10px 0 0 -4px !important; display: flex !important; flex-direction: row !important; align-items: center !important; }',
     'mmp-media-controls { flex: 1 1 auto !important; flex-direction: row-reverse !important; }',
-    'mmp-shortcuts { flex: 0 0 auto !important; margin: 0 !important; }',
+    // Stop is a shortcut, outside the media controls, so it is laid into a gap left after Next.
+    `mmp-shortcuts { position: absolute !important; left: ${3 * BTN}px; top: 0; height: ${BTN}px; margin: 0 !important; }`,
   ].join('\n'),
-  'mmp-media-controls$': '.mmp-media-controls__media { margin: 0 !important; justify-content: flex-start !important; } .mmp-media-controls__volume { flex: 1 1 auto !important; }',
-  'mmp-shortcuts$': '.mmp-shortcuts__buttons { display: flex !important; } .mmp-shortcuts__button { min-height: 40px !important; height: 40px !important; width: 40px !important; min-width: 40px !important; padding: 0 !important; margin: 0 !important; background: none !important; box-shadow: none !important; border-radius: 50% !important; } .mmp-shortcuts__button .ellipsis { display: none !important; } .mmp-shortcuts__button ha-icon { margin: 0 !important; --mdc-icon-size: 26px; }',
+  'mmp-media-controls$': `.mmp-media-controls__media { margin: 0 !important; justify-content: flex-start !important; } .mmp-media-controls__volume { flex: 1 1 auto !important; margin-left: ${BTN}px !important; } ha-icon-button { --mdc-icon-button-size: ${BTN}px !important; --ha-icon-button-size: ${BTN}px !important; --mdc-icon-size: ${ICON}px !important; width: ${BTN}px !important; height: ${BTN}px !important; }`,
+  'mmp-shortcuts$': `.mmp-shortcuts__buttons { display: flex !important; margin: 0 !important; } .mmp-shortcuts__button { min-height: ${BTN}px !important; height: ${BTN}px !important; width: ${BTN}px !important; min-width: ${BTN}px !important; padding: 0 !important; margin: 0 !important; background: none !important; box-shadow: none !important; border-radius: 50% !important; } .mmp-shortcuts__button .ellipsis { display: none !important; } .mmp-shortcuts__button ha-icon { margin: 0 !important; --mdc-icon-size: ${ICON}px !important; width: ${ICON}px !important; height: ${ICON}px !important; }`,
 };
 const playerFor = (entity, i) => ({
   type: 'custom:mini-media-player',
