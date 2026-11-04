@@ -22,16 +22,32 @@
 {#- Flightradar24 often files United Express flights under United itself (UAL with an E175 or CRJ, 2026-11-04). -#}
 {%- set airline = 'UAX' if icao == 'UAL' and t in ['E75L', 'E75S', 'E170', 'CRJ2', 'CRJ5', 'CRJ7', 'CRJ9'] else operator.get(icao, icao) -%}
 {%- set cat = (f.aircraft_category or '') | lower -%}
-{%- if airline and (airline ~ '-' ~ t) in have -%}{{ airline }}-{{ t }}
+{%- set helis = ['R22', 'R44', 'R66', 'EC20', 'EC30', 'EC35', 'EC45', 'AS50', 'AS55', 'B06', 'B407', 'B429', 'H125', 'H135', 'H145', 'A109', 'A119', 'S76'] -%}
+{#- Medical and fire aircraft (2026-11-04) go by operator: Flightradar24's airline name, the callsign, and the
+    registered owner Plane details found. Flight For Life Colorado flies AStars from St. Anthony in Lakewood. -#}
+{%- set who = ((f.airline or '') ~ ' ' ~ (((state_attr('sensor.plane_details', 'by_fr24') or {}).get(f.id | string) or {}).get('owner') or '')) | lower -%}
+{%- set cs = (f.callsign or '') | upper -%}
+{%- set reg = (f.aircraft_registration or '') | upper -%}
+{%- if (t in helis or 'heli' in cat) and 'flight for life' in who -%}MED-FFL
+{%- elif (t in helis or 'heli' in cat) and ('airlife' in who or cs[:5] == 'ALIFE') -%}MED-AIRLIFE
+{#- Civil Black Hawks (N-registered) are Firehawks: the state's S-70i pair and the contract ones. -#}
+{%- elif t in ['H60', 'UH60', 'S70'] and (reg[:1] == 'N' or 'fire' in who or 'colorado' in who) -%}FIRE-FIREHAWK
+{%- elif t == 'PC12' and ('fire' in who or 'state of colorado' in who or 'colorado division' in who) -%}FIRE-MMA
+{#- Every BAe 146 / Avro RJ flying in the US now is an air tanker (Neptune, Aero Flite). -#}
+{%- elif t in ['B461', 'B462', 'B463', 'RJ70', 'RJ85', 'RJ1H'] -%}FIRE-RJ85
+{%- elif t in ['C130', 'C30J', 'L100'] and ('coulson' in who or 'tanker' in who or 'fire' in who or 'air response' in who or cs[:4] == 'TNKR') -%}FIRE-C130
+{#- Air Tractors: single-engine air tankers, and the crop sprayers look the same. -#}
+{%- elif t in ['AT8T', 'AT6T', 'AT5T', 'AT4T', 'AT3T'] -%}FIRE-SEAT
+{%- elif airline and (airline ~ '-' ~ t) in have -%}{{ airline }}-{{ t }}
 {%- elif airline and (airline ~ '-' ~ sibling.get(t, '')) in have -%}{{ airline }}-{{ sibling.get(t, '') }}
 {#- The CH-47 Chinooks that cross Denver are Army or Army National Guard, all in Army tan. -#}
 {%- elif t in ['H47', 'CH47'] -%}MIL-H47
-{#- Army Black Hawks (UH-60A 84-23960 crossed 2026-11-04). Not S70: civil Firehawks wear their own colours. -#}
+{#- Army Black Hawks (UH-60A 84-23960 crossed 2026-11-04); the civil ones were caught as Firehawks above. -#}
 {%- elif t in ['H60', 'UH60'] -%}MIL-H60
 {#- Balloons: Urban Sky's stratospheric imaging balloons out of Denver (2026-11-04). -#}
 {%- elif t == 'BALL' -%}GEN-BALLOON
 {#- Helicopters by type first; FR24's category alone comes last (it calls the Zenith CH-750, a high-wing plane, a helicopter). -#}
-{%- elif t in ['R22', 'R44', 'R66', 'EC20', 'EC30', 'EC35', 'EC45', 'AS50', 'AS55', 'B06', 'B407', 'B429', 'H125', 'H135', 'H145', 'A109', 'A119', 'S76'] -%}GEN-HELI
+{%- elif t in helis -%}GEN-HELI
 {%- elif t in ['C150', 'C152', 'C162', 'C170', 'C172', 'C175', 'C177', 'C180', 'C182', 'C185', 'C195', 'C205', 'C206', 'C207', 'C208', 'C210', 'P210', 'T210', 'CH70', 'CH75'] -%}GEN-C172
 {%- elif t in ['SR20', 'SR22', 'S22T', 'COL3', 'COL4', 'C400'] -%}GEN-SR22
 {%- elif t in ['PA44', 'PA34', 'PA23', 'PA30', 'PA31', 'BE76', 'BE55', 'BE58', 'BE95', 'DA42', 'DA62', 'C310', 'C340', 'C414', 'C421', 'P68', 'AC50'] -%}GEN-PA44

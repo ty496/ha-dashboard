@@ -1,7 +1,7 @@
 {
   "id": "planes_overhead_takeover",
   "alias": "Planes overhead takeover",
-  "description": "Picks the planes that get the Show's full-screen poster; every other plane stays on the small card, route and all. A plane gets it when it is the first of its kind today (airline and type, e.g. UAL-B738, or PVT-<type> for private aircraft; kinds that had a poster are kept in todo.plane_posters_today, which planes_overhead_count clears at midnight) or when it is unusual: a helicopter (Army Chinooks and Black Hawks included), a balloon, a wide-body, a person of interest's aircraft (plane-alert-db) or a private jet with a registered owner. The last two come from sensor.plane_details, which pairs a flight up to 30 s after it enters, so a plane that is neither waits up to 40 s for that. Never 22:00-07:00, never on the ground, never flight-school and local VFR traffic (plane_boring). script.plane_poster shows the poster, at most once every 5 minutes. Before 2026-11-04 every plane got one and Denver departures brought it up every 9 minutes. Source: ha-dashboard/automations/planes_overhead_takeover.json",
+  "description": "Picks the planes that get the Show's full-screen poster; every other plane stays on the small card, route and all. A plane gets it when it is the first of its kind today (airline and type, e.g. UAL-B738, or PVT-<type> for private aircraft; kinds that had a poster are kept in todo.plane_posters_today, which planes_overhead_count clears at midnight) or when it is unusual: a helicopter (Army Chinooks and Black Hawks, Flight For Life included), a fire aircraft (any MIL-, MED- or FIRE- drawing), a balloon, a wide-body, a person of interest's aircraft (plane-alert-db) or a private jet with a registered owner. The last two come from sensor.plane_details, which pairs a flight up to 30 s after it enters, so a plane that is neither waits up to 40 s for that. Never 22:00-07:00, never on the ground, never flight-school and local VFR traffic (plane_boring). script.plane_poster shows the poster, at most once every 5 minutes. Before 2026-11-04 every plane got one and Denver departures brought it up every 9 minutes. Source: ha-dashboard/automations/planes_overhead_takeover.json",
   "mode": "parallel",
   "max": 15,
   "triggers": [
@@ -30,7 +30,7 @@
       "variables": {
         "fid": "{{ trigger.event.data.id | string }}",
         "kind": "{{ (trigger.event.data.airline_icao or 'PVT') | upper }}-{{ (trigger.event.data.aircraft_code or '?') | upper }}",
-        "special": "{% from 'planes.jinja' import plane_key %}{% set k = plane_key(trigger.event.data) | trim %}{% set t = (trigger.event.data.aircraft_code or '') | upper %}{{ k[:4] == 'MIL-' or k in ['GEN-HELI', 'GEN-BALLOON'] or t[:3] in ['B74', 'B76', 'B77', 'B78', 'A33', 'A34', 'A35', 'A38', 'MD1'] or t in ['A306', 'A310'] }}"
+        "special": "{% from 'planes.jinja' import plane_key %}{% set k = plane_key(trigger.event.data) | trim %}{% set t = (trigger.event.data.aircraft_code or '') | upper %}{{ k[:4] in ['MIL-', 'MED-'] or k[:5] == 'FIRE-' or k in ['GEN-HELI', 'GEN-BALLOON'] or t[:3] in ['B74', 'B76', 'B77', 'B78', 'A33', 'A34', 'A35', 'A38', 'MD1'] or t in ['A306', 'A310'] }}"
       }
     },
     {

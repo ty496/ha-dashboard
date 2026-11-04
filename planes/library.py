@@ -55,6 +55,14 @@ COMBOS = [
     ("ASA", "E75L", "Alaska Airlines", "Embraer 175"),
     ("GEN", "TWINPROP", "", "Beechcraft 1900D"),
     ("MIL", "H60", "U.S. Army", "Sikorsky UH-60A Black Hawk"),  # 2026-11-04, ref: Commons 0-26745 UH-60A Laramie + PR ARNG UH-60A, with the MIL-H47 drawing as style
+    # 2026-11-04 medical and fire, matched by operator in plane_key (refs: Commons; Med-Trans has no photo and paints per hospital).
+    ("MED", "FFL", "Flight For Life Colorado", "Airbus AS350 B3 AStar"),
+    ("MED", "AIRLIFE", "HCA HealthONE AirLife", "Bell 407"),
+    ("FIRE", "FIREHAWK", "Colorado Division of Fire Prevention and Control", "Sikorsky S-70i Firehawk"),
+    ("FIRE", "MMA", "Colorado Division of Fire Prevention and Control", "Pilatus PC-12 Multi-Mission Aircraft"),
+    ("FIRE", "RJ85", "Neptune Aviation", "BAe 146 air tanker"),
+    ("FIRE", "C130", "Coulson Aviation", "C-130 air tanker"),
+    ("FIRE", "SEAT", "", "Air Tractor AT-802"),
     ("GEN", "NARROW", "", "Boeing 737-800"),
     ("GEN", "REGIONAL", "", "Embraer 175"),
     ("GEN", "WIDE", "", "Boeing 787-9"),
