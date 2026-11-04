@@ -165,6 +165,34 @@
             },
             {
               "type": "custom:mini-media-player",
+              "entity": "media_player.whole_house",
+              "artwork": "default",
+              "info": "scroll",
+              "volume_step": 5,
+              "hide": {
+                "power": true,
+                "source": true,
+                "name": true
+              },
+              "grid_options": {
+                "columns": 9
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "media_player.whole_house",
+                  "state": [
+                    "playing",
+                    "paused"
+                  ]
+                }
+              ],
+              "card_mod": {
+                "style": "ha-card { border-radius: 24px; --mmp-unit: 36px; } .entity__artwork, .entity__icon { width: 60px !important; height: 60px !important; min-width: 60px !important; border-radius: 12px !important; background-size: cover !important; } .entity__info__media, .entity__info__media span { font-size: 18px !important; font-weight: 600 !important; color: var(--primary-text-color) !important; opacity: 1 !important; } .mmp-player__adds { margin-left: 0 !important; } mmp-media-controls { --mdc-icon-size: 36px !important; }"
+              }
+            },
+            {
+              "type": "custom:mini-media-player",
               "entity": "media_player.family_room_stereo",
               "artwork": "default",
               "info": "scroll",
@@ -182,6 +210,14 @@
                   "condition": "state",
                   "entity": "media_player.family_room_stereo",
                   "state": [
+                    "playing",
+                    "paused"
+                  ]
+                },
+                {
+                  "condition": "state",
+                  "entity": "media_player.whole_house",
+                  "state_not": [
                     "playing",
                     "paused"
                   ]
@@ -217,6 +253,14 @@
                 {
                   "condition": "state",
                   "entity": "media_player.family_room_stereo",
+                  "state_not": [
+                    "playing",
+                    "paused"
+                  ]
+                },
+                {
+                  "condition": "state",
+                  "entity": "media_player.whole_house",
                   "state_not": [
                     "playing",
                     "paused"
@@ -259,6 +303,14 @@
                     {
                       "condition": "state",
                       "entity": "media_player.family_room_stereo",
+                      "state": [
+                        "playing",
+                        "paused"
+                      ]
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "media_player.whole_house",
                       "state": [
                         "playing",
                         "paused"
@@ -477,6 +529,14 @@
                   "condition": "state",
                   "entity": "media_player.family_room_family_room_homepod",
                   "state": "playing"
+                },
+                {
+                  "condition": "state",
+                  "entity": "media_player.whole_house",
+                  "state_not": [
+                    "playing",
+                    "paused"
+                  ]
                 }
               ]
             },
@@ -991,13 +1051,23 @@
               "content": " ",
               "visibility": [
                 {
-                  "condition": "state",
-                  "entity": "media_player.family_room_family_room_wiim",
-                  "state": "playing"
+                  "condition": "or",
+                  "conditions": [
+                    {
+                      "condition": "state",
+                      "entity": "media_player.family_room_family_room_wiim",
+                      "state": "playing"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "media_player.whole_house",
+                      "state": "playing"
+                    }
+                  ]
                 }
               ],
               "card_mod": {
-                "style": "ha-card { position: fixed !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; max-height: none !important; top: -300px !important; left: -300px !important; width: calc(100vw + 600px) !important; height: calc(100vh + 600px) !important; background: center / 100% 100% no-repeat url('{{ state_attr('media_player.family_room_family_room_wiim', 'entity_picture') or '' }}') !important; filter: blur(140px) saturate(1.25) brightness(0.6); }"
+                "style": "ha-card { position: fixed !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; max-height: none !important; top: -300px !important; left: -300px !important; width: calc(100vw + 600px) !important; height: calc(100vh + 600px) !important; background: center / 100% 100% no-repeat url('{{ state_attr('media_player.whole_house' if is_state('media_player.whole_house', 'playing') else 'media_player.family_room_family_room_wiim', 'entity_picture') or '' }}') !important; filter: blur(140px) saturate(1.25) brightness(0.6); }"
               }
             },
             {
@@ -1006,13 +1076,23 @@
               "content": " ",
               "visibility": [
                 {
-                  "condition": "state",
-                  "entity": "media_player.family_room_family_room_wiim",
-                  "state": "playing"
+                  "condition": "or",
+                  "conditions": [
+                    {
+                      "condition": "state",
+                      "entity": "media_player.family_room_family_room_wiim",
+                      "state": "playing"
+                    },
+                    {
+                      "condition": "state",
+                      "entity": "media_player.whole_house",
+                      "state": "playing"
+                    }
+                  ]
                 }
               ],
               "card_mod": {
-                "style": "ha-card { position: fixed !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; max-height: none !important; top: 18vh !important; left: calc(50vw - 32vh) !important; width: 64vh !important; height: 64vh !important; border-radius: 16px !important; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5) !important; background: center / cover no-repeat url('{{ state_attr('media_player.family_room_family_room_wiim', 'entity_picture') or '' }}') !important; filter: brightness(0.6); }"
+                "style": "ha-card { position: fixed !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; max-height: none !important; top: 18vh !important; left: calc(50vw - 32vh) !important; width: 64vh !important; height: 64vh !important; border-radius: 16px !important; box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5) !important; background: center / cover no-repeat url('{{ state_attr('media_player.whole_house' if is_state('media_player.whole_house', 'playing') else 'media_player.family_room_family_room_wiim', 'entity_picture') or '' }}') !important; filter: brightness(0.6); }"
               }
             }
           ]

@@ -1,40 +1,80 @@
 {
   "id": "family_room_stereo_stop",
-  "alias": "Family room stereo: stop and turn off",
+  "alias": "Now Playing: stop and turn off",
   "icon": "mdi:stop",
-  "description": "Stops the music on the Family Room Stereo, clears Music Assistant's queue, stops the WiiM's stream, then turns the Pioneer SX-780 off a second later (silence first, then power). The Now Playing player's Stop button runs it.",
+  "description": "The Now Playing player's Stop button. The Whole House group (Kitchen Echo + HomePod), if playing or paused: stopped and its queue cleared. The Family Room Stereo, if playing or paused (or when nothing is, as before the group existed): Music Assistant stopped and its queue cleared, the WiiM's stream stopped, then the Pioneer SX-780 off a second later (silence first, then power). The Pioneer is left alone when only the group was playing, so a record isn't cut.",
   "sequence": [
     {
-      "action": "media_player.media_stop",
-      "target": {
-        "entity_id": "media_player.family_room_stereo"
-      },
-      "continue_on_error": true
-    },
-    {
-      "action": "media_player.clear_playlist",
-      "target": {
-        "entity_id": "media_player.family_room_stereo"
-      },
-      "continue_on_error": true
-    },
-    {
-      "action": "media_player.media_stop",
-      "target": {
-        "entity_id": "media_player.family_room_family_room_wiim"
-      },
-      "continue_on_error": true
-    },
-    {
-      "delay": {
-        "seconds": 1
+      "variables": {
+        "house": "{{ is_state('media_player.whole_house', ['playing', 'paused']) }}",
+        "stereo": "{{ is_state('media_player.family_room_stereo', ['playing', 'paused']) or is_state('media_player.family_room_family_room_wiim', ['playing', 'paused']) }}"
       }
     },
     {
-      "action": "switch.turn_off",
-      "target": {
-        "entity_id": "switch.family_room_pioneer_sx_780"
-      }
+      "if": [
+        {
+          "condition": "template",
+          "value_template": "{{ house }}"
+        }
+      ],
+      "then": [
+        {
+          "action": "media_player.media_stop",
+          "target": {
+            "entity_id": "media_player.whole_house"
+          },
+          "continue_on_error": true
+        },
+        {
+          "action": "media_player.clear_playlist",
+          "target": {
+            "entity_id": "media_player.whole_house"
+          },
+          "continue_on_error": true
+        }
+      ]
+    },
+    {
+      "if": [
+        {
+          "condition": "template",
+          "value_template": "{{ stereo or not house }}"
+        }
+      ],
+      "then": [
+        {
+          "action": "media_player.media_stop",
+          "target": {
+            "entity_id": "media_player.family_room_stereo"
+          },
+          "continue_on_error": true
+        },
+        {
+          "action": "media_player.clear_playlist",
+          "target": {
+            "entity_id": "media_player.family_room_stereo"
+          },
+          "continue_on_error": true
+        },
+        {
+          "action": "media_player.media_stop",
+          "target": {
+            "entity_id": "media_player.family_room_family_room_wiim"
+          },
+          "continue_on_error": true
+        },
+        {
+          "delay": {
+            "seconds": 1
+          }
+        },
+        {
+          "action": "switch.turn_off",
+          "target": {
+            "entity_id": "switch.family_room_pioneer_sx_780"
+          }
+        }
+      ]
     }
   ],
   "mode": "single"
