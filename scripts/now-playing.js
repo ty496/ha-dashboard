@@ -100,7 +100,7 @@ const backdrop = {
   name: 'Now playing background',
   content: ' ',
   visibility: [{ condition: 'state', entity: E, state: 'playing' }],
-  card_mod: { style: `ha-card { position: fixed !important; top: -80px !important; left: -80px !important; width: calc(100vw + 160px) !important; height: calc(100vh + 160px) !important; max-height: none !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: center / cover no-repeat url('{{ state_attr('${E}', 'entity_picture') or '' }}') !important; filter: blur(40px) saturate(1.3) brightness(0.55); }` },
+  card_mod: { style: `ha-card { position: fixed !important; top: -24px !important; left: -24px !important; width: calc(100vw + 48px) !important; height: calc(100vh + 48px) !important; max-height: none !important; z-index: -1 !important; pointer-events: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: center / cover no-repeat url('{{ state_attr('${E}', 'entity_picture') or '' }}') !important; filter: blur(12px) saturate(1.15) brightness(0.6); }` },
 };
 
 // The old small control under the calendar goes; the player sits at the foot of the left column.
