@@ -1,7 +1,7 @@
 {
   "id": "voice_music_controls_local",
   "alias": "Voice: music controls (local)",
-  "description": "Pause, resume, skip, volume, mute and \"what's playing\" by voice, answered locally on whichever Music Assistant speaker is playing (Family Room Stereo, HomePod, Kitchen, Basement Stereo), or the Family Room Stereo when none is. HA's built-in media intents look only in the asking satellite's area, so from the kitchen Echo they failed for music in the family room. Bare \"stop\" is left to the Echo, whose stop word silences timers and alarms.",
+  "description": "Pause, resume, skip, volume, mute and \"what's playing\" by voice, answered locally on whichever Music Assistant speaker is playing (the Whole House group first, so a group is paused or skipped as one, then Family Room Stereo, HomePod, Kitchen, Basement Stereo), or the Family Room Stereo when none is. HA's built-in media intents look only in the asking satellite's area, so from the kitchen Echo they failed for music in the family room. Bare \"stop\" is left to the Echo, whose stop word silences timers and alarms.",
   "triggers": [
     {
       "trigger": "conversation",
@@ -104,6 +104,7 @@
     {
       "variables": {
         "players": [
+          "media_player.whole_house",
           "media_player.family_room_stereo",
           "media_player.homepod",
           "media_player.kitchen",
