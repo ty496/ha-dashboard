@@ -141,7 +141,8 @@ An "Overhead now" glass card at the top of the home view's right column, plus a 
   aircraft with Flightradar24's flights (registration, callsign, else nearest of the same type within 15 km),
   and adds the registered owner (adsbdb, cached a month, 6 lookups a poll) and plane-alert-db's entry for
   notable aircraft (read once a day). People of interest are its categories Climate Crisis (celebrities' and
-  billionaires' jets), Don't you know who I am?, Joe Cool, Big Hello, Dictator Alert and Governments; the name
+  billionaires' jets), Don't you know who I am?, As Seen on TV (more celebrities, and news helicopters), Joe Cool,
+  Big Hello, Dictator Alert and Governments; the name
   shown is the operator, or the first tag that reads like a person when the operator is a company (Elon Musk,
   not Falcon Landing LLC). `sensor.plane_details` holds `by_fr24` (keyed by Flightradar24's flight id),
   `aircraft` and `notable`; `plane_details_notable` fires when a person of interest's aircraft enters the area.

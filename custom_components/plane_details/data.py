@@ -10,9 +10,11 @@ import re
 from typing import Any
 
 # plane-alert-db categories counted as people of interest (Ty, 2026-11-03: "celebrities or billionaires etc.").
-# "Climate Crisis" is its list of celebrities' and billionaires' private jets.
+# "Climate Crisis" is its list of celebrities' and billionaires' private jets. "As Seen on TV" holds more
+# celebrities (Travis Scott's E190 crossed the house that day) and TV news helicopters.
 POI_CATEGORIES = frozenset(
-    {"Climate Crisis", "Don't you know who I am?", "Joe Cool", "Big Hello", "Dictator Alert", "Governments"}
+    {"Climate Crisis", "Don't you know who I am?", "As Seen on TV", "Joe Cool", "Big Hello", "Dictator Alert",
+     "Governments"}
 )
 
 # adsb.lol dbFlags bits.
