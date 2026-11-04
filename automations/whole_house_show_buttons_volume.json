@@ -1,0 +1,47 @@
+{
+  "id": "whole_house_show_buttons_volume",
+  "alias": "Whole House: the Show's volume buttons move the HomePod too",
+  "description": "While Music Assistant's Whole House group (Kitchen Echo + HomePod) is playing or paused, the Kitchen Echo's own volume buttons change only the Echo. This follows each change on the HomePod in proportion, as the group's own volume does (Echo 53 -> 86 takes the HomePod 30 -> 49). Only right after a press of the Echo's buttons (within 3 s), so a change made through the group itself, which already moves both, isn't applied twice. Ty, 2026-11-03.",
+  "triggers": [
+    {
+      "trigger": "state",
+      "entity_id": "media_player.kitchen",
+      "attribute": "volume_level"
+    }
+  ],
+  "conditions": [
+    {
+      "condition": "template",
+      "value_template": "{{ is_state('media_player.whole_house', ['playing', 'paused']) }}"
+    },
+    {
+      "condition": "template",
+      "value_template": "{% set t = [states('event.kitchen_volume_up_button'), states('event.kitchen_volume_down_button')] | map('as_datetime', none) | reject('none') | list %}{{ t | count > 0 and (now() - (t | max)).total_seconds() < 3 }}"
+    },
+    {
+      "condition": "template",
+      "value_template": "{{ trigger.from_state.attributes.volume_level is number and trigger.to_state.attributes.volume_level is number }}"
+    }
+  ],
+  "actions": [
+    {
+      "variables": {
+        "old": "{{ trigger.from_state.attributes.volume_level | float(0) }}",
+        "new": "{{ trigger.to_state.attributes.volume_level | float(0) }}",
+        "homepod": "{{ state_attr('media_player.homepod', 'volume_level') | float(0) }}",
+        "target": "{{ ([([homepod * new / old if old > 0 else homepod + new - old, 0] | max), 1] | min) | round(2) }}"
+      }
+    },
+    {
+      "action": "media_player.volume_set",
+      "target": {
+        "entity_id": "media_player.homepod"
+      },
+      "data": {
+        "volume_level": "{{ target }}"
+      }
+    }
+  ],
+  "mode": "queued",
+  "max": 20
+}
