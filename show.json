@@ -170,6 +170,72 @@
           "column_span": 1,
           "cards": [
             {
+              "type": "custom:mini-media-player",
+              "entity": "media_player.family_room_stereo",
+              "name": "Family Room Stereo",
+              "artwork": "full-cover",
+              "info": "scroll",
+              "volume_step": 5,
+              "hide": {
+                "power": true,
+                "source": true,
+                "icon": true
+              },
+              "grid_options": {
+                "columns": "full"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "media_player.family_room_stereo",
+                  "state": [
+                    "playing",
+                    "paused"
+                  ]
+                }
+              ],
+              "card_mod": {
+                "style": "ha-card { border-radius: 24px; overflow: hidden; --mmp-text-color: #fff; --mmp-icon-color: #fff; }"
+              }
+            },
+            {
+              "type": "custom:mini-media-player",
+              "entity": "media_player.family_room_family_room_wiim",
+              "name": "Family Room Stereo",
+              "artwork": "full-cover",
+              "info": "scroll",
+              "volume_step": 5,
+              "hide": {
+                "power": true,
+                "source": true,
+                "icon": true
+              },
+              "grid_options": {
+                "columns": "full"
+              },
+              "visibility": [
+                {
+                  "condition": "state",
+                  "entity": "media_player.family_room_family_room_wiim",
+                  "state": [
+                    "playing",
+                    "paused"
+                  ]
+                },
+                {
+                  "condition": "state",
+                  "entity": "media_player.family_room_stereo",
+                  "state_not": [
+                    "playing",
+                    "paused"
+                  ]
+                }
+              ],
+              "card_mod": {
+                "style": "ha-card { border-radius: 24px; overflow: hidden; --mmp-text-color: #fff; --mmp-icon-color: #fff; }"
+              }
+            },
+            {
               "type": "markdown",
               "title": "Needs attention",
               "content": "**{{ states(\"sensor.broken_automations\") }} automation(s) unavailable:** {{ states(\"sensor.broken_automation_names\") }}",
@@ -360,17 +426,6 @@
               "card_mod": {
                 "style": ".event-title, .event-left, .event-time, .event-right, .hours, .relative-time { font-size: 19px !important; } .event-left { min-width: 120px !important; } .single-event-container { line-height: 1.5 !important; } .header { font-size: 1.25em !important; } ha-card { height: 100%; }"
               }
-            },
-            {
-              "type": "media-control",
-              "entity": "media_player.family_room_family_room_wiim",
-              "visibility": [
-                {
-                  "condition": "state",
-                  "entity": "media_player.family_room_family_room_wiim",
-                  "state": "playing"
-                }
-              ]
             },
             {
               "type": "media-control",
@@ -885,6 +940,128 @@
                   "show_forecast": true,
                   "forecast_type": "daily",
                   "forecast_slots": 7
+                }
+              ]
+            },
+            {
+              "type": "custom:bubble-card",
+              "card_type": "pop-up",
+              "hash": "#now-playing",
+              "name": "Now playing",
+              "icon": "mdi:music",
+              "popup_mode": "centered",
+              "width_desktop": "1180px",
+              "slide_to_close": true,
+              "close_by_clicking_outside": true,
+              "trigger_entity": "input_boolean.kitchen_now_playing_popup",
+              "trigger_state": "on",
+              "trigger_close": true,
+              "close_action": {
+                "action": "perform-action",
+                "perform_action": "input_boolean.turn_off",
+                "target": {
+                  "entity_id": "input_boolean.kitchen_now_playing_popup"
+                }
+              },
+              "styles": ".bubble-pop-up { overflow: hidden !important; }\n.bubble-pop-up-background { background: center / cover no-repeat url('${hass.states['media_player.family_room_family_room_wiim'].attributes.entity_picture || ''}') !important; filter: blur(44px) saturate(1.35) brightness(0.62) !important; transform: scale(1.25); opacity: 1 !important; }",
+              "cards": [
+                {
+                  "type": "horizontal-stack",
+                  "cards": [
+                    {
+                      "type": "markdown",
+                      "content": "{% set p = state_attr('media_player.family_room_family_room_wiim', 'entity_picture') %}{% if p %}<img src=\"{{ p }}\">{% endif %}",
+                      "card_mod": {
+                        "style": {
+                          ".": "ha-card { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } ha-card { padding: 0 !important; }",
+                          "ha-markdown$": "img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 24px; box-shadow: 0 22px 60px rgba(0, 0, 0, 0.5); }"
+                        }
+                      }
+                    },
+                    {
+                      "type": "vertical-stack",
+                      "cards": [
+                        {
+                          "type": "markdown",
+                          "content": "## {{ state_attr('media_player.family_room_family_room_wiim', 'media_title') or 'Nothing playing' }}\n### {{ state_attr('media_player.family_room_family_room_wiim', 'media_artist') or '' }}\n{{ state_attr('media_player.family_room_family_room_wiim', 'media_album_name') or '' }}",
+                          "card_mod": {
+                            "style": {
+                              ".": "ha-card { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } ha-card { padding: 28px 8px 8px 8px !important; }",
+                              "ha-markdown$": "h2 { font-size: 46px !important; line-height: 1.1 !important; font-weight: 700 !important; margin: 0 0 12px 0 !important; color: #fff !important; text-shadow: 0 2px 12px rgba(0,0,0,.45); } h3 { font-size: 30px; font-weight: 500; margin: 0 0 10px 0; color: rgba(255,255,255,.88); } p { font-size: 22px; color: rgba(255,255,255,.7); margin: 0; }"
+                            }
+                          }
+                        },
+                        {
+                          "type": "conditional",
+                          "conditions": [
+                            {
+                              "condition": "state",
+                              "entity": "media_player.family_room_stereo",
+                              "state": [
+                                "playing",
+                                "paused"
+                              ]
+                            }
+                          ],
+                          "card": {
+                            "type": "custom:mini-media-player",
+                            "entity": "media_player.family_room_stereo",
+                            "artwork": "none",
+                            "volume_step": 5,
+                            "hide": {
+                              "name": true,
+                              "icon": true,
+                              "info": true,
+                              "power": true,
+                              "source": true,
+                              "progress": false,
+                              "volume": false,
+                              "mute": false,
+                              "prev": false,
+                              "next": false
+                            },
+                            "card_mod": {
+                              "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } ha-card { --mmp-text-color: #fff; --mmp-icon-color: #fff; --mmp-accent-color: #fff; --mmp-button-size: 56px; padding: 8px !important; }"
+                            }
+                          }
+                        },
+                        {
+                          "type": "conditional",
+                          "conditions": [
+                            {
+                              "condition": "state",
+                              "entity": "media_player.family_room_stereo",
+                              "state_not": [
+                                "playing",
+                                "paused"
+                              ]
+                            }
+                          ],
+                          "card": {
+                            "type": "custom:mini-media-player",
+                            "entity": "media_player.family_room_family_room_wiim",
+                            "artwork": "none",
+                            "volume_step": 5,
+                            "hide": {
+                              "name": true,
+                              "icon": true,
+                              "info": true,
+                              "power": true,
+                              "source": true,
+                              "progress": false,
+                              "volume": false,
+                              "mute": false,
+                              "prev": false,
+                              "next": false
+                            },
+                            "card_mod": {
+                              "style": "ha-card { background: none !important; border: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } ha-card { --mmp-text-color: #fff; --mmp-icon-color: #fff; --mmp-accent-color: #fff; --mmp-button-size: 56px; padding: 8px !important; }"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             }

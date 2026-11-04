@@ -1,0 +1,42 @@
+{
+  "id": "kitchen_now_playing_popup_open",
+  "alias": "Kitchen now playing popup: open on a new song",
+  "description": "Opens the #now-playing pop-up on the Show dashboard when a new song starts on the Family Room Stereo (the WiiM, any source): the title changes, then waits up to 20 s for it to be playing (the Pioneer warm-up pauses it first). Not while a weather pop-up is up. kitchen_weather_popup_close shuts it 30 s later.",
+  "triggers": [
+    {
+      "trigger": "state",
+      "entity_id": "media_player.family_room_family_room_wiim",
+      "attribute": "media_title"
+    }
+  ],
+  "conditions": [
+    {
+      "condition": "template",
+      "value_template": "{{ state_attr('media_player.family_room_family_room_wiim', 'media_title') not in [none, ''] }}"
+    },
+    {
+      "condition": "state",
+      "entity_id": [
+        "input_boolean.kitchen_weather_popup",
+        "input_boolean.kitchen_place_weather_popup"
+      ],
+      "state": "off"
+    }
+  ],
+  "actions": [
+    {
+      "wait_template": "{{ is_state('media_player.family_room_family_room_wiim', 'playing') }}",
+      "timeout": {
+        "seconds": 20
+      },
+      "continue_on_timeout": false
+    },
+    {
+      "action": "input_boolean.turn_on",
+      "target": {
+        "entity_id": "input_boolean.kitchen_now_playing_popup"
+      }
+    }
+  ],
+  "mode": "restart"
+}
