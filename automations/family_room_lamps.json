@@ -1,0 +1,47 @@
+{
+  "id": "family_room_lamps",
+  "alias": "Family room lamps: sunset and early morning",
+  "description": "Port of Hubitat rule 13 'Family Room Lamp Automations' (disabled there 2026-11-04), same times and lights: on at sunset - 47 min, off at 22:43, on at sunrise - 45 min, off at 9:30. The FR Lights group (tall lamp, donut lamp, globe, both bookcase shelves) and the two kitchen sconces go on and off together as before. The bookcase and the tall lamp are first set to their stored Hubitat look: Hubitat's bare group 'on' left the bookcase at 1% (its orange shows red that dim) and the tall lamp dark on 2026-11-03 and 11-04, while the hub still showed 32% and on. Bookcase: Hubitat hue 5, saturation 96, 32% (HA hs 18, 96). Tall lamp: 67%.",
+  "triggers": [
+    { "trigger": "sun", "event": "sunset", "offset": "-00:47:00", "id": "on" },
+    { "trigger": "time", "at": "22:43:00", "id": "off" },
+    { "trigger": "sun", "event": "sunrise", "offset": "-00:45:00", "id": "on" },
+    { "trigger": "time", "at": "09:30:00", "id": "off" }
+  ],
+  "conditions": [],
+  "actions": [
+    {
+      "choose": [
+        {
+          "conditions": [{ "condition": "trigger", "id": "on" }],
+          "sequence": [
+            {
+              "action": "light.turn_on",
+              "target": { "entity_id": ["light.family_room_bookcase_family_room", "light.family_room_bookcase_lower_family_room"] },
+              "data": { "hs_color": [18, 96], "brightness_pct": 32 }
+            },
+            {
+              "action": "light.turn_on",
+              "target": { "entity_id": "light.family_room_tall_lamp_family_room" },
+              "data": { "brightness_pct": 67 }
+            },
+            {
+              "action": "light.turn_on",
+              "target": { "entity_id": ["light.family_room_fr_lights", "light.kitchen_left_sconce_kitchen", "light.kitchen_right_sconce_kitchen"] }
+            }
+          ]
+        },
+        {
+          "conditions": [{ "condition": "trigger", "id": "off" }],
+          "sequence": [
+            {
+              "action": "light.turn_off",
+              "target": { "entity_id": ["light.family_room_fr_lights", "light.kitchen_left_sconce_kitchen", "light.kitchen_right_sconce_kitchen"] }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mode": "single"
+}
