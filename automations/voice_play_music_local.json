@@ -1,7 +1,7 @@
 {
   "id": "voice_play_music_local",
   "alias": "Voice: play music (local)",
-  "description": "\"Play X [on/in Y]\" answered on the local agent through Music Assistant, so music requests skip Claude. Y: the family room stereo (also the default), the HomePod, the kitchen, the basement, or the whole house (also \"everywhere\", \"all speakers\", \"every room\"): Music Assistant's Whole House sync group of the Kitchen Echo and the HomePod (Ty left the basement out: no whole-house music downstairs). The Family Room Stereo can't join it: the WiiM Ultra has no AirPlay and can't run Sendspin over Cast. \"X by Y\" is a song with its artist; \"X playlist\" or \"X album\" sets the type. Songs or music by X plays the artist X when Music Assistant knows one by that exact name. A request naming another target (a TV), too vague to search (\"some music\", \"something chill\"), naming a mood, time, activity or genre (\"good morning music\", \"dinner\", \"jazz\"), or phrased \"X music\" / \"X songs\" is handed to Claude as said (2026-11-04: \"play some good morning music\" had played the band Good Morning); Claude reads Ty's Music Taste Profile in the house wiki and plays a pick with script.music_play_pick. If Music Assistant finds nothing, it says so; if nothing started because another speaker is already streaming Tidal (the account allows one stream at a time), it says that instead. Once it plays, the Show's Music pop-up is pointed at that speaker (input_text.music_speaker). One wildcard sentence, with the speaker read from its end: separate sentences per speaker lost to the bare wildcard.",
+  "description": "\"Play X [on/in Y]\" answered on the local agent through Music Assistant, so music requests skip Claude. Y: the family room stereo, the HomePod, the kitchen, the basement, or the whole house (also \"everywhere\", \"all speakers\", \"every room\"): Music Assistant's Whole House sync group of the Kitchen Echo and the HomePod (Ty left the basement out: no whole-house music downstairs). The Family Room Stereo can't join it: the WiiM Ultra has no AirPlay and can't run Sendspin over Cast. \"X by Y\" is a song with its artist. With no Y it plays where music is already playing, else on the whole house (Ty made the whole house the default 2026-11-04, after a bare \"play X\" started the stereo while the house played something else). \"X playlist\", \"the playlist X\" or \"my X playlist\" (likewise album) sets the type, and a trailing \"on my Tidal\" (heard as \"title\") is dropped. A playlist goes through script.music_play_pick, which looks it up in Ty's library first: \"play the playlist Vision\" had played the song THE VISION. Songs or music by X plays the artist X when Music Assistant knows one by that exact name. A request naming another target (a TV), too vague to search (\"some music\", \"something chill\"), naming a mood, time, activity or genre (\"good morning music\", \"dinner\", \"jazz\"), or phrased \"X music\" / \"X songs\" is handed to Claude as said (2026-11-04: \"play some good morning music\" had played the band Good Morning); Claude reads Ty's Music Taste Profile in the house wiki and plays a pick with script.music_play_pick. If Music Assistant finds nothing, it says so; if nothing started because another speaker is already streaming Tidal (the account allows one stream at a time), it says that instead. Once it plays, the Show's Music pop-up is pointed at that speaker (input_text.music_speaker). One wildcard sentence, with the speaker read from its end: separate sentences per speaker lost to the bare wildcard.",
   "triggers": [
     {
       "trigger": "conversation",
@@ -52,25 +52,25 @@
           "basement": "on the basement stereo",
           "house": "throughout the house"
         },
-        "raw": "{{ trigger.slots.query | trim }}",
-        "found": "{{ trigger.slots.query | trim | regex_findall('^(.*?) (?:(?:on|in|through|throughout|to) (?:the )?(family room stereo|family room|stereo|big speakers|homepod|home pod|kitchen speaker|kitchen echo|kitchen|basement stereo|basement speakers|basement receiver|basement|whole house|entire house|all speakers|all the speakers|every room|all rooms)|(everywhere|all over the house))$', ignorecase=True) }}"
+        "raw": "{{ trigger.slots.query | trim | regex_replace('(?i) (on|in|from) (my )?(tidal|title)$', '') | trim }}",
+        "found": "{{ trigger.slots.query | trim | regex_replace('(?i) (on|in|from) (my )?(tidal|title)$', '') | trim | regex_findall('^(.*?) (?:(?:on|in|through|throughout|to) (?:the )?(family room stereo|family room|stereo|big speakers|homepod|home pod|kitchen speaker|kitchen echo|kitchen|basement stereo|basement speakers|basement receiver|basement|whole house|entire house|all speakers|all the speakers|every room|all rooms)|(everywhere|all over the house))$', ignorecase=True) }}"
       }
     },
     {
       "variables": {
-        "key": "{{ keys[(found[0][1] or found[0][2]) | lower] if found else 'stereo' }}",
+        "key": "{% if found %}{{ keys[(found[0][1] or found[0][2]) | lower] }}{% else %}{% set ns = namespace(k='') %}{% for k in ['house', 'stereo', 'homepod', 'kitchen', 'basement'] %}{% if ns.k == '' and is_state(players[k], 'playing') %}{% set ns.k = k %}{% endif %}{% endfor %}{{ ns.k or 'house' }}{% endif %}",
         "named": "{{ found | count > 0 }}",
-        "q": "{{ (found[0][0] if found else raw) | trim | regex_replace('^(me |us )?(some|a little|a bit of) ', '') | trim }}"
+        "q": "{{ (found[0][0] if found else raw) | trim | regex_replace('(?i) (on|in|from) (my )?(tidal|title)$', '') | trim | regex_replace('^(me |us )?(some|a little|a bit of) ', '') | trim }}"
       }
     },
     {
       "variables": {
         "player": "{{ players[key] }}",
         "where": "{{ spoken[key] }}",
-        "vague": "{% set s = q | lower %}{{ s in ['music', 'something', 'anything', 'a song', 'songs', 'some music', 'something good', 'tunes'] or s is search('^(something|anything|whatever)( |$)') or (not (s is search(' (playlist|album)$')) and ' by ' not in s and (s is search('^.+ (music|songs|tunes|vibes|hits|jams)$') or s is search('(^| )(morning|afternoon|evening|tonight|night|weekend|sunday|chill|chilled|relax|relaxing|mellow|calm|upbeat|happy|sad|energetic|focus|study|dinner|cooking|cocktail|party|workout|sleep|bedtime|rainy|background|vibe|vibes|mood|coffee|breakfast|brunch|wind down|wake up|road trip|jazz|country|folk|indie|yacht|soul|funk|funky|disco|classical|lo-?fi|acoustic|bluegrass|blues|reggae|latin|oldies|christmas|holiday)( |$)'))) }}",
+        "vague": "{% set s = q | lower %}{{ s in ['music', 'something', 'anything', 'a song', 'songs', 'some music', 'something good', 'tunes'] or s is search('^(something|anything|whatever)( |$)') or (not (s is search(' (playlist|album)$') or s is search('^(the |my )?(playlist|album) ')) and ' by ' not in s and (s is search('^.+ (music|songs|tunes|vibes|hits|jams)$') or s is search('(^| )(morning|afternoon|evening|tonight|night|weekend|sunday|chill|chilled|relax|relaxing|mellow|calm|upbeat|happy|sad|energetic|focus|study|dinner|cooking|cocktail|party|workout|sleep|bedtime|rainy|background|vibe|vibes|mood|coffee|breakfast|brunch|wind down|wake up|road trip|jazz|country|folk|indie|yacht|soul|funk|funky|disco|classical|lo-?fi|acoustic|bluegrass|blues|reggae|latin|oldies|christmas|holiday)( |$)'))) }}",
         "elsewhere": "{{ not named and (q | lower) is search(' (on|in|through|to) (the )?[a-z0-9 ]+$') }}",
-        "kind": "{{ 'playlist' if q | lower is search(' playlist$') else ('album' if q | lower is search(' album$') else '') }}",
-        "name": "{{ q | regex_replace('(?i) (playlist|album)$', '') | trim }}"
+        "kind": "{{ 'playlist' if q | lower is search(' playlist$|^(the |my )?playlist ') else ('album' if q | lower is search(' album$|^(the |my )?album ') else '') }}",
+        "name": "{{ q | regex_replace('(?i)^(the |my )?(playlist|album) (called |named )?', '') | regex_replace('(?i) (playlist|album)$', '') | regex_replace('(?i)^my ', '') | trim }}"
       }
     },
     {
@@ -105,6 +105,29 @@
             },
             {
               "set_conversation_response": "{{ claude.response.speech.plain.speech | default('Done.') }}"
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "template",
+              "value_template": "{{ kind == 'playlist' }}"
+            }
+          ],
+          "sequence": [
+            {
+              "action": "script.music_play_pick",
+              "data": {
+                "media": "{{ name }}",
+                "media_type": "playlist",
+                "speaker": "{{ {'stereo': 'family room stereo', 'homepod': 'homepod', 'kitchen': 'kitchen', 'basement': 'basement', 'house': 'whole house'}[key] }}"
+              },
+              "response_variable": "pick",
+              "continue_on_error": true
+            },
+            {
+              "set_conversation_response": "{% if pick is defined and pick.started %}Playing your {{ name }} playlist {{ where }}.{% elif pick is defined and pick.reason %}{{ pick.reason | replace(\"Ty's library\", 'your library') }}{% else %}I couldn't start the {{ name }} playlist.{% endif %}"
             }
           ]
         }

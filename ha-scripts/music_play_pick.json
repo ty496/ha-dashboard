@@ -2,7 +2,7 @@
   "id": "music_play_pick",
   "alias": "Play music",
   "icon": "mdi:music-circle",
-  "description": "Plays one specific pick through Music Assistant (Tidal) on one speaker: an artist, a song, an album or one of Ty's playlists. The voice agent's music tool (2026-11-04): the Voice: play music automation hands vague and mood requests ('good morning music', 'something chill') to Claude, which reads Ty's taste in the house wiki (Music Taste Profile) and calls this with a concrete choice. Ty's own playlists: Dinner Music, Cocktail Hour, Driving Range, Work Focus, Funky Vibes, Funky, Chill HipHop, Vibe Farming, Camping 2026, Running 2026, Claude Weekly Discovery, 3rd Annual Fall Classic, JBL 4312, Christmas, Puerto Vallartaaa, Wedding Songs. With radio on, Music Assistant keeps going with similar music after the pick. Returns whether it started and what is playing; if Tidal is already streaming on another speaker (one stream per account) it says so.",
+  "description": "Plays one specific pick through Music Assistant (Tidal) on one speaker: an artist, a song, an album or one of Ty's playlists. The voice agent's music tool (2026-11-04): the Voice: play music automation hands vague and mood requests ('good morning music', 'something chill') to Claude, which reads Ty's taste in the house wiki (Music Taste Profile) and calls this with a concrete choice. Ty's own playlists: Dinner Music, Vision, Cocktail Hour, Driving Range, Work Focus, Funky Vibes, Funky, Chill HipHop, Vibe Farming, Camping 2026, Running 2026, Claude Weekly Discovery, 3rd Annual Fall Classic, JBL 4312, Christmas, Puerto Vallartaaa, Wedding Songs. A playlist is looked up by name in Ty's Music Assistant library first, then on Tidal by exact name, and played by its address; if neither has it, nothing plays and it says so (2026-11-04: 'Vision in my title', Tidal misheard, played nothing yet came back as started because the Whole House's mix moved to its next song inside the wait). 'my', 'the', 'playlist' and a trailing 'on my Tidal' are dropped from the name. With no speaker given it plays where music is already playing, so two rooms never play different things, else on the Whole House (Ty's default, 2026-11-04). With radio on, Music Assistant keeps going with similar music after the pick. Returns whether it started and what is playing; if Tidal is already streaming on another speaker (one stream per account) it says so.",
   "fields": {
     "media": {
       "name": "What",
@@ -23,8 +23,7 @@
     },
     "speaker": {
       "name": "Speaker",
-      "description": "family room stereo (the default), homepod, kitchen, basement, or whole house (the kitchen Echo and the HomePod together).",
-      "default": "family room stereo",
+      "description": "Only when Ty named one: family room stereo, homepod, kitchen, basement, or whole house (the kitchen Echo and the HomePod together). Leave it empty otherwise: it then plays where music is already playing, or on the whole house when nothing is.",
       "selector": { "select": { "options": ["family room stereo", "homepod", "kitchen", "basement", "whole house"] } }
     },
     "radio": {
@@ -46,18 +45,57 @@
         },
         "by": "{{ artist | default('', true) | trim }}",
         "kind": "{{ media_type | default('artist', true) | lower }}",
-        "with_radio": "{{ radio | default(false) | bool(false) }}"
+        "with_radio": "{{ radio | default(false) | bool(false) }}",
+        "uri": "",
+        "name": "{% set n = media | trim | regex_replace('(?i) (on|in|from) (my )?(tidal|title)$', '') | trim %}{% if (media_type | default('', true) | lower) == 'playlist' %}{% set n = n | regex_replace('(?i)^(the |my )?playlist (called |named )?', '') | regex_replace('(?i) playlist$', '') | regex_replace('(?i)^my ', '') | trim %}{% endif %}{{ n }}"
       }
     },
     {
       "variables": {
-        "player": "{{ players.get(speaker | default('family room stereo', true) | lower | trim, 'media_player.family_room_stereo') }}"
+        "player": "{% set s = speaker | default('', true) | lower | trim %}{% if s in players %}{{ players[s] }}{% else %}{% set ns = namespace(p='') %}{% for e in ['media_player.whole_house', 'media_player.family_room_stereo', 'media_player.homepod', 'media_player.kitchen', 'media_player.basement_stereo'] %}{% if ns.p == '' and is_state(e, 'playing') %}{% set ns.p = e %}{% endif %}{% endfor %}{{ ns.p or 'media_player.whole_house' }}{% endif %}"
       }
     },
     {
       "variables": {
         "before": "{{ state_attr(player, 'media_content_id') }}"
       }
+    },
+    {
+      "if": [
+        { "condition": "template", "value_template": "{{ kind == 'playlist' }}" }
+      ],
+      "then": [
+        {
+          "action": "music_assistant.get_library",
+          "data": { "config_entry_id": "{{ config_entry_id(player) }}", "media_type": "playlist", "search": "{{ name }}", "limit": 25 },
+          "response_variable": "lib",
+          "continue_on_error": true
+        },
+        { "variables": { "uri": "{% set want = name | lower | regex_replace('[^a-z0-9 ]', '') | regex_replace('^the ', '') | trim %}{% set ns = namespace(exact='', part='') %}{% for x in (lib['items'] if lib is defined and lib is mapping and 'items' in lib else []) %}{% set n = (x.name or '') | lower | regex_replace('[^a-z0-9 ]', '') | regex_replace('^the ', '') | trim %}{% if ns.exact == '' and n == want %}{% set ns.exact = x.uri %}{% endif %}{% if ns.part == '' and n != '' and want != '' and (want in n or n in want) %}{% set ns.part = x.uri %}{% endif %}{% endfor %}{{ ns.exact or ns.part }}" } },
+        {
+          "if": [
+            { "condition": "template", "value_template": "{{ uri == '' }}" }
+          ],
+          "then": [
+            {
+              "action": "music_assistant.search",
+              "data": { "config_entry_id": "{{ config_entry_id(player) }}", "name": "{{ name }}", "media_type": ["playlist"], "limit": 10 },
+              "response_variable": "cat",
+              "continue_on_error": true
+            },
+            { "variables": { "uri": "{% set want = name | lower | regex_replace('[^a-z0-9 ]', '') | regex_replace('^the ', '') | trim %}{% set ns = namespace(m='') %}{% for x in (cat['playlists'] if cat is defined and cat is mapping and 'playlists' in cat else []) %}{% if ns.m == '' and ((x.name or '') | lower | regex_replace('[^a-z0-9 ]', '') | regex_replace('^the ', '') | trim) == want %}{% set ns.m = x.uri %}{% endif %}{% endfor %}{{ ns.m }}" } }
+          ]
+        },
+        {
+          "if": [
+            { "condition": "template", "value_template": "{{ uri == '' }}" }
+          ],
+          "then": [
+            { "variables": { "result": { "started": false, "reason": "No playlist called {{ name }} in Ty's library or on Tidal. Nothing was changed." } } },
+            { "stop": "No such playlist", "response_variable": "result" }
+          ]
+        }
+      ]
     },
     {
       "if": [
@@ -71,7 +109,7 @@
           "action": "music_assistant.play_media",
           "target": { "entity_id": "{{ player }}" },
           "data": {
-            "media_id": "{{ media }}",
+            "media_id": "{{ name }}",
             "media_type": "{{ kind }}",
             "artist": "{{ by }}",
             "enqueue": "replace",
@@ -85,7 +123,7 @@
           "action": "music_assistant.play_media",
           "target": { "entity_id": "{{ player }}" },
           "data": {
-            "media_id": "{{ media }}",
+            "media_id": "{{ uri or name }}",
             "media_type": "{{ kind }}",
             "enqueue": "replace",
             "radio_mode": "{{ with_radio }}"
@@ -117,7 +155,7 @@
           "variables": {
             "result": {
               "started": true,
-              "now_playing": "{{ state_attr(player, 'media_title') or media }}",
+              "now_playing": "{{ state_attr(player, 'media_title') or name }}",
               "by": "{{ state_attr(player, 'media_artist') or by }}",
               "speaker": "{{ state_attr(player, 'friendly_name') }}",
               "radio": "{{ with_radio }}"
@@ -131,7 +169,7 @@
           "variables": {
             "result": {
               "started": false,
-              "reason": "{% set ns = namespace(by='') %}{% for e in ['media_player.whole_house', 'media_player.family_room_stereo', 'media_player.homepod', 'media_player.kitchen', 'media_player.basement_stereo'] %}{% if ns.by == '' and e != player and is_state(e, 'playing') and 'tidal' in (state_attr(e, 'media_content_id') or '') %}{% set ns.by = state_attr(e, 'friendly_name') %}{% endif %}{% endfor %}{% if ns.by %}Tidal plays one stream at a time and the {{ ns.by }} is already playing it.{% else %}Nothing started: Music Assistant found no {{ kind }} called {{ media }}{{ ' by ' ~ by if by else '' }}. Try another spelling or a different pick.{% endif %}"
+              "reason": "{% set ns = namespace(by='') %}{% for e in ['media_player.whole_house', 'media_player.family_room_stereo', 'media_player.homepod', 'media_player.kitchen', 'media_player.basement_stereo'] %}{% if ns.by == '' and e != player and is_state(e, 'playing') and 'tidal' in (state_attr(e, 'media_content_id') or '') %}{% set ns.by = state_attr(e, 'friendly_name') %}{% endif %}{% endfor %}{% if ns.by %}Tidal plays one stream at a time and the {{ ns.by }} is already playing it.{% else %}Nothing started: Music Assistant found no {{ kind }} called {{ name }}{{ ' by ' ~ by if by else '' }}. Try another spelling or a different pick.{% endif %}"
             }
           }
         },
