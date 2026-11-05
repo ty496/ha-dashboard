@@ -1563,6 +1563,7 @@
                       "hide_menu_player": true,
                       "artwork_object_fit": "no_artwork",
                       "default_search_favorites": true,
+                      "search_results_limit": 60,
                       "disable_autofocus": true,
                       "search_view": "card",
                       "search_card_columns": 3,
